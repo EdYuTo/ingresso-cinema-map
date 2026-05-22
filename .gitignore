@@ -1,0 +1,14 @@
+# Unused legacy files
+popup.html
+popup.js
+popup.css
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.suo
+*.user
