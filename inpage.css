@@ -1,0 +1,293 @@
+/* ── Panel (inline, full-width) ──────────────────────────────────────── */
+
+#icm-panel {
+  display: block !important;
+  width: 100% !important;
+  background: #111827 !important;
+  color: #f3f4f6 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 13px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-bottom: 3px solid #6366f1 !important;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+
+#icm-panel #icm-header {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px 16px !important;
+  background: #1f2937 !important;
+  border-bottom: 1px solid #374151 !important;
+  box-sizing: border-box !important;
+}
+
+#icm-panel #icm-title {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: #e5e7eb !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.4 !important;
+}
+
+/* ── Loading / Error / Manual states ─────────────────────────────────── */
+
+#icm-panel #icm-loading,
+#icm-panel #icm-error,
+#icm-panel #icm-manual {
+  display: flex;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 160px !important;
+  padding: 28px 24px !important;
+  gap: 10px !important;
+  text-align: center !important;
+  color: #9ca3af !important;
+  box-sizing: border-box !important;
+}
+
+#icm-panel .icm-hidden { display: none !important; }
+
+#icm-panel .icm-state-icon { font-size: 28px !important; line-height: 1 !important; }
+
+/* ── Spinner ─────────────────────────────────────────────────────────── */
+
+#icm-panel .icm-spinner {
+  width: 28px !important;
+  height: 28px !important;
+  border: 3px solid #374151 !important;
+  border-top-color: #6366f1 !important;
+  border-radius: 50% !important;
+  animation: icm-spin 0.8s linear infinite !important;
+  flex-shrink: 0 !important;
+}
+
+@keyframes icm-spin { to { transform: rotate(360deg); } }
+
+#icm-panel #icm-loading-msg { font-size: 12px !important; color: #9ca3af !important; margin: 0 !important; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+
+#icm-panel .icm-btn-primary {
+  padding: 8px 20px !important;
+  background: #6366f1 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+#icm-panel .icm-btn-primary:hover { background: #4f46e5 !important; }
+#icm-panel .icm-btn-primary:disabled { opacity: 0.6 !important; cursor: default !important; }
+
+#icm-panel .icm-btn-link {
+  background: none !important;
+  border: none !important;
+  color: #6366f1 !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  padding: 4px 0 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+  margin: 0 !important;
+}
+
+#icm-panel .icm-btn-link:hover { color: #a5b4fc !important; }
+
+#icm-panel .icm-btn-small {
+  background: none !important;
+  border: none !important;
+  color: #6b7280 !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+  white-space: nowrap !important;
+}
+
+#icm-panel .icm-btn-small:hover { color: #9ca3af !important; }
+
+/* ── Error / Manual specific ─────────────────────────────────────────── */
+
+#icm-panel #icm-error-msg { font-size: 13px !important; color: #d1d5db !important; margin: 0 !important; }
+#icm-panel .icm-manual-label { font-size: 13px !important; color: #d1d5db !important; margin: 0 !important; }
+
+#icm-panel .icm-manual-row {
+  display: flex !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 420px !important;
+}
+
+#icm-panel .icm-manual-row input {
+  flex: 1 !important;
+  padding: 8px 12px !important;
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 6px !important;
+  color: #f3f4f6 !important;
+  font-size: 13px !important;
+  font-family: inherit !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+#icm-panel .icm-manual-row input:focus { border-color: #6366f1 !important; }
+#icm-panel .icm-manual-row input::placeholder { color: #6b7280 !important; }
+#icm-panel #icm-manual-error { font-size: 12px !important; color: #f87171 !important; margin: 0 !important; }
+
+/* ── Map section (results state) ─────────────────────────────────────── */
+
+#icm-panel #icm-map-section {
+  display: flex;
+  flex-direction: column !important;
+}
+
+#icm-panel #icm-map {
+  height: 300px !important;
+  width: 100% !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Toolbar (below map) ─────────────────────────────────────────────── */
+
+#icm-panel #icm-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 14px !important;
+  background: #1f2937 !important;
+  border-top: 1px solid #374151 !important;
+  flex-wrap: wrap !important;
+  flex-shrink: 0 !important;
+}
+
+#icm-panel #icm-count {
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  white-space: nowrap !important;
+}
+
+#icm-panel #icm-sort-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex: 1 !important;
+  flex-wrap: wrap !important;
+}
+
+#icm-panel .icm-sort-label {
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap !important;
+}
+
+#icm-panel .icm-chip {
+  background: #111827 !important;
+  border: 1px solid #374151 !important;
+  color: #9ca3af !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 3px 10px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+  margin: 0 !important;
+}
+
+#icm-panel .icm-chip:hover { border-color: #6366f1 !important; color: #e5e7eb !important; }
+
+#icm-panel .icm-chip.icm-chip-active {
+  background: #312e81 !important;
+  border-color: #6366f1 !important;
+  color: #c7d2fe !important;
+}
+
+/* ── User location marker ────────────────────────────────────────────── */
+
+.icm-user-dot-wrapper { position: relative; width: 16px; height: 16px; }
+
+.icm-user-dot {
+  width: 12px; height: 12px;
+  background: #6366f1;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  position: absolute; top: 2px; left: 2px;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.3);
+  animation: icm-pulse 2s infinite;
+}
+
+@keyframes icm-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(99,102,241,0.3); }
+  50%       { box-shadow: 0 0 0 7px rgba(99,102,241,0.1); }
+}
+
+/* ── Cinema pin ──────────────────────────────────────────────────────── */
+
+.icm-pin {
+  width: 26px; height: 26px;
+  background: #6366f1;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.icm-pin-n { transform: rotate(45deg); font-size: 10px; font-weight: 700; color: #fff; line-height: 1; }
+
+/* ── Leaflet popup dark theme ────────────────────────────────────────── */
+
+.leaflet-popup-content-wrapper {
+  background: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+}
+
+.leaflet-popup-tip { background: #1f2937 !important; }
+.leaflet-popup-content { margin: 10px 14px !important; }
+
+.icm-popup-name { font-weight: 700; font-size: 13px; color: #f3f4f6; margin-bottom: 2px; }
+.icm-popup-dist { font-size: 11px; color: #a5b4fc; margin-bottom: 3px; }
+.icm-popup-addr { font-size: 11px; color: #9ca3af; margin-bottom: 5px; }
+.icm-popup-sessions { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+
+.icm-badge {
+  display: inline-block !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  padding: 2px 5px !important; border-radius: 3px !important;
+  text-transform: uppercase !important; letter-spacing: 0.03em !important; line-height: 1.4 !important;
+}
+
+.icm-badge-vip      { background: #78350f !important; color: #fcd34d !important; }
+.icm-badge-laser    { background: #164e63 !important; color: #67e8f9 !important; }
+.icm-badge-dublado  { background: #7c2d12 !important; color: #fdba74 !important; }
+.icm-badge-legendado{ background: #14532d !important; color: #86efac !important; }
+.icm-badge-normal   { background: #1f2937 !important; color: #9ca3af !important; }
+
+.icm-time {
+  display: inline-block !important;
+  font-size: 10px !important; font-weight: 500 !important;
+  background: #1f2937 !important; color: #d1d5db !important;
+  padding: 1px 5px !important; border-radius: 3px !important;
+  border: 1px solid #374151 !important; line-height: 1.4 !important;
+}
