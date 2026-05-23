@@ -18,6 +18,7 @@
   // ── Module state ───────────────────────────────────────────────────────
   let leafletMap = null;
   let cinemaMarkers = [];
+  let userMarker = null;
   let cachedCinemas = null;
   let cachedUserCoords = null;
   let currentSort = 'dist-asc';
@@ -272,6 +273,39 @@
     }).join('');
   }
 
+  function onUserMarkerDragged() {
+    if (!cachedCinemas || !userMarker) return;
+    const latlng = userMarker.getLatLng();
+    cachedUserCoords = { lat: latlng.lat, lng: latlng.lng };
+
+    const withDist = cachedCinemas.map(c => ({
+      ...c,
+      distance: c.lat !== null ? haversine(cachedUserCoords.lat, cachedUserCoords.lng, c.lat, c.lng) : null
+    }));
+    const sorted = sortCinemas(withDist);
+
+    // Update markers in-place — no map teardown
+    sorted.forEach((cinema, idx) => {
+      const entry = cinemaMarkers.find(m => m.name === cinema.name);
+      if (!entry) return;
+      entry.marker.setIcon(L.divIcon({
+        className: '',
+        html: `<div class="icm-pin"><span class="icm-pin-n">${idx + 1}</span></div>`,
+        iconSize: [26, 26], iconAnchor: [13, 26]
+      }));
+      const distText = cinema.distance != null ? `${cinema.distance.toFixed(1)} km` : '';
+      entry.marker.setPopupContent(
+        `<div class="icm-popup">
+          <div class="icm-popup-name">${cinema.name}</div>
+          ${distText ? `<div class="icm-popup-dist">${distText}</div>` : ''}
+          <div class="icm-popup-addr">${cinema.address || ''}</div>
+          <div class="icm-popup-sessions">${sessionBadgesHtml(cinema.sessions)}</div>
+        </div>`);
+    });
+
+    sortPageCinemas(sorted);
+  }
+
   function renderMap(cinemas, userCoords) {
     const mapEl = document.getElementById('icm-map');
     if (!mapEl) return;
@@ -290,13 +324,12 @@
       html: '<div class="icm-user-dot-wrapper"><div class="icm-user-dot"></div></div>',
       iconSize: [16, 16], iconAnchor: [8, 8]
     });
-    L.marker([userCoords.lat, userCoords.lng], { icon: userIcon })
+    userMarker = L.marker([userCoords.lat, userCoords.lng], { icon: userIcon, draggable: true })
       .addTo(leafletMap)
       .bindPopup(
-        `<strong>Você está aqui</strong>${userCoords.label
-          ? `<br><span style="font-size:11px;color:#9ca3af">${userCoords.label}</span>`
-          : ''}`
+        `<strong>Você está aqui</strong><br><span style="font-size:11px;color:rgba(240,240,240,0.5)">Arraste para mover</span>`
       );
+    userMarker.on('dragend', onUserMarkerDragged);
 
     const validCoords = [[userCoords.lat, userCoords.lng]];
     cinemas.forEach((cinema, idx) => {
@@ -737,7 +770,7 @@
             <button class="icm-chip" data-sort="dist-desc">Mais distante</button>
             <button class="icm-chip" data-sort="name">A–Z</button>
           </div>
-          <button id="icm-btn-change-loc" class="icm-btn-small">📍 Alterar localização</button>
+          <button id="icm-btn-change-loc" class="icm-btn-small">Inserir endereço</button>
         </div>
       </div>`;
 
