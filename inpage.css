@@ -1,44 +1,43 @@
-/* ── Keep ingresso.com's fixed nav above Leaflet controls (z-98 < z-1000) */
+/* ── Keep ingresso.com's fixed nav above Leaflet controls ────────────── */
 
 #header { z-index: 10001 !important; }
 
-/* ── Panel (inline, full-width) ──────────────────────────────────────── */
+/* ── Panel wrapper (transparent — blends with page bg #041218) ───────── */
 
 #icm-panel {
   display: block !important;
   width: 100% !important;
-  background: #111827 !important;
-  color: #f3f4f6 !important;
+  background: transparent !important;
+  color: #f0f0f0 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-size: 13px !important;
   box-sizing: border-box !important;
   margin: 0 !important;
   padding: 0 !important;
-  border-bottom: 3px solid #6366f1 !important;
+  border: none !important;
 }
 
-/* ── Header ──────────────────────────────────────────────────────────── */
+/* ── Header (minimal section label, transparent bg) ──────────────────── */
 
 #icm-panel #icm-header {
   display: flex !important;
   align-items: center !important;
-  padding: 10px 16px !important;
-  background: #1f2937 !important;
-  border-bottom: 1px solid #374151 !important;
+  padding: 14px 0 8px !important;
+  background: transparent !important;
   box-sizing: border-box !important;
 }
 
 #icm-panel #icm-title {
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  color: #e5e7eb !important;
+  font-weight: 400 !important;
+  font-size: 13px !important;
+  color: rgba(240, 240, 240, 0.6) !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   line-height: 1.4 !important;
 }
 
-/* ── Loading / Error / Manual states ─────────────────────────────────── */
+/* ── Loading / Error / Manual states (card style) ────────────────────── */
 
 #icm-panel #icm-loading,
 #icm-panel #icm-error,
@@ -51,8 +50,11 @@
   padding: 28px 24px !important;
   gap: 10px !important;
   text-align: center !important;
-  color: #9ca3af !important;
+  color: rgba(240, 240, 240, 0.5) !important;
+  background: #21262d !important;
+  border-radius: 16px !important;
   box-sizing: border-box !important;
+  margin-bottom: 24px !important;
 }
 
 #icm-panel .icm-hidden { display: none !important; }
@@ -64,8 +66,8 @@
 #icm-panel .icm-spinner {
   width: 28px !important;
   height: 28px !important;
-  border: 3px solid #374151 !important;
-  border-top-color: #6366f1 !important;
+  border: 3px solid rgba(255,255,255,0.1) !important;
+  border-top-color: #3255e2 !important;
   border-radius: 50% !important;
   animation: icm-spin 0.8s linear infinite !important;
   flex-shrink: 0 !important;
@@ -73,16 +75,16 @@
 
 @keyframes icm-spin { to { transform: rotate(360deg); } }
 
-#icm-panel #icm-loading-msg { font-size: 12px !important; color: #9ca3af !important; margin: 0 !important; }
+#icm-panel #icm-loading-msg { font-size: 12px !important; color: rgba(240,240,240,0.45) !important; margin: 0 !important; }
 
 /* ── Buttons ─────────────────────────────────────────────────────────── */
 
 #icm-panel .icm-btn-primary {
   padding: 8px 20px !important;
-  background: #6366f1 !important;
+  background: #3255e2 !important;
   color: #fff !important;
   border: none !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
   cursor: pointer !important;
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -90,13 +92,13 @@
   margin: 0 !important;
 }
 
-#icm-panel .icm-btn-primary:hover { background: #4f46e5 !important; }
+#icm-panel .icm-btn-primary:hover { background: #2847d4 !important; }
 #icm-panel .icm-btn-primary:disabled { opacity: 0.6 !important; cursor: default !important; }
 
 #icm-panel .icm-btn-link {
   background: none !important;
   border: none !important;
-  color: #6366f1 !important;
+  color: #98aaec !important;
   font-size: 12px !important;
   cursor: pointer !important;
   padding: 4px 0 !important;
@@ -105,12 +107,12 @@
   margin: 0 !important;
 }
 
-#icm-panel .icm-btn-link:hover { color: #a5b4fc !important; }
+#icm-panel .icm-btn-link:hover { color: #c4ceef !important; }
 
 #icm-panel .icm-btn-small {
   background: none !important;
   border: none !important;
-  color: #6b7280 !important;
+  color: rgba(152, 170, 236, 0.55) !important;
   font-size: 11px !important;
   cursor: pointer !important;
   padding: 0 !important;
@@ -120,12 +122,12 @@
   white-space: nowrap !important;
 }
 
-#icm-panel .icm-btn-small:hover { color: #9ca3af !important; }
+#icm-panel .icm-btn-small:hover { color: #98aaec !important; }
 
 /* ── Error / Manual specific ─────────────────────────────────────────── */
 
-#icm-panel #icm-error-msg { font-size: 13px !important; color: #d1d5db !important; margin: 0 !important; }
-#icm-panel .icm-manual-label { font-size: 13px !important; color: #d1d5db !important; margin: 0 !important; }
+#icm-panel #icm-error-msg { font-size: 13px !important; color: #f0f0f0 !important; margin: 0 !important; }
+#icm-panel .icm-manual-label { font-size: 13px !important; color: #f0f0f0 !important; margin: 0 !important; }
 
 #icm-panel .icm-manual-row {
   display: flex !important;
@@ -137,10 +139,10 @@
 #icm-panel .icm-manual-row input {
   flex: 1 !important;
   padding: 8px 12px !important;
-  background: #1f2937 !important;
-  border: 1px solid #374151 !important;
-  border-radius: 6px !important;
-  color: #f3f4f6 !important;
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 8px !important;
+  color: #f0f0f0 !important;
   font-size: 13px !important;
   font-family: inherit !important;
   outline: none !important;
@@ -148,15 +150,19 @@
   margin: 0 !important;
 }
 
-#icm-panel .icm-manual-row input:focus { border-color: #6366f1 !important; }
-#icm-panel .icm-manual-row input::placeholder { color: #6b7280 !important; }
+#icm-panel .icm-manual-row input:focus { border-color: #3255e2 !important; }
+#icm-panel .icm-manual-row input::placeholder { color: rgba(240,240,240,0.35) !important; }
 #icm-panel #icm-manual-error { font-size: 12px !important; color: #f87171 !important; margin: 0 !important; }
 
-/* ── Map section (results state) ─────────────────────────────────────── */
+/* ── Map section — card matching ingresso's cinema cards ─────────────── */
 
 #icm-panel #icm-map-section {
   display: flex;
   flex-direction: column !important;
+  background: #21262d !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin-bottom: 24px !important;
 }
 
 #icm-panel #icm-map {
@@ -166,15 +172,15 @@
   flex-shrink: 0 !important;
 }
 
-/* ── Toolbar (below map) ─────────────────────────────────────────────── */
+/* ── Toolbar (below map, inside card) ────────────────────────────────── */
 
 #icm-panel #icm-toolbar {
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
   padding: 8px 14px !important;
-  background: #1f2937 !important;
-  border-top: 1px solid #374151 !important;
+  background: #21262d !important;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
   flex-wrap: wrap !important;
   flex-shrink: 0 !important;
   box-sizing: border-box !important;
@@ -182,7 +188,7 @@
 
 #icm-panel #icm-count {
   font-size: 11px !important;
-  color: #6b7280 !important;
+  color: rgba(240,240,240,0.38) !important;
   white-space: nowrap !important;
 }
 
@@ -196,32 +202,35 @@
 
 #icm-panel .icm-sort-label {
   font-size: 11px !important;
-  color: #6b7280 !important;
+  color: rgba(240,240,240,0.38) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   white-space: nowrap !important;
 }
 
 #icm-panel .icm-chip {
-  background: #111827 !important;
-  border: 1px solid #374151 !important;
-  color: #9ca3af !important;
+  background: transparent !important;
+  border: 1px solid rgba(152, 170, 236, 0.3) !important;
+  color: rgba(152, 170, 236, 0.65) !important;
   font-size: 11px !important;
   font-weight: 500 !important;
   padding: 3px 10px !important;
-  border-radius: 12px !important;
+  border-radius: 20px !important;
   cursor: pointer !important;
   white-space: nowrap !important;
-  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+  transition: border-color 0.15s, color 0.15s !important;
   margin: 0 !important;
 }
 
-#icm-panel .icm-chip:hover { border-color: #6366f1 !important; color: #e5e7eb !important; }
+#icm-panel .icm-chip:hover {
+  border-color: #98aaec !important;
+  color: #98aaec !important;
+}
 
 #icm-panel .icm-chip.icm-chip-active {
-  background: #312e81 !important;
-  border-color: #6366f1 !important;
-  color: #c7d2fe !important;
+  background: rgba(50, 85, 226, 0.18) !important;
+  border-color: #3255e2 !important;
+  color: #98aaec !important;
 }
 
 /* ── User location marker ────────────────────────────────────────────── */
@@ -230,24 +239,24 @@
 
 .icm-user-dot {
   width: 12px; height: 12px;
-  background: #6366f1;
+  background: #3255e2;
   border: 2px solid #fff;
   border-radius: 50%;
   position: absolute; top: 2px; left: 2px;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.3);
+  box-shadow: 0 0 0 3px rgba(50,85,226,0.3);
   animation: icm-pulse 2s infinite;
 }
 
 @keyframes icm-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(99,102,241,0.3); }
-  50%       { box-shadow: 0 0 0 7px rgba(99,102,241,0.1); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(50,85,226,0.3); }
+  50%       { box-shadow: 0 0 0 7px rgba(50,85,226,0.1); }
 }
 
 /* ── Cinema pin ──────────────────────────────────────────────────────── */
 
 .icm-pin {
   width: 26px; height: 26px;
-  background: #6366f1;
+  background: #3255e2;
   border: 2px solid #fff;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
@@ -257,41 +266,47 @@
 
 .icm-pin-n { transform: rotate(45deg); font-size: 10px; font-weight: 700; color: #fff; line-height: 1; }
 
-/* ── Leaflet popup dark theme ────────────────────────────────────────── */
+/* ── Leaflet popup ───────────────────────────────────────────────────── */
 
 .leaflet-popup-content-wrapper {
-  background: #1f2937 !important;
-  color: #f3f4f6 !important;
-  border: 1px solid #374151 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+  background: #21262d !important;
+  color: #f0f0f0 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
 }
 
-.leaflet-popup-tip { background: #1f2937 !important; }
+.leaflet-popup-tip { background: #21262d !important; }
 .leaflet-popup-content { margin: 10px 14px !important; }
 
-.icm-popup-name { font-weight: 700; font-size: 13px; color: #f3f4f6; margin-bottom: 2px; }
-.icm-popup-dist { font-size: 11px; color: #a5b4fc; margin-bottom: 3px; }
-.icm-popup-addr { font-size: 11px; color: #9ca3af; margin-bottom: 5px; }
+.icm-popup-name { font-weight: 700; font-size: 13px; color: #f0f0f0; margin-bottom: 2px; }
+.icm-popup-dist { font-size: 11px; color: #98aaec; margin-bottom: 3px; }
+.icm-popup-addr { font-size: 11px; color: rgba(240,240,240,0.5); margin-bottom: 5px; }
 .icm-popup-sessions { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+
+/* ── Session type badges ─────────────────────────────────────────────── */
 
 .icm-badge {
   display: inline-block !important;
   font-size: 10px !important; font-weight: 700 !important;
-  padding: 2px 5px !important; border-radius: 3px !important;
-  text-transform: uppercase !important; letter-spacing: 0.03em !important; line-height: 1.4 !important;
+  padding: 2px 6px !important; border-radius: 4px !important;
+  text-transform: uppercase !important; letter-spacing: 0.04em !important; line-height: 1.4 !important;
 }
 
-.icm-badge-vip      { background: #78350f !important; color: #fcd34d !important; }
-.icm-badge-laser    { background: #164e63 !important; color: #67e8f9 !important; }
-.icm-badge-dublado  { background: #7c2d12 !important; color: #fdba74 !important; }
-.icm-badge-legendado{ background: #14532d !important; color: #86efac !important; }
-.icm-badge-normal   { background: #1f2937 !important; color: #9ca3af !important; }
+.icm-badge-vip      { background: rgba(120, 53, 15, 0.7) !important; color: #fcd34d !important; }
+.icm-badge-laser    { background: rgba(22, 78, 99, 0.7) !important;  color: #67e8f9 !important; }
+.icm-badge-dublado  { background: rgba(124, 45, 18, 0.7) !important; color: #fdba74 !important; }
+.icm-badge-legendado{ background: rgba(20, 83, 45, 0.7) !important;  color: #86efac !important; }
+.icm-badge-normal   { background: rgba(255,255,255,0.07) !important; color: rgba(240,240,240,0.55) !important; }
+
+/* ── Time chips in popup ─────────────────────────────────────────────── */
 
 .icm-time {
   display: inline-block !important;
   font-size: 10px !important; font-weight: 500 !important;
-  background: #1f2937 !important; color: #d1d5db !important;
-  padding: 1px 5px !important; border-radius: 3px !important;
-  border: 1px solid #374151 !important; line-height: 1.4 !important;
+  background: transparent !important;
+  color: #98aaec !important;
+  padding: 1px 6px !important; border-radius: 6px !important;
+  border: 1px solid rgba(152, 170, 236, 0.45) !important;
+  line-height: 1.4 !important;
 }
