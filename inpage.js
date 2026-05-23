@@ -22,7 +22,7 @@
   let cachedUserCoords = null;
   let currentSort = 'dist-asc';
   let cinemaContainer = null;
-  let isSortingDOM = false; // prevents observer re-entrancy during our DOM reordering
+  let refreshVersion = 0;
 
   const geocodeCache = new Map(); // cinemaName → { lat, lng }
 
@@ -219,12 +219,14 @@
   // ── Sort the page's own cinema cards ──────────────────────────────────
 
   function sortPageCinemas(sortedCinemas) {
+    // Refresh container reference in case React replaced it
+    if (!cinemaContainer || !document.body.contains(cinemaContainer)) {
+      cinemaContainer = findCinemaListContainer();
+    }
     if (!cinemaContainer) return;
 
     const cardEls = findCinemaCardElements();
     if (cardEls.length === 0) return;
-
-    isSortingDOM = true;
 
     // Remove existing distance badges
     document.querySelectorAll('[data-icm-dist]').forEach(el => el.remove());
@@ -245,10 +247,10 @@
         'font-size:12px', 'line-height:1'
       ].join(';');
 
-      const numColor = cinema.lat ? '#6366f1' : '#4b5563';
+      const numColor = cinema.lat ? '#3255e2' : '#4b5563';
       const distLabel = cinema.distance != null
-        ? `<span style="color:#a5b4fc;font-weight:600;">${cinema.distance.toFixed(1)} km</span>`
-        : `<span style="color:#6b7280;">distância desconhecida</span>`;
+        ? `<span style="color:#98aaec;font-weight:600;">${cinema.distance.toFixed(1)} km</span>`
+        : `<span style="color:rgba(240,240,240,0.4);">distância desconhecida</span>`;
 
       badge.innerHTML = `
         <span style="background:${numColor};color:#fff;min-width:20px;height:20px;border-radius:50%;
@@ -258,8 +260,6 @@
 
       entry.card.insertAdjacentElement('afterbegin', badge);
     });
-
-    setTimeout(() => { isSortingDOM = false; }, 300);
   }
 
   // ── Map markers ────────────────────────────────────────────────────────
@@ -607,25 +607,34 @@
   // ── Refresh on day-tab change ──────────────────────────────────────────
 
   async function refreshCinemas() {
+    const version = ++refreshVersion;
+
     let domCinemas;
     try { domCinemas = scrapeCinemas(); } catch (_) { return; }
 
+    // Re-find container in case React replaced it during the day change
+    const fresh = findCinemaListContainer();
+    if (fresh) cinemaContainer = fresh;
+
     let apiTheaters = [];
     try { apiTheaters = await fetchTheaters(1); } catch (_) {}
+
+    // Abort if a newer refresh was started while we were awaiting
+    if (version !== refreshVersion) return;
 
     cachedCinemas = await matchAndGeocode(domCinemas, apiTheaters, (i, total) => {
       setLoading(`Geocodificando ${i} de ${total} cinemas...`);
     });
 
+    if (version !== refreshVersion) return;
     if (cachedUserCoords) renderWithLocation(cachedUserCoords);
   }
 
-  function watchForDayChanges(target) {
+  function watchForDayChanges() {
     let debounce = null;
     let lastSig = getCinemaSignature();
 
     new MutationObserver(() => {
-      if (isSortingDOM) return;
       clearTimeout(debounce);
       debounce = setTimeout(() => {
         if (!cachedUserCoords) return;
@@ -634,7 +643,7 @@
         lastSig = sig;
         refreshCinemas();
       }, 800);
-    }).observe(target, { childList: true, subtree: true });
+    }).observe(document.body, { childList: true, subtree: true });
   }
 
   // ── Main data load ─────────────────────────────────────────────────────
@@ -777,7 +786,7 @@
     setupStickyToolbar();
     await loadData();
 
-    watchForDayChanges(cinemaContainer || document.body);
+    watchForDayChanges();
   }
 
   if (document.readyState === 'loading') {
