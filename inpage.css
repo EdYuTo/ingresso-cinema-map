@@ -235,7 +235,8 @@
 
 /* ── User location marker ────────────────────────────────────────────── */
 
-.icm-user-dot-wrapper { position: relative; width: 16px; height: 16px; }
+.icm-user-dot-wrapper { position: relative; width: 16px; height: 16px; cursor: grab; }
+.icm-user-dot-wrapper:active { cursor: grabbing; }
 
 .icm-user-dot {
   width: 12px; height: 12px;
@@ -246,6 +247,10 @@
   box-shadow: 0 0 0 3px rgba(50,85,226,0.3);
   animation: icm-pulse 2s infinite;
 }
+
+/* Leaflet sets cursor on the marker element itself */
+.leaflet-marker-draggable { cursor: grab !important; }
+.leaflet-marker-draggable:active { cursor: grabbing !important; }
 
 @keyframes icm-pulse {
   0%, 100% { box-shadow: 0 0 0 3px rgba(50,85,226,0.3); }
