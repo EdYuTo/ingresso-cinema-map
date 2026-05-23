@@ -770,6 +770,7 @@
             <button class="icm-chip" data-sort="dist-desc">Mais distante</button>
             <button class="icm-chip" data-sort="name">A–Z</button>
           </div>
+          <button id="icm-btn-center-loc" class="icm-btn-small">📍</button>
           <button id="icm-btn-change-loc" class="icm-btn-small">Inserir endereço</button>
         </div>
       </div>`;
@@ -781,6 +782,9 @@
     panel.querySelector('#icm-btn-manual-err').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-manual-loading').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-use-auto').addEventListener('click', runAutoLocation);
+    panel.querySelector('#icm-btn-center-loc').addEventListener('click', () => {
+      if (leafletMap && userMarker) leafletMap.panTo(userMarker.getLatLng());
+    });
     panel.querySelector('#icm-btn-change-loc').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-manual-go').addEventListener('click', submitManualLocation);
     panel.querySelector('#icm-manual-input').addEventListener('keydown', e => {
