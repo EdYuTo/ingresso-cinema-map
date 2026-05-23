@@ -783,7 +783,7 @@
     panel.querySelector('#icm-btn-manual-loading').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-use-auto').addEventListener('click', runAutoLocation);
     panel.querySelector('#icm-btn-center-loc').addEventListener('click', () => {
-      if (leafletMap && userMarker) leafletMap.panTo(userMarker.getLatLng());
+      if (leafletMap && userMarker) leafletMap.setView(userMarker.getLatLng(), 14);
     });
     panel.querySelector('#icm-btn-change-loc').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-manual-go').addEventListener('click', submitManualLocation);
