@@ -469,6 +469,66 @@
     setTimeout(() => inp?.focus(), 50);
   }
 
+  // ── Sticky toolbar (JS-based, works despite overflow:hidden ancestors) ──
+
+  function setupStickyToolbar() {
+    const toolbar = document.getElementById('icm-toolbar');
+    const panel = document.getElementById('icm-panel');
+    if (!toolbar) return;
+
+    // Detect ingresso.com's fixed/sticky header height
+    let navHeight = 0;
+    for (const el of document.querySelectorAll('*')) {
+      if (panel && panel.contains(el)) continue;
+      const style = getComputedStyle(el);
+      if (style.position !== 'fixed' && style.position !== 'sticky') continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 2 && rect.height > 10 && rect.width > 100) {
+        navHeight = Math.max(navHeight, rect.bottom);
+      }
+    }
+
+    // Sentinel preserves toolbar's height in flow when toolbar goes fixed
+    const sentinel = document.createElement('div');
+    let isFixed = false;
+
+    function fix() {
+      if (isFixed) return;
+      isFixed = true;
+      const rect = toolbar.getBoundingClientRect();
+      sentinel.style.cssText = `height:${toolbar.offsetHeight}px;flex-shrink:0;`;
+      toolbar.after(sentinel);
+      toolbar.style.setProperty('position', 'fixed', 'important');
+      toolbar.style.setProperty('top', navHeight + 'px', 'important');
+      toolbar.style.setProperty('left', rect.left + 'px', 'important');
+      toolbar.style.setProperty('width', toolbar.offsetWidth + 'px', 'important');
+      toolbar.style.setProperty('z-index', '10000', 'important');
+    }
+
+    function unfix() {
+      if (!isFixed) return;
+      isFixed = false;
+      sentinel.remove();
+      ['position', 'top', 'left', 'width', 'z-index'].forEach(p => toolbar.style.removeProperty(p));
+    }
+
+    function update() {
+      const mapSection = document.getElementById('icm-map-section');
+      if (!mapSection || getComputedStyle(mapSection).display === 'none') { unfix(); return; }
+      const measureRect = (isFixed ? sentinel : toolbar).getBoundingClientRect();
+      measureRect.top < navHeight ? fix() : unfix();
+    }
+
+    function onResize() {
+      if (!isFixed) return;
+      unfix();
+      update();
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+  }
+
   // ── Render with location ───────────────────────────────────────────────
 
   function renderWithLocation(userCoords) {
@@ -714,6 +774,7 @@
       cinemaContainer.before(panel);
     }
 
+    setupStickyToolbar();
     await loadData();
 
     watchForDayChanges(cinemaContainer || document.body);
