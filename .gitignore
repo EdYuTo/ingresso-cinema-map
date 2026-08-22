@@ -12,3 +12,6 @@ Thumbs.db
 .idea/
 *.suo
 *.user
+
+# Claude
+.claude/
