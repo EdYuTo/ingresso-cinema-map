@@ -27,6 +27,11 @@
 
   const geocodeCache = new Map(); // cinemaName → { lat, lng }
 
+  let groupMode = false;
+  let friendLocations = []; // { lat, lng, label, marker }
+  let currentGroupMode = 'centroid'; // 'centroid', 'total-dist', 'per-friend'
+  let friendMarkers = [];
+
   // ── Utilities ──────────────────────────────────────────────────────────
 
   function haversine(lat1, lng1, lat2, lng2) {
@@ -47,6 +52,51 @@
       .replace(/[^a-z0-9 ]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  // ── Group mode calculations ────────────────────────────────────────────
+
+  function calculateCentroid(locations) {
+    if (locations.length === 0) return null;
+    const lat = locations.reduce((sum, loc) => sum + loc.lat, 0) / locations.length;
+    const lng = locations.reduce((sum, loc) => sum + loc.lng, 0) / locations.length;
+    return { lat, lng };
+  }
+
+  function calculateDistancesToPoint(point, cinemas) {
+    return cinemas.map(cinema => ({
+      ...cinema,
+      distance: cinema.lat && cinema.lng ? haversine(point.lat, point.lng, cinema.lat, cinema.lng) : null
+    }));
+  }
+
+  function calculateGroupDistances(cinemas, friends) {
+    return cinemas.map(cinema => {
+      if (!cinema.lat || !cinema.lng) {
+        return { ...cinema, friendDistances: friends.map(() => null), totalDistance: null };
+      }
+      const friendDistances = friends.map(friend =>
+        haversine(friend.lat, friend.lng, cinema.lat, cinema.lng)
+      );
+      const totalDistance = friendDistances.reduce((sum, d) => sum + d, 0);
+      return { ...cinema, friendDistances, totalDistance };
+    });
+  }
+
+  function findBestCinemaByMode(cinemas, friends, mode) {
+    if (friends.length === 0 || cinemas.length === 0) return null;
+
+    if (mode === 'centroid') {
+      const centroid = calculateCentroid(friends);
+      const withDist = calculateDistancesToPoint(centroid, cinemas);
+      return withDist.filter(c => c.distance !== null).sort((a, b) => a.distance - b.distance)[0] || null;
+    } else if (mode === 'total-dist') {
+      const withGroupDist = calculateGroupDistances(cinemas, friends);
+      return withGroupDist.filter(c => c.totalDistance !== null).sort((a, b) => a.totalDistance - b.totalDistance)[0] || null;
+    } else if (mode === 'per-friend') {
+      return cinemas[0];
+    }
+    return null;
   }
 
   // ── DOM scraping ───────────────────────────────────────────────────────
@@ -312,6 +362,8 @@
 
     if (leafletMap) { leafletMap.remove(); leafletMap = null; }
     cinemaMarkers = [];
+    friendMarkers.forEach(m => m.remove?.());
+    friendMarkers = [];
 
     leafletMap = L.map(mapEl, { zoomControl: true });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -332,17 +384,56 @@
     userMarker.on('dragend', onUserMarkerDragged);
 
     const validCoords = [[userCoords.lat, userCoords.lng]];
+
+    if (groupMode && friendLocations.length > 0) {
+      friendLocations.forEach((friend, idx) => {
+        const friendIcon = L.divIcon({
+          className: '',
+          html: `<div class="icm-friend-marker"><span class="icm-friend-marker-label">${idx + 1}</span></div>`,
+          iconSize: [24, 24], iconAnchor: [12, 12]
+        });
+        const m = L.marker([friend.lat, friend.lng], { icon: friendIcon })
+          .addTo(leafletMap)
+          .bindPopup(`<strong>${friend.label || `Amigo ${idx + 1}`}</strong>`);
+        friendMarkers.push(m);
+        validCoords.push([friend.lat, friend.lng]);
+      });
+    }
+
+    const bestCinema = groupMode && friendLocations.length > 0
+      ? findBestCinemaByMode(cinemas, friendLocations, currentGroupMode)
+      : null;
+
     cinemas.forEach((cinema, idx) => {
       if (cinema.lat === null) return;
+      const isBest = bestCinema && bestCinema.name === cinema.name;
       const icon = L.divIcon({
         className: '',
-        html: `<div class="icm-pin"><span class="icm-pin-n">${idx + 1}</span></div>`,
+        html: `<div class="icm-pin ${isBest ? 'icm-pin-best' : ''}"><span class="icm-pin-n">${idx + 1}</span></div>`,
         iconSize: [26, 26], iconAnchor: [13, 26]
       });
-      const distText = cinema.distance != null ? `${cinema.distance.toFixed(1)} km` : '';
+
+      let distText = '';
+      if (groupMode && friendLocations.length > 0) {
+        if (currentGroupMode === 'centroid') {
+          const centroid = calculateCentroid(friendLocations);
+          const dist = haversine(centroid.lat, centroid.lng, cinema.lat, cinema.lng);
+          distText = `${dist.toFixed(1)} km (centroide)`;
+        } else if (currentGroupMode === 'total-dist') {
+          const dists = friendLocations.map(f => haversine(f.lat, f.lng, cinema.lat, cinema.lng));
+          const total = dists.reduce((a, b) => a + b, 0);
+          distText = `${total.toFixed(1)} km (total)`;
+        } else if (currentGroupMode === 'per-friend') {
+          const dists = friendLocations.map((f, i) => `${haversine(f.lat, f.lng, cinema.lat, cinema.lng).toFixed(1)}`);
+          distText = `Distâncias: ${dists.join(', ')} km`;
+        }
+      } else if (cinema.distance != null) {
+        distText = `${cinema.distance.toFixed(1)} km`;
+      }
+
       const popup = `
         <div class="icm-popup">
-          <div class="icm-popup-name">${cinema.name}</div>
+          <div class="icm-popup-name">${cinema.name}${isBest ? ' ⭐' : ''}</div>
           ${distText ? `<div class="icm-popup-dist">${distText}</div>` : ''}
           <div class="icm-popup-addr">${cinema.address || ''}</div>
           <div class="icm-popup-sessions">${sessionBadgesHtml(cinema.sessions)}</div>
@@ -502,6 +593,114 @@
     setTimeout(() => inp?.focus(), 50);
   }
 
+  // ── Group mode ─────────────────────────────────────────────────────────
+
+  function toggleGroupMode() {
+    groupMode = !groupMode;
+    const modal = document.getElementById('icm-group-modal');
+    const bar = document.getElementById('icm-sort-bar');
+    const groupBar = document.getElementById('icm-group-bar');
+    const btn = document.getElementById('icm-btn-group-toggle');
+
+    if (groupMode) {
+      if (modal) modal.classList.remove('icm-hidden');
+      if (bar) bar.style.display = 'none';
+      if (groupBar) groupBar.classList.remove('icm-hidden');
+      if (btn) btn.classList.add('icm-active');
+    } else {
+      if (modal) modal.classList.add('icm-hidden');
+      if (bar) bar.style.display = 'flex';
+      if (groupBar) groupBar.classList.add('icm-hidden');
+      if (btn) btn.classList.remove('icm-active');
+      friendLocations = [];
+      friendMarkers.forEach(m => m.remove?.());
+      friendMarkers = [];
+      if (cachedCinemas && cachedUserCoords) {
+        renderMap(cachedCinemas, cachedUserCoords);
+      }
+    }
+    updateGroupList();
+  }
+
+  function closeGroupModal() {
+    const modal = document.getElementById('icm-group-modal');
+    if (modal) modal.classList.add('icm-hidden');
+    if (cachedCinemas && cachedUserCoords) {
+      renderMap(cachedCinemas, cachedUserCoords);
+      updateMapCount(cachedCinemas);
+    }
+  }
+
+  async function addFriendLocation() {
+    const input = document.getElementById('icm-group-search');
+    if (!input || !input.value.trim()) return;
+
+    try {
+      const coords = await geocodeManualInput(input.value);
+      friendLocations.push({
+        lat: coords.lat,
+        lng: coords.lng,
+        label: coords.label
+      });
+      input.value = '';
+      updateGroupList();
+    } catch (err) {
+      const errEl = document.getElementById('icm-manual-error');
+      if (errEl) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('icm-hidden');
+      }
+    }
+  }
+
+  function enablePinDrop() {
+    if (!leafletMap) return;
+    const modal = document.getElementById('icm-group-modal');
+    if (modal) modal.classList.add('icm-hidden');
+
+    leafletMap.once('click', (e) => {
+      const coords = { lat: e.latlng.lat, lng: e.latlng.lng, label: `Amigo ${friendLocations.length + 1}` };
+      friendLocations.push(coords);
+      const modal2 = document.getElementById('icm-group-modal');
+      if (modal2) modal2.classList.remove('icm-hidden');
+      updateGroupList();
+      renderMap(cachedCinemas, cachedUserCoords);
+    });
+  }
+
+  function updateGroupList() {
+    const list = document.getElementById('icm-group-list');
+    if (!list) return;
+
+    list.innerHTML = friendLocations.map((friend, idx) => `
+      <div class="icm-group-item">
+        <span>${friend.label}</span>
+        <button class="icm-group-remove" data-idx="${idx}">✕</button>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.icm-group-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        friendLocations.splice(idx, 1);
+        updateGroupList();
+        if (cachedCinemas && cachedUserCoords) {
+          renderMap(cachedCinemas, cachedUserCoords);
+        }
+      });
+    });
+  }
+
+  function updateMapCount(cinemas) {
+    const countEl = document.getElementById('icm-count');
+    if (countEl) {
+      const text = groupMode && friendLocations.length > 0
+        ? `${cinemas.length} cinemas • ${friendLocations.length} amigos`
+        : `${cinemas.length} cinema${cinemas.length !== 1 ? 's' : ''}`;
+      countEl.textContent = text;
+    }
+  }
+
   // ── Sticky toolbar (JS-based, works despite overflow:hidden ancestors) ──
 
   function setupStickyToolbar() {
@@ -575,10 +774,7 @@
     const sorted = sortCinemas(withDist);
 
     setState('icm-map-section');
-
-    const countEl = document.getElementById('icm-count');
-    if (countEl) countEl.textContent =
-      `${sorted.length} cinema${sorted.length !== 1 ? 's' : ''}`;
+    updateMapCount(sorted);
 
     setTimeout(() => {
       renderMap(sorted, userCoords);
@@ -770,8 +966,35 @@
             <button class="icm-chip" data-sort="dist-desc">Mais distante</button>
             <button class="icm-chip" data-sort="name">A–Z</button>
           </div>
+          <div id="icm-group-bar" class="icm-hidden">
+            <span class="icm-sort-label">Modo:</span>
+            <button class="icm-chip icm-chip-active" data-group-mode="centroid">Centroide</button>
+            <button class="icm-chip" data-group-mode="total-dist">Distância Total</button>
+            <button class="icm-chip" data-group-mode="per-friend">Por Amigo</button>
+          </div>
+          <button id="icm-btn-group-toggle" class="icm-btn-small">👥 Grupo</button>
           <button id="icm-btn-center-loc" class="icm-btn-small">📍</button>
           <button id="icm-btn-change-loc" class="icm-btn-small">Inserir endereço</button>
+        </div>
+      </div>
+      <div id="icm-group-modal" class="icm-hidden">
+        <div class="icm-group-panel">
+          <div class="icm-group-header">
+            <h3>Buscar cinema para o grupo</h3>
+            <button id="icm-group-close" class="icm-group-close">✕</button>
+          </div>
+          <div class="icm-group-content">
+            <div class="icm-group-section">
+              <label>Adicionar endereço do amigo:</label>
+              <div class="icm-manual-row">
+                <input id="icm-group-search" type="text" placeholder="Ex: Rua das Flores, São Paulo" autocomplete="off">
+                <button id="icm-group-add-btn" class="icm-btn-primary">Adicionar</button>
+              </div>
+              <button id="icm-group-pin-drop" class="icm-btn-link">ou clique no mapa</button>
+            </div>
+            <div id="icm-group-list" class="icm-group-list"></div>
+            <button id="icm-group-done" class="icm-btn-primary" style="width: 100%; margin-top: 12px;">Pronto</button>
+          </div>
         </div>
       </div>`;
 
@@ -790,9 +1013,28 @@
     panel.querySelector('#icm-manual-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitManualLocation();
     });
-    panel.querySelectorAll('.icm-chip').forEach(chip => {
+    panel.querySelector('#icm-btn-group-toggle').addEventListener('click', toggleGroupMode);
+    panel.querySelector('#icm-group-close').addEventListener('click', closeGroupModal);
+    panel.querySelector('#icm-group-done').addEventListener('click', closeGroupModal);
+    panel.querySelector('#icm-group-add-btn').addEventListener('click', addFriendLocation);
+    panel.querySelector('#icm-group-search').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addFriendLocation();
+    });
+    panel.querySelector('#icm-group-pin-drop').addEventListener('click', enablePinDrop);
+    panel.querySelectorAll('[data-group-mode]').forEach(chip => {
       chip.addEventListener('click', () => {
-        panel.querySelectorAll('.icm-chip').forEach(c => c.classList.remove('icm-chip-active'));
+        panel.querySelectorAll('[data-group-mode]').forEach(c => c.classList.remove('icm-chip-active'));
+        chip.classList.add('icm-chip-active');
+        currentGroupMode = chip.dataset.groupMode;
+        if (cachedCinemas && cachedUserCoords) {
+          renderMap(cachedCinemas, cachedUserCoords);
+          updateMapCount(cachedCinemas);
+        }
+      });
+    });
+    panel.querySelectorAll('.icm-chip[data-sort]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        panel.querySelectorAll('.icm-chip[data-sort]').forEach(c => c.classList.remove('icm-chip-active'));
         chip.classList.add('icm-chip-active');
         currentSort = chip.dataset.sort;
         reSort();
