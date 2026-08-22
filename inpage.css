@@ -315,3 +315,85 @@
   border: 1px solid rgba(152, 170, 236, 0.45) !important;
   line-height: 1.4 !important;
 }
+
+/* ── Best cinema marker highlight ────────────────────────────────────── */
+
+.icm-pin-best {
+  background: #fbbf24 !important;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.5), 0 2px 8px rgba(0,0,0,0.4) !important;
+}
+
+/* ── Friend location marker ──────────────────────────────────────────── */
+
+.icm-friend-marker {
+  width: 24px; height: 24px;
+  background: #ec4899;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.icm-friend-marker-label {
+  font-size: 10px; font-weight: 700; color: #fff; line-height: 1;
+}
+
+/* ── Group mode modal ────────────────────────────────────────────────── */
+
+#icm-panel #icm-group-modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
+  z-index: 10001; box-sizing: border-box;
+}
+
+#icm-panel #icm-group-modal.icm-hidden { display: none !important; }
+
+.icm-group-panel {
+  background: #21262d !important; border-radius: 16px !important; border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.8) !important; max-width: 400px !important; width: 90% !important;
+  max-height: 80vh !important; overflow: hidden !important; display: flex !important; flex-direction: column !important;
+}
+
+.icm-group-header {
+  display: flex !important; justify-content: space-between !important; align-items: center !important;
+  padding: 16px !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.icm-group-header h3 { font-size: 16px !important; font-weight: 600 !important; color: #f0f0f0 !important; margin: 0 !important; }
+
+.icm-group-close {
+  background: none !important; border: none !important; color: rgba(240,240,240,0.6) !important;
+  font-size: 20px !important; cursor: pointer !important; padding: 0 !important; width: 24px !important; height: 24px !important;
+}
+
+.icm-group-close:hover { color: #f0f0f0 !important; }
+
+.icm-group-content {
+  padding: 16px !important; overflow-y: auto !important; flex: 1 !important;
+}
+
+.icm-group-section { margin-bottom: 16px !important; }
+
+.icm-group-section label { display: block !important; font-size: 12px !important; color: rgba(240,240,240,0.7) !important;
+  margin-bottom: 8px !important; font-weight: 500 !important; }
+
+.icm-group-list { margin: 16px 0 !important; }
+
+.icm-group-item {
+  display: flex !important; justify-content: space-between !important; align-items: center !important;
+  padding: 10px 12px !important; background: rgba(255,255,255,0.05) !important; border-radius: 8px !important;
+  margin-bottom: 8px !important; font-size: 12px !important; color: #f0f0f0 !important;
+}
+
+.icm-group-remove {
+  background: none !important; border: none !important; color: rgba(240,240,240,0.6) !important;
+  font-size: 16px !important; cursor: pointer !important; padding: 0 !important;
+}
+
+.icm-group-remove:hover { color: #f0f0f0 !important; }
+
+#icm-panel #icm-group-bar { display: flex !important; align-items: center !important; gap: 5px !important; }
+
+#icm-panel .icm-btn-small.icm-active {
+  color: #3255e2 !important; text-decoration-color: #3255e2 !important;
+}
