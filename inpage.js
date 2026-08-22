@@ -488,7 +488,8 @@
   }
 
   async function geocodeManualInput(query) {
-    const params = new URLSearchParams({ q: query, format: 'json', limit: '1', countrycodes: 'br' });
+    const q = query.trim() + ', Brasil';
+    const params = new URLSearchParams({ q, format: 'json', limit: '1', countrycodes: 'br' });
     const res = await fetch(`${NOMINATIM_API}?${params}`, {
       headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
     });
