@@ -44,7 +44,7 @@ A extensão aparece em qualquer página `https://www.ingresso.com/filme/*`.
 
 ## Como usar
 
-1. Abra um filme em cartaz no ingresso.com (ex.: [Homem-Aranha](https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo))
+1. Abra um filme em cartaz no ingresso.com
 2. O mapa carrega no topo da lista de cinemas
 3. Permita a localização ou use **Inserir outro endereço** para buscar manualmente
 4. Use os chips **Mais próximo / Mais distante / A–Z** para ordenar — o pin amarelo destaca o cinema correspondente ao filtro
