@@ -199,6 +199,91 @@
     return `${query.trim()}, ${city.name}, ${city.uf}, Brasil`;
   }
 
+  const GOOGLE_MAPS_URL_RE =
+    /^(https?:\/\/)?((www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+)|maps\.app\.goo\.gl|goo\.gl\/maps)/i;
+
+  function decodeMapsText(text) {
+    return decodeURIComponent(String(text).replace(/\+/g, ' ')).trim();
+  }
+
+  function isValidCoord(lat, lng) {
+    return Number.isFinite(lat) && Number.isFinite(lng)
+      && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+  }
+
+  function parseGoogleMapsUrl(input) {
+    const trimmed = input.trim();
+    if (!GOOGLE_MAPS_URL_RE.test(trimmed)) return null;
+
+    let url;
+    try {
+      url = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+    } catch {
+      return null;
+    }
+
+    const href = url.href;
+    const queryParam = url.searchParams.get('query') || url.searchParams.get('q');
+    const placeMatch = url.pathname.match(/\/place\/([^/@?]+)/);
+    const placeName = placeMatch ? decodeMapsText(placeMatch[1]) : '';
+
+    const dataMatch = href.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+    if (dataMatch) {
+      const lat = parseFloat(dataMatch[1]);
+      const lng = parseFloat(dataMatch[2]);
+      if (isValidCoord(lat, lng)) {
+        return {
+          lat,
+          lng,
+          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
+        };
+      }
+    }
+
+    const atMatch = href.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if (atMatch) {
+      const lat = parseFloat(atMatch[1]);
+      const lng = parseFloat(atMatch[2]);
+      if (isValidCoord(lat, lng)) {
+        return {
+          lat,
+          lng,
+          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
+        };
+      }
+    }
+
+    const ll = url.searchParams.get('ll');
+    if (ll) {
+      const [latRaw, lngRaw] = ll.split(',');
+      const lat = parseFloat(latRaw);
+      const lng = parseFloat(lngRaw);
+      if (isValidCoord(lat, lng)) {
+        return {
+          lat,
+          lng,
+          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
+        };
+      }
+    }
+
+    if (queryParam) {
+      const decoded = decodeMapsText(queryParam);
+      const coordMatch = decoded.match(/^(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)$/);
+      if (coordMatch) {
+        const lat = parseFloat(coordMatch[1]);
+        const lng = parseFloat(coordMatch[2]);
+        if (isValidCoord(lat, lng)) {
+          return { lat, lng, label: `${lat}, ${lng}` };
+        }
+      }
+      return { query: decoded };
+    }
+
+    if (placeName) return { query: placeName };
+    return null;
+  }
+
   function geocodeResultMatchesCity(item, city) {
     const hay = normalizeName(item.display_name || '');
     const cityNorm = normalizeName(city.name);
@@ -850,7 +935,17 @@
   }
 
   async function geocodeManualInput(query) {
-    const match = await geocodeInPageCity(query);
+    const mapsInput = parseGoogleMapsUrl(query);
+    if (mapsInput?.lat != null && mapsInput?.lng != null) {
+      return {
+        lat: mapsInput.lat,
+        lng: mapsInput.lng,
+        label: mapsInput.label || `${mapsInput.lat}, ${mapsInput.lng}`
+      };
+    }
+
+    const searchQuery = mapsInput?.query || query;
+    const match = await geocodeInPageCity(searchQuery);
     return {
       lat: parseFloat(match.lat),
       lng: parseFloat(match.lon),
@@ -975,7 +1070,7 @@
     setMapOverlayVisibility(false);
     const inp = document.getElementById('icm-loc-search-input');
     if (inp) {
-      inp.placeholder = `Ex: R. da Consolação, 2423 (${pageCity?.name || 'sua cidade'})`;
+      inp.placeholder = `Endereço ou link do Google Maps (${pageCity?.name || 'sua cidade'})`;
       inp.value = '';
       setTimeout(() => inp.focus(), 50);
     }
@@ -1467,7 +1562,7 @@
         <p class="icm-state-icon">📍</p>
         <p class="icm-manual-label">Digite seu endereço ou bairro</p>
         <div class="icm-manual-row">
-          <input id="icm-manual-input" type="text" placeholder="Ex: R. da Consolação, 2423, São Paulo" autocomplete="off">
+          <input id="icm-manual-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
           <button id="icm-btn-manual-go" class="icm-btn-primary">Buscar</button>
         </div>
         <p id="icm-manual-error" class="icm-hidden"></p>
@@ -1478,7 +1573,7 @@
           <div id="icm-map"></div>
           <div id="icm-loc-search" class="icm-loc-overlay icm-hidden">
             <div class="icm-loc-search-row">
-              <input id="icm-loc-search-input" type="text" placeholder="Digite seu endereço ou bairro" autocomplete="off">
+              <input id="icm-loc-search-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
               <button id="icm-loc-search-go" class="icm-btn-primary" type="button">Buscar</button>
               <button id="icm-loc-search-close" class="icm-loc-search-close" type="button" aria-label="Fechar">✕</button>
             </div>
@@ -1529,7 +1624,7 @@
             <div class="icm-group-section">
               <label>Adicionar endereço do amigo:</label>
               <div class="icm-manual-row">
-                <input id="icm-group-search" type="text" placeholder="Ex: R. da Consolação, 2423, São Paulo" autocomplete="off">
+                <input id="icm-group-search" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
                 <button id="icm-group-add-btn" class="icm-btn-primary">Adicionar</button>
               </div>
               <button id="icm-group-pin-drop" class="icm-btn-link">ou clique no mapa</button>
