@@ -51,7 +51,7 @@ PRIVACIDADE
 
 A extensão não envia seus dados para servidores dos desenvolvedores. A localização é usada apenas para calcular distâncias no seu navegador.
 
-Política de privacidade: https://edyuto.github.io/ingresso-cinema-map/privacy.html
+Política de privacidade: https://ingresso-cinema-map.pages.dev/privacy.html
 
 Código aberto: https://github.com/EdYuTo/ingresso-cinema-map
 ```
@@ -108,7 +108,7 @@ Use nos formulários de revisão do Chrome Web Store.
 **Política de privacidade (URL):**
 
 ```
-https://edyuto.github.io/ingresso-cinema-map/privacy.html
+https://ingresso-cinema-map.pages.dev/privacy.html
 ```
 
 ---
@@ -129,21 +129,41 @@ npm run screenshots
 
 | Arquivo | Uso |
 |---------|-----|
-| `docs/screenshots/01-map-overview.png` | Principal — visão geral do mapa |
-| `docs/screenshots/04-cinema-list.png` | Badges de distância nos cards |
-| `docs/screenshots/06-group-per-friend-map.png` | Modo grupo |
+| `website/images/01-map-overview.png` | Principal — visão geral do mapa |
+| `website/images/04-cinema-list.png` | Badges de distância nos cards |
+| `website/images/06-group-per-friend-map.png` | Modo grupo |
 
 Tamanho recomendado: 1280×800 ou 640×400 px.
 
 ---
 
-## GitHub Pages (URL da política de privacidade)
+## Cloudflare Pages (site e política de privacidade)
 
-1. Repositório → **Settings → Pages**
-2. **Build and deployment → Source:** Deploy from a branch
-3. **Branch:** `main` → folder **`/docs`**
-4. Salvar — em alguns minutos a URL ficará ativa:
+O site estático fica em `website/` (landing page + privacidade). GitHub Pages não serve aqui: o domínio customizado em `EdYuTo.github.io` redireciona todos os sites para `isonepieceonabreak.com`. Use Cloudflare Pages (grátis, URL própria em `*.pages.dev`).
 
-   `https://edyuto.github.io/ingresso-cinema-map/privacy.html`
+1. Crie conta em [dash.cloudflare.com](https://dash.cloudflare.com) (se ainda não tiver).
+2. **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+3. Autorize o GitHub e selecione o repositório **`EdYuTo/ingresso-cinema-map`**.
+4. Configuração do build (importante — não use Wrangler aqui):
+   - **Production branch:** `main`
+   - **Framework preset:** None
+   - **Build command:** *(deixe vazio)*
+   - **Deploy command:** *(deixe vazio — não use `npx wrangler deploy`)*
+   - **Build output directory:** `website`
+5. **Save and Deploy** — aguarde ~1 minuto.
 
-Faça merge do PR de CI (ou commit `docs/privacy.html` em `main`) antes de publicar a extensão.
+   **Se o deploy falhar com** `Could not detect a directory containing static files`:
+   - Em **Settings → Builds**, apague qualquer **Deploy command** (`npx wrangler deploy` está errado para site estático).
+   - Confirme **Build output directory** = `website` e **Build command** vazio.
+   - **Retry deployment**.
+
+6. URLs:
+
+   - Landing: `https://ingresso-cinema-map.pages.dev/`
+   - Privacidade: `https://ingresso-cinema-map.pages.dev/privacy.html`
+
+   (O subdomínio pode variar se o nome do projeto for diferente — confira em **Deployments** no dashboard.)
+
+7. Abra a URL da política no navegador e confirme que renderiza corretamente antes de colar no Chrome Web Store.
+
+Cada push em `main` que altere `website/` republica automaticamente.
