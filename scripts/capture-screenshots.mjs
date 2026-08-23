@@ -17,6 +17,9 @@ const OUT = path.join(ROOT, 'docs', 'screenshots');
 const PROFILE = path.join(ROOT, '.playwright-profile');
 const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo';
 
+/** Zoom for 01-map-overview (Leaflet: ~12 = wide, 13 = balanced, 14+ = tight) */
+const OVERVIEW_ZOOM = 13;
+
 const GROUP_FRIENDS = [
   'CINUSP Paulo Emílio',
   'Museu da Imagem e do Som',
@@ -99,33 +102,36 @@ async function shot(page, name, locator) {
   console.log('  ✓', name);
 }
 
-async function centerMapForScreenshot(page) {
-  await page.locator('#icm-btn-center-loc').click();
-  await page.waitForFunction(() => {
-    const map = document.querySelector('#icm-map')?._leaflet_map;
-    return map && map.getZoom() >= 14;
-  }, { timeout: 10000 }).catch(() => {});
-  await page.evaluate(() => {
+async function frameMapForOverview(page, zoom = OVERVIEW_ZOOM) {
+  await page.evaluate((targetZoom) => {
     const map = document.querySelector('#icm-map')?._leaflet_map;
     if (!map) return;
+
+    let latlng = map.getCenter();
     const userPane = document.querySelector('.icm-user-dot-wrapper');
     if (userPane) {
       const marker = userPane.closest('.leaflet-marker-icon');
       const mapEl = document.querySelector('#icm-map');
       if (marker && mapEl) {
-        const m = mapEl.getBoundingClientRect();
+        const mapRect = mapEl.getBoundingClientRect();
         const r = marker.getBoundingClientRect();
         const point = map.mouseEventToContainerPoint({
           clientX: r.left + r.width / 2,
           clientY: r.top + r.height / 2,
         });
-        map.setView(map.containerPointToLatLng(point), 15, { animate: false });
-        return;
+        latlng = map.containerPointToLatLng(point);
       }
     }
-    map.setZoom(15, { animate: false });
-  });
-  await page.waitForTimeout(2000);
+
+    map.setView(latlng, targetZoom, { animate: false });
+  }, zoom);
+
+  await page.waitForFunction(
+    z => document.querySelector('#icm-map')?._leaflet_map?.getZoom() === z,
+    zoom,
+    { timeout: 10000 }
+  ).catch(() => {});
+  await page.waitForTimeout(1500);
 }
 
 async function shotCinemaCard(page, name) {
@@ -190,7 +196,7 @@ try {
   await ensureMapReady(page);
 
   console.log('Capturando screenshots…');
-  await centerMapForScreenshot(page);
+  await frameMapForOverview(page);
   await shot(page, '01-map-overview.png', '#icm-map-section');
 
   await page.locator('#icm-btn-change-loc').click();

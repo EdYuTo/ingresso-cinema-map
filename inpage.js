@@ -307,6 +307,35 @@
     }).join('');
   }
 
+  function findHighlightedCinemaForSort(cinemas) {
+    if (currentSort !== 'dist-asc' && currentSort !== 'dist-desc') return null;
+    const withDist = cinemas.filter(c => c.distance != null && c.lat != null);
+    if (!withDist.length) return null;
+    if (currentSort === 'dist-asc') {
+      return withDist.reduce((best, c) => (c.distance < best.distance ? c : best));
+    }
+    return withDist.reduce((best, c) => (c.distance > best.distance ? c : best));
+  }
+
+  function getHighlightedCinema(cinemas) {
+    if (groupMode && friendLocations.length > 0) {
+      if (currentGroupMode === 'centroid') {
+        return findBestCinemaByMode(cinemas, friendLocations, currentGroupMode);
+      }
+      return null;
+    }
+    return findHighlightedCinemaForSort(cinemas);
+  }
+
+  function buildCinemaPinHtml(cinema, idx, cinemas, closestByCinema) {
+    const highlighted = getHighlightedCinema(cinemas);
+    const isBest = highlighted && highlighted.name === cinema.name;
+    const closestFriends = closestByCinema?.get(cinema.name) || [];
+    const pinStyle = closestFriends.length ? friendPinStyle(closestFriends) : '';
+    const bestClass = isBest && !closestFriends.length ? 'icm-pin-best' : '';
+    return `<div class="icm-pin ${bestClass}" style="${pinStyle}"><span class="icm-pin-n">${idx + 1}</span></div>`;
+  }
+
   function findBestCinemaByMode(cinemas, friends, mode) {
     if (friends.length === 0 || cinemas.length === 0 || mode === 'per-friend') return null;
 
@@ -627,24 +656,37 @@
   }
 
   function applyDistancesFromPoint(point, updatePageSort) {
+    if (groupMode && friendLocations.length > 0) {
+      if (point.lat != null && point.lng != null) {
+        cachedUserCoords = { ...(cachedUserCoords || {}), lat: point.lat, lng: point.lng };
+      }
+      refreshMapDisplay();
+      return;
+    }
+
     const withDist = cachedCinemas.map(c => ({
       ...c,
       distance: c.lat !== null ? haversine(point.lat, point.lng, c.lat, c.lng) : null
     }));
     const sorted = sortCinemas(withDist);
+    const highlighted = getHighlightedCinema(sorted);
+    const closestByCinema = groupMode && friendLocations.length > 0 && currentGroupMode === 'per-friend'
+      ? findClosestCinemaPerFriend(sorted, friendLocations)
+      : null;
 
     sorted.forEach((cinema, idx) => {
       const entry = cinemaMarkers.find(m => m.name === cinema.name);
       if (!entry) return;
+      const isBest = highlighted && highlighted.name === cinema.name;
       entry.marker.setIcon(L.divIcon({
         className: '',
-        html: `<div class="icm-pin"><span class="icm-pin-n">${idx + 1}</span></div>`,
+        html: buildCinemaPinHtml(cinema, idx, sorted, closestByCinema),
         iconSize: [26, 26], iconAnchor: [13, 26]
       }));
       const distText = cinema.distance != null ? `${cinema.distance.toFixed(1)} km` : '';
       entry.marker.setPopupContent(
         `<div class="icm-popup">
-          <div class="icm-popup-name">${cinema.name}</div>
+          <div class="icm-popup-name">${cinema.name}${isBest ? ' ⭐' : ''}</div>
           ${distText ? `<div class="icm-popup-dist">${distText}</div>` : ''}
           <div class="icm-popup-addr">${cinema.address || ''}</div>
           <div class="icm-popup-sessions">${sessionBadgesHtml(cinema.sessions)}</div>
@@ -715,22 +757,19 @@
       });
     }
 
-    const bestCinema = groupMode && friendLocations.length > 0 && currentGroupMode === 'centroid'
-      ? findBestCinemaByMode(cinemas, friendLocations, currentGroupMode)
-      : null;
-
     const closestByCinema = groupMode && friendLocations.length > 0 && currentGroupMode === 'per-friend'
       ? findClosestCinemaPerFriend(cinemas, friendLocations)
       : null;
 
+    const highlighted = getHighlightedCinema(cinemas);
+
     cinemas.forEach((cinema, idx) => {
       if (cinema.lat === null) return;
-      const isBest = bestCinema && bestCinema.name === cinema.name;
+      const isBest = highlighted && highlighted.name === cinema.name;
       const closestFriends = closestByCinema?.get(cinema.name) || [];
-      const pinStyle = closestFriends.length ? friendPinStyle(closestFriends) : '';
       const icon = L.divIcon({
         className: '',
-        html: `<div class="icm-pin ${isBest ? 'icm-pin-best' : ''}" style="${pinStyle}"><span class="icm-pin-n">${idx + 1}</span></div>`,
+        html: buildCinemaPinHtml(cinema, idx, cinemas, closestByCinema),
         iconSize: [26, 26], iconAnchor: [13, 26]
       });
 
