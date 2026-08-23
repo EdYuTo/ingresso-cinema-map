@@ -24,6 +24,10 @@ import {
   isSortedAsc,
   isSortedDesc,
   isSortedLocaleNames,
+  readLeafletMapState,
+  readPageCinemaTimeSignature,
+  openCinemaPinPopup,
+  closeOpenMapPopup,
 } from './lib/test-harness.mjs';
 
 const report = createReporter();
@@ -85,6 +89,116 @@ async function testBackgroundShortLink(context) {
   );
 }
 
+async function assertMapStable(page, expected, label) {
+  const state = await readLeafletMapState(page);
+  report.assert(
+    `${label}: same leaflet instance`,
+    state?.mapId === expected.mapId,
+    `before=${expected.mapId} after=${state?.mapId}`,
+  );
+  report.assert(
+    `${label}: zoom preserved`,
+    state?.zoom === expected.zoom,
+    `before=${expected.zoom} after=${state?.zoom}`,
+  );
+}
+
+async function testPinClickDoesNotReloadMap(page) {
+  report.section('Map: cinema pin popup does not trigger day-refresh rebuild');
+
+  await page.waitForSelector('.icm-pin', { timeout: 15000 });
+  report.assert('leaflet map ready before pin click', !!(await readLeafletMapState(page)));
+
+  const sigBefore = await readPageCinemaTimeSignature(page);
+  report.assert('page cinema time signature non-empty', sigBefore.length > 0, `sig=${sigBefore.slice(0, 40)}`);
+
+  // Zoom in so a rebuild+fitBounds would be obvious
+  await page.evaluate(() => {
+    const map = document.getElementById('icm-map')?._leaflet_map;
+    if (map) map.setZoom(Math.min(18, map.getZoom() + 2));
+  });
+  await new Promise(r => setTimeout(r, 200));
+  const baseline = await readLeafletMapState(page);
+
+  const opened = await openCinemaPinPopup(page, 0);
+  report.assert('first cinema popup opened', !!opened, `method=${opened}`);
+  await page.waitForSelector('.leaflet-popup-content .icm-popup', { state: 'attached', timeout: 5000 });
+
+  const popupMeta = await page.evaluate(() => {
+    const popup = document.querySelector('.leaflet-popup-content .icm-popup');
+    const times = Array.from(popup?.querySelectorAll('.icm-time') || [])
+      .map(el => el.textContent.trim())
+      .filter(t => /^\d{2}:\d{2}$/.test(t));
+    const name = popup?.querySelector('.icm-popup-name')?.textContent?.trim() || '';
+    const panelTimes = Array.from(document.querySelectorAll('#icm-panel .icm-time'))
+      .map(el => el.textContent.trim())
+      .filter(t => /^\d{2}:\d{2}$/.test(t));
+    return { name, times, panelTimes: panelTimes.length };
+  });
+  report.assert('popup shows cinema name', popupMeta.name.length > 0, `name=${popupMeta.name}`);
+  report.assert(
+    'popup injects HH:MM session times into panel',
+    popupMeta.times.length > 0 && popupMeta.panelTimes > 0,
+    `popupTimes=${popupMeta.times.length} panelTimes=${popupMeta.panelTimes}`,
+  );
+
+  // Day-change watcher debounces 800ms — wait past that window
+  await new Promise(r => setTimeout(r, 1500));
+
+  const afterOpen = await page.evaluate(() => {
+    const loading = document.getElementById('icm-loading');
+    const loadingShown = !!(loading
+      && loading.style.display !== 'none'
+      && !loading.classList.contains('icm-hidden'));
+    return {
+      loadingShown,
+      popupOpen: !!document.querySelector('.leaflet-popup-content .icm-popup'),
+    };
+  });
+  const sigAfterOpen = await readPageCinemaTimeSignature(page);
+  report.assert(
+    'page time signature unchanged with popup open',
+    sigAfterOpen === sigBefore,
+    `beforeLen=${sigBefore.length} afterLen=${sigAfterOpen.length}`,
+  );
+  report.assert('loading UI not shown after pin open', afterOpen.loadingShown === false);
+  await assertMapStable(page, baseline, 'after first pin');
+  report.assert('first popup still open after debounce', afterOpen.popupOpen === true);
+
+  report.section('Map: switching to another cinema pin keeps map stable');
+  const pinCount = await page.locator('.icm-pin').count();
+  if (pinCount < 2) {
+    report.assert('at least two cinema pins for switch test', false, `pins=${pinCount}`);
+  } else {
+    const openedSecond = await openCinemaPinPopup(page, 1);
+    report.assert('second cinema popup opened', !!openedSecond, `method=${openedSecond}`);
+    await page.waitForSelector('.leaflet-popup-content .icm-popup', { state: 'attached', timeout: 5000 });
+    await new Promise(r => setTimeout(r, 1500));
+    await assertMapStable(page, baseline, 'after second pin');
+    report.assert(
+      'page time signature unchanged after second pin',
+      (await readPageCinemaTimeSignature(page)) === sigBefore,
+    );
+  }
+
+  report.section('Map: closing cinema popup keeps map stable');
+  await closeOpenMapPopup(page);
+  await new Promise(r => setTimeout(r, 1500));
+  await assertMapStable(page, baseline, 'after popup close');
+  report.assert(
+    'page time signature unchanged after popup close',
+    (await readPageCinemaTimeSignature(page)) === sigBefore,
+  );
+
+  report.section('Map: sort still works after pin popup interactions');
+  await clickSort(page, 'dist-desc');
+  const descOrder = await readCinemaSortOrder(page);
+  const descKm = descOrder.map(o => o.km).filter(km => km != null);
+  report.assert('sort after pin popup still applies', descKm.length >= 3, `count=${descKm.length}`);
+  report.assert('sort after pin popup is descending', isSortedDesc(descKm), descKm.slice(0, 5).join(', '));
+  await clickSort(page, 'dist-asc');
+}
+
 async function testGroupFriends(page) {
   report.section(process.env.CI
     ? 'Group: friend via Google Maps URL (CI stand-in for short link)'
@@ -132,6 +246,7 @@ try {
 
   await testBackgroundShortLink(context);
   await testPersonalShortLink(page);
+  await testPinClickDoesNotReloadMap(page);
   await testSortControls(page);
   await testGroupFriends(page);
 

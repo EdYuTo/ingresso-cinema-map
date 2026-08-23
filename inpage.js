@@ -109,6 +109,20 @@
       .trim();
   }
 
+  // Leaflet popups inject HH:MM session times into #icm-panel. Those must not
+  // be treated as page cinema sessions (would trigger day-change refresh / map rebuild).
+  function isExtensionDom(el) {
+    return !!(el && typeof el.closest === 'function' && el.closest('#icm-panel'));
+  }
+
+  function getPageTimeLeaves() {
+    return Array.from(document.body.querySelectorAll('*')).filter(
+      el => !isExtensionDom(el)
+        && TIME_RE.test(el.textContent.trim())
+        && el.children.length === 0
+    );
+  }
+
   // ── Page city (from ingresso.com selector) ─────────────────────────────
 
   function readCookie(name) {
@@ -729,8 +743,7 @@
   }
 
   function scrapeCinemas() {
-    const allEls = Array.from(document.body.querySelectorAll('*'));
-    const timeLeaves = allEls.filter(el => TIME_RE.test(el.textContent.trim()) && el.children.length === 0);
+    const timeLeaves = getPageTimeLeaves();
     if (timeLeaves.length === 0) throw new Error('Nenhuma sessão encontrada. A página carregou completamente?');
 
     const cardSet = new Set(), cardMap = new Map();
@@ -754,8 +767,7 @@
   }
 
   function getCinemaSignature() {
-    return Array.from(document.body.querySelectorAll('*'))
-      .filter(el => TIME_RE.test(el.textContent.trim()) && el.children.length === 0)
+    return getPageTimeLeaves()
       .map(el => el.textContent.trim())
       .sort().join(',');
   }
@@ -766,10 +778,7 @@
   function findCinemaCardElements() {
     if (!cinemaContainer) return [];
 
-    const allEls = Array.from(document.body.querySelectorAll('*'));
-    const timeLeaves = allEls.filter(
-      el => TIME_RE.test(el.textContent.trim()) && el.children.length === 0
-    );
+    const timeLeaves = getPageTimeLeaves();
 
     const cardSet = new Set(), entries = [];
     for (const te of timeLeaves) {
@@ -1836,7 +1845,15 @@
     let debounce = null;
     let lastSig = getCinemaSignature();
 
-    new MutationObserver(() => {
+    new MutationObserver((mutations) => {
+      // Ignore map/popup/UI mutations inside the extension panel — opening a
+      // cinema pin injects session times that must not look like a day-tab change.
+      const relevant = mutations.some(m => {
+        const nodes = [...m.addedNodes, ...m.removedNodes, m.target];
+        return nodes.some(n => n.nodeType === 1 && !isExtensionDom(n));
+      });
+      if (!relevant) return;
+
       clearTimeout(debounce);
       debounce = setTimeout(() => {
         if (!cachedUserCoords) return;
@@ -1884,9 +1901,7 @@
 
   function waitForTimeElements() {
     return new Promise(resolve => {
-      const hasTime = () => Array.from(document.body.querySelectorAll('*')).some(
-        el => TIME_RE.test(el.textContent.trim()) && el.children.length === 0
-      );
+      const hasTime = () => getPageTimeLeaves().length > 0;
       if (hasTime()) return resolve();
       const obs = new MutationObserver(() => {
         if (hasTime()) { obs.disconnect(); resolve(); }
@@ -1897,10 +1912,7 @@
   }
 
   function findCinemaListContainer() {
-    const allEls = Array.from(document.body.querySelectorAll('*'));
-    const timeLeaves = allEls.filter(
-      el => TIME_RE.test(el.textContent.trim()) && el.children.length === 0
-    );
+    const timeLeaves = getPageTimeLeaves();
     if (timeLeaves.length === 0) return null;
     let node = timeLeaves[0].parentElement;
     while (node && node !== document.body) {

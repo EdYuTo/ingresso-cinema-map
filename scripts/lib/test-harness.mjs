@@ -324,6 +324,68 @@ export async function clickSort(page, sortKey) {
   await page.waitForTimeout(400);
 }
 
+/** Leaflet map identity + zoom used to detect accidental rebuilds. */
+export async function readLeafletMapState(page) {
+  return page.evaluate(() => {
+    const map = document.getElementById('icm-map')?._leaflet_map;
+    if (!map) return null;
+    return { zoom: map.getZoom(), mapId: map._leaflet_id };
+  });
+}
+
+/**
+ * Page session-time signature excluding #icm-panel (mirrors getCinemaSignature).
+ * Popup HH:MM nodes must not change this.
+ */
+export async function readPageCinemaTimeSignature(page) {
+  return page.evaluate(() => {
+    const TIME_RE = /^\d{2}:\d{2}$/;
+    return Array.from(document.body.querySelectorAll('*'))
+      .filter(el => !el.closest('#icm-panel')
+        && TIME_RE.test(el.textContent.trim())
+        && el.children.length === 0)
+      .map(el => el.textContent.trim())
+      .sort()
+      .join(',');
+  });
+}
+
+/** Open the Nth cinema marker popup (0-based among markers with icm-popup content). */
+export async function openCinemaPinPopup(page, index = 0) {
+  return page.evaluate((idx) => {
+    const map = document.getElementById('icm-map')?._leaflet_map;
+    if (!map) return null;
+
+    const cinemaLayers = [];
+    map.eachLayer((layer) => {
+      if (!layer.getPopup || !layer.getPopup()) return;
+      const html = layer.getPopup().getContent?.() || '';
+      if (typeof html === 'string' && html.includes('icm-popup')) cinemaLayers.push(layer);
+    });
+    const layer = cinemaLayers[idx];
+    if (!layer) return null;
+
+    const iconEl = layer.getElement?.();
+    if (iconEl) {
+      iconEl.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      if (document.querySelector('.leaflet-popup-content .icm-popup')) return 'click';
+    }
+    layer.openPopup();
+    return document.querySelector('.leaflet-popup-content .icm-popup') ? 'api' : null;
+  }, index);
+}
+
+export async function closeOpenMapPopup(page) {
+  await page.evaluate(() => {
+    const map = document.getElementById('icm-map')?._leaflet_map;
+    map?.closePopup();
+  });
+  await page.waitForFunction(
+    () => !document.querySelector('.leaflet-popup-content .icm-popup'),
+    { timeout: 5000 },
+  );
+}
+
 export async function readCinemaSortOrder(page) {
   return page.evaluate(() => {
     return Array.from(document.querySelectorAll('[data-icm-dist]')).map((badge) => {
