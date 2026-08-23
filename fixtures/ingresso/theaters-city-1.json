@@ -1,0 +1,5234 @@
+[
+  {
+    "id": "413",
+    "boxOfficeId": "9005",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_10.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cine-araujo-campo-limpo",
+    "name": "Cine Araújo Campo Limpo",
+    "siteURL": "https://www.ingresso.com/cinema/cine-araujo-campo-limpo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cine-araujo-campo-limpo",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cine-araujo-campo-limpo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cine-araujo-campo-limpo",
+    "cnpj": "03608600002250",
+    "districtAuthorization": "",
+    "address": "Estrada de campo limpo",
+    "addressComplement": "",
+    "number": "459",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Santo Amaro",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "2144-3558"
+    ],
+    "geolocation": {
+      "lat": -23.64966,
+      "lng": -46.75746
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cine Araújo",
+    "corporationId": "10",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#000000",
+    "rooms": [
+      {
+        "id": "1293",
+        "name": "Sala 1 - LASER",
+        "fullName": "Cine Araújo Campo Limpo 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1294",
+        "name": "Sala 2 - LASER",
+        "fullName": "Cine Araújo Campo Limpo 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1295",
+        "name": "Sala 3 - LASER",
+        "fullName": "Cine Araújo Campo Limpo 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1296",
+        "name": "Sala 4 - LASER ",
+        "fullName": "Cine Araújo Campo Limpo 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1297",
+        "name": "Sala 5 - LASER",
+        "fullName": "Cine Araújo Campo Limpo 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4805",
+        "name": "Sala 6 - VIP LASER",
+        "fullName": "Cine Araújo Campo Limpo 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": false,
+    "blockMessage": "Infelizmente estamos sem comunicação com o local.",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1661",
+    "boxOfficeId": "0142",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/img/cinema/avatar/avatarcorporation_default.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cineflix-cantareira",
+    "name": "Cineflix Cantareira",
+    "siteURL": "https://www.ingresso.com/cinema/cineflix-cantareira?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cineflix-cantareira",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cineflix-cantareira?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cineflix-cantareira",
+    "cnpj": "14859056000100",
+    "districtAuthorization": "",
+    "address": "Av. Raimundo Pereira de Magalhães",
+    "addressComplement": "",
+    "number": "11001",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "São Paulo",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": 0.0,
+      "lng": 0.0
+    },
+    "deliveryType": [
+      "Impressão",
+      "Aplicativo/DataMatrix"
+    ],
+    "corporation": "Cineflix",
+    "corporationId": "13",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#00adee",
+    "rooms": [
+      {
+        "id": "5102",
+        "name": "Sala 1",
+        "fullName": "Sala 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "5103",
+        "name": "Sala 2",
+        "fullName": "Sala 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "5104",
+        "name": "Sala 3",
+        "fullName": "Sala 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "5105",
+        "name": "Sala 4",
+        "fullName": "Sala 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "5106",
+        "name": "Sala 5",
+        "fullName": "Sala 5",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1566",
+    "boxOfficeId": "0046",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/cfe14b3d-a050-4663-8cdd-e640c719803f.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinema-belas-artes",
+    "name": "Cinema Belas Artes",
+    "siteURL": "https://www.ingresso.com/cinema/cinema-belas-artes?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinema-belas-artes",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinema-belas-artes?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinema-belas-artes",
+    "cnpj": "42130905000126",
+    "districtAuthorization": "",
+    "address": "Rua da Consolação",
+    "addressComplement": "",
+    "number": "2423",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Consolação",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -21.17089,
+      "lng": -47.8184
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Caixa Belas Artes",
+    "corporationId": "133",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#FFFFFF",
+    "rooms": [
+      {
+        "id": "4701",
+        "name": "Sala 1",
+        "fullName": "Belas Artes - Sala 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4702",
+        "name": "Sala 2",
+        "fullName": "Belas Artes - Sala 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4704",
+        "name": "Sala 3",
+        "fullName": "Belas Artes - Sala 03",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4703",
+        "name": "Sala 4",
+        "fullName": "Belas Artes - Sala 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4705",
+        "name": "Sala 5",
+        "fullName": "Belas Artes - Sala 05",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4706",
+        "name": "Sala 6",
+        "fullName": "Belas Artes - Sala 06",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "330",
+    "boxOfficeId": "4635",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/5548c01b-c58f-4676-94b9-daad2a2fe7ad.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_330.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "#FFFFFF",
+    "urlKey": "cinema-reserva-cultural-sao-paulo",
+    "name": "Cinema Reserva Cultural São Paulo",
+    "siteURL": "https://www.ingresso.com/cinema/cinema-reserva-cultural-sao-paulo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinema-reserva-cultural-sao-paulo",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinema-reserva-cultural-sao-paulo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinema-reserva-cultural-sao-paulo",
+    "cnpj": "05924151000150",
+    "districtAuthorization": "",
+    "address": "Av. Paulista",
+    "addressComplement": "",
+    "number": "900",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Bela Vista",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 32873-529"
+    ],
+    "geolocation": {
+      "lat": -23.56498,
+      "lng": -46.65106
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Imovision",
+    "corporationId": "147",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#000000",
+    "rooms": [
+      {
+        "id": "1208",
+        "name": "Sala 1",
+        "fullName": "Cinema Reserva Cultural São Paulo 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "975",
+        "name": "Sala 2",
+        "fullName": "Cinema Reserva Cultural São Paulo 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1209",
+        "name": "Sala 3",
+        "fullName": "Cinema Reserva Cultural São Paulo 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1210",
+        "name": "Sala 4",
+        "fullName": "Cinema Reserva Cultural São Paulo 4",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 4,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "348",
+    "boxOfficeId": "3084",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-aricanduva",
+    "name": "Cinemark Aricanduva",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-aricanduva?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-aricanduva",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-aricanduva?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-aricanduva",
+    "cnpj": "00779721000575",
+    "districtAuthorization": "26589249",
+    "address": "Av. Aricanduva / Salas 1 a 8 - Interlar Aricanduva / Salas 9 a 14 - Shopping Aricanduva corredor Auto Shopping",
+    "addressComplement": "Subsolo",
+    "number": "5555",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Matilde",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 5180-3419"
+    ],
+    "geolocation": {
+      "lat": -23.56602,
+      "lng": -46.50407
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "1040",
+        "name": "Sala 1",
+        "fullName": "Cinemark Interlar Aricanduva 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1041",
+        "name": "Sala 2",
+        "fullName": "Cinemark Interlar Aricanduva 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1042",
+        "name": "Sala 3",
+        "fullName": "Cinemark Interlar Aricanduva 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1043",
+        "name": "Sala 4",
+        "fullName": "Cinemark Interlar Aricanduva 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1044",
+        "name": "Sala 5",
+        "fullName": "Cinemark Interlar Aricanduva 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1045",
+        "name": "Sala 6",
+        "fullName": "Cinemark Interlar Aricanduva 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1046",
+        "name": "Sala 7",
+        "fullName": "Cinemark Interlar Aricanduva 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1053",
+        "name": "Sala 8",
+        "fullName": "Cinemark Interlar Aricanduva 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4376",
+        "name": "Sala 9",
+        "fullName": "Cinemark Aricanduva 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1048",
+        "name": "Sala 10",
+        "fullName": "Cinemark Aricanduva 10",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1049",
+        "name": "Sala 11",
+        "fullName": "Cinemark Aricanduva 11",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1050",
+        "name": "Sala 12",
+        "fullName": "Cinemark Aricanduva 12",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1051",
+        "name": "Sala 13",
+        "fullName": "Cinemark Aricanduva 13",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 13,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "441",
+    "boxOfficeId": "3373",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-boulevard-tatuape",
+    "name": "Cinemark Boulevard Tatuapé",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-boulevard-tatuape?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-boulevard-tatuape",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-boulevard-tatuape?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-boulevard-tatuape",
+    "cnpj": "00779721003914",
+    "districtAuthorization": "36180483",
+    "address": "R. Gonçalves Crespo",
+    "addressComplement": "LJS 420-421",
+    "number": "S/N",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Tatuapé",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "11 5180-3410"
+    ],
+    "geolocation": {
+      "lat": -23.53893,
+      "lng": -46.57638
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "1399",
+        "name": "Sala 1",
+        "fullName": "Cinemark Boulevard Tatuapé 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1400",
+        "name": "Sala 2",
+        "fullName": "Cinemark Boulevard Tatuapé 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1401",
+        "name": "Sala 3",
+        "fullName": "Cinemark Boulevard Tatuapé 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1403",
+        "name": "Sala 4",
+        "fullName": "Cinemark Boulevard Tatuapé 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1402",
+        "name": "Sala 5",
+        "fullName": "Cinemark Boulevard Tatuapé 5",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "312",
+    "boxOfficeId": "3218",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-center-norte",
+    "name": "Cinemark Center Norte",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-center-norte?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-center-norte",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-center-norte?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-center-norte",
+    "cnpj": "00779721003590",
+    "districtAuthorization": "32991843",
+    "address": "Travessa Casalbuono",
+    "addressComplement": "Lj 503",
+    "number": "127",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Guilherme",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 6222-2395"
+    ],
+    "geolocation": {
+      "lat": -23.51526,
+      "lng": -46.61755
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "925",
+        "name": "Sala 1",
+        "fullName": "Cinemark Center Norte 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "926",
+        "name": "Sala 2",
+        "fullName": "Cinemark Center Norte 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "927",
+        "name": "Sala 3",
+        "fullName": "Cinemark Center Norte 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "929",
+        "name": "Sala 4",
+        "fullName": "Cinemark Center Norte 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "928",
+        "name": "Sala 5",
+        "fullName": "Cinemark Center Norte 5",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "54",
+    "boxOfficeId": "3019",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-central-plaza",
+    "name": "Cinemark Central Plaza",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-central-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-central-plaza",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-central-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-central-plaza",
+    "cnpj": "00779721001628",
+    "districtAuthorization": "27967077",
+    "address": "Av. Dr. Francisco Mesquita",
+    "addressComplement": "Âncora D",
+    "number": "1000",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Ipiranga",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 69141202"
+    ],
+    "geolocation": {
+      "lat": -23.59327,
+      "lng": -46.5852
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "167",
+        "name": "Sala 1",
+        "fullName": "Cinemark Central Plaza 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "168",
+        "name": "Sala 2",
+        "fullName": "Cinemark Central Plaza 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "169",
+        "name": "Sala 3",
+        "fullName": "Cinemark Central Plaza 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "170",
+        "name": "Sala 4",
+        "fullName": "Cinemark Central Plaza 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "171",
+        "name": "Sala 5",
+        "fullName": "Cinemark Central Plaza 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "172",
+        "name": "Sala 6",
+        "fullName": "Cinemark Central Plaza 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "173",
+        "name": "Sala 7",
+        "fullName": "Cinemark Central Plaza 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "174",
+        "name": "Sala 8",
+        "fullName": "Cinemark Central Plaza 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "175",
+        "name": "Sala 9",
+        "fullName": "Cinemark Central Plaza 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "176",
+        "name": "Sala 10",
+        "fullName": "Cinemark Central Plaza 10",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 10,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "676",
+    "boxOfficeId": "3401",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-cidade-jardim-vip",
+    "name": "Cinemark Cidade Jardim VIP",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-cidade-jardim-vip?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-cidade-jardim-vip",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-cidade-jardim-vip?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-cidade-jardim-vip",
+    "cnpj": "00779721004309",
+    "districtAuthorization": "37480529",
+    "address": "Av. Magalhães de Castro",
+    "addressComplement": "Shopping Cidade Jardim",
+    "number": "12000",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Morumbi",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3552-1800"
+    ],
+    "geolocation": {
+      "lat": -23.59903,
+      "lng": -46.69773
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "2059",
+        "name": "Bradesco Prime 1",
+        "fullName": "Cinemark Cidade Jardim Bradesco Prime 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2060",
+        "name": "Bradesco Prime 2",
+        "fullName": "Cinemark Cidade Jardim Bradesco Prime 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2061",
+        "name": "Bradesco Prime 3",
+        "fullName": "Cinemark Cidade Jardim Bradesco Prime 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2062",
+        "name": "Bradesco Prime 4",
+        "fullName": "Cinemark Cidade Jardim Bradesco Prime 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2063",
+        "name": "Sala 5",
+        "fullName": "Cinemark Cidade Jardim 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2064",
+        "name": "Sala 6",
+        "fullName": "Cinemark Cidade Jardim 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2065",
+        "name": "Sala 7",
+        "fullName": "Cinemark Cidade Jardim 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "409",
+    "boxOfficeId": "3356",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-eldorado",
+    "name": "Cinemark Eldorado",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-eldorado?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-eldorado",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-eldorado?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-eldorado",
+    "cnpj": "00779721003833",
+    "districtAuthorization": "35608501",
+    "address": "Av. Rebouças",
+    "addressComplement": "lj 410",
+    "number": "3970",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Pinheiros",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 21977470"
+    ],
+    "geolocation": {
+      "lat": -23.57234,
+      "lng": -46.69506
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "1270",
+        "name": "Sala 01",
+        "fullName": "Cinemark Eldorado 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1269",
+        "name": "Sala 02",
+        "fullName": "Cinemark Eldorado 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1271",
+        "name": "Sala 03",
+        "fullName": "Cinemark Eldorado 03",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1272",
+        "name": "Sala 04",
+        "fullName": "Cinemark Eldorado 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1273",
+        "name": "Sala 05",
+        "fullName": "Cinemark Eldorado 05",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1274",
+        "name": "Sala 06",
+        "fullName": "Cinemark Eldorado 06",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1275",
+        "name": "Sala 07",
+        "fullName": "Cinemark Eldorado 07",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1276",
+        "name": "Sala 08",
+        "fullName": "Cinemark Eldorado 08",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1277",
+        "name": "Sala 09",
+        "fullName": "Cinemark Eldorado 09",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 9,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1297",
+    "boxOfficeId": "9756",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-lar-center",
+    "name": "Cinemark Lar Center",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-lar-center?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-lar-center",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-lar-center?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-lar-center",
+    "cnpj": "00779721006506",
+    "districtAuthorization": "",
+    "address": "Av. Otto Baumgart - Shopping Lar Center Piso ",
+    "addressComplement": "Sup. Lj 320,321,322",
+    "number": "500",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Guilherme",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 5180-3411"
+    ],
+    "geolocation": {
+      "lat": -23.5153,
+      "lng": -46.6155
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "3837",
+        "name": "Sala 1",
+        "fullName": "Cinemark Lar Center 1 ",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3838",
+        "name": "Sala 2",
+        "fullName": "Cinemark Lar Center 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3839",
+        "name": "Sala 3",
+        "fullName": "Cinemark Lar Center 3",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 3,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "120",
+    "boxOfficeId": "3038",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-market-place",
+    "name": "Cinemark Market Place",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-market-place?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-market-place",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-market-place?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-market-place",
+    "cnpj": "00779721002780",
+    "districtAuthorization": "29538769",
+    "address": "Av. Dr.Chucri Zaidan",
+    "addressComplement": "1º andar torrell",
+    "number": "920",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Morumbi",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 30487405"
+    ],
+    "geolocation": {
+      "lat": -23.62167,
+      "lng": -46.69952
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "340",
+        "name": "Sala 1",
+        "fullName": "Cinemark Market Place 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "341",
+        "name": "Sala 2",
+        "fullName": "Cinemark Market Place 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "342",
+        "name": "Sala 3",
+        "fullName": "Cinemark Market Place 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "343",
+        "name": "Sala 4",
+        "fullName": "Cinemark Market Place 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "344",
+        "name": "Sala 5",
+        "fullName": "Cinemark Market Place 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "345",
+        "name": "Sala 6",
+        "fullName": "Cinemark Market Place 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "346",
+        "name": "Sala 7",
+        "fullName": "Cinemark Market Place 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "347",
+        "name": "Sala 8",
+        "fullName": "Cinemark Market Place 8",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 8,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "292",
+    "boxOfficeId": "3098",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-metro-tatuape",
+    "name": "Cinemark Metrô Tatuapé",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-metro-tatuape?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-metro-tatuape",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-metro-tatuape?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-metro-tatuape",
+    "cnpj": "00779721000303",
+    "districtAuthorization": "26345218",
+    "address": "R. Domingos de Agostim",
+    "addressComplement": "Piso G2",
+    "number": "91",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Tatuapé",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 61929300"
+    ],
+    "geolocation": {
+      "lat": -23.5417,
+      "lng": -46.57672
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "869",
+        "name": "Sala 1",
+        "fullName": "Cinemark Metrô Tatuapé 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "870",
+        "name": "Sala 2",
+        "fullName": "Cinemark Metrô Tatuapé 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "871",
+        "name": "Sala 3",
+        "fullName": "Cinemark Metrô Tatuapé 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "872",
+        "name": "Sala 4",
+        "fullName": "Cinemark Metrô Tatuapé 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "873",
+        "name": "Sala 5",
+        "fullName": "Cinemark Metrô Tatuapé 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "874",
+        "name": "Sala 6",
+        "fullName": "Cinemark Metrô Tatuapé 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "876",
+        "name": "Sala 7",
+        "fullName": "Cinemark Metrô Tatuapé 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "875",
+        "name": "Sala 8",
+        "fullName": "Cinemark Metrô Tatuapé 8",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 8,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "954",
+    "boxOfficeId": "3600",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-mooca",
+    "name": "Cinemark Móoca",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-mooca?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-mooca",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-mooca?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-mooca",
+    "cnpj": "00779721005372",
+    "districtAuthorization": "",
+    "address": "Rua  Cap Pacheco e Chaves",
+    "addressComplement": "Mooca Plaza",
+    "number": "313",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Prudente",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3548-4502"
+    ],
+    "geolocation": {
+      "lat": -23.57975,
+      "lng": -46.59441
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "2745",
+        "name": "Sala 1",
+        "fullName": "Cinemark Mooca 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2746",
+        "name": "Sala 2",
+        "fullName": "Cinemark Mooca 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2747",
+        "name": "Sala 3",
+        "fullName": "Cinemark Mooca 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2748",
+        "name": "Sala 4",
+        "fullName": "Cinemark Mooca 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2749",
+        "name": "Sala 5",
+        "fullName": "CInemark Mooca 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2750",
+        "name": "Sala 6",
+        "fullName": "Cinemark Mooca 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "123",
+    "boxOfficeId": "3106",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-patio-higienopolis",
+    "name": "Cinemark Pátio Higienópolis",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-patio-higienopolis?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-patio-higienopolis",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-patio-higienopolis?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-patio-higienopolis",
+    "cnpj": "00779721002276",
+    "districtAuthorization": "28513231",
+    "address": "Av. Higienopolis",
+    "addressComplement": "",
+    "number": "646",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Higienópolis",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 38232875"
+    ],
+    "geolocation": {
+      "lat": -23.54287,
+      "lng": -46.65796
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "351",
+        "name": "Sala 1",
+        "fullName": "Cinemark Patio Higienopolis 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "352",
+        "name": "Sala 2",
+        "fullName": "Cinemark Patio Higienopolis 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "353",
+        "name": "Sala 3",
+        "fullName": "Cinemark Patio Higienopolis 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "354",
+        "name": "Sala 4",
+        "fullName": "Cinemark Patio Higienopolis 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "355",
+        "name": "Sala 5",
+        "fullName": "Cinemark Patio Higienopolis 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "356",
+        "name": "Sala 6",
+        "fullName": "Cinemark Patio Higienopolis 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "775",
+    "boxOfficeId": "3444",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-paulista",
+    "name": "Cinemark Paulista",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-paulista?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-paulista",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-paulista?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-paulista",
+    "cnpj": "00779721004643",
+    "districtAuthorization": "38943638",
+    "address": "R Treze de maio",
+    "addressComplement": "Shopping Patio Paulista",
+    "number": "1947",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Bela Vista",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3262-4065"
+    ],
+    "geolocation": {
+      "lat": -23.57048,
+      "lng": -46.64354
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "2252",
+        "name": "Sala 1",
+        "fullName": "Cinemark Paulista 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2253",
+        "name": "Sala 2",
+        "fullName": "Cinemark Paulista 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2254",
+        "name": "Sala 3",
+        "fullName": "Cinemark Paulista 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2255",
+        "name": "Sala 4",
+        "fullName": "Cinemark Paulista 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2256",
+        "name": "Sala 5",
+        "fullName": "Cinemark Paulista 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2257",
+        "name": "Sala 6",
+        "fullName": "Cinemark Paulista 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2258",
+        "name": "Sala 7",
+        "fullName": "Cinemark Paulista 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "941",
+    "boxOfficeId": "3593",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-raposo",
+    "name": "Cinemark Raposo",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-raposo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-raposo",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-raposo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-raposo",
+    "cnpj": "00779721005100",
+    "districtAuthorization": "",
+    "address": "Rodovia Raposo Tavares",
+    "addressComplement": "Shopping Raposo Tavares, Piso do Cinema Loja 1002",
+    "number": "SN",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Jardim Boa Vista",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3731-6405"
+    ],
+    "geolocation": {
+      "lat": -23.58665,
+      "lng": -46.75095
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "2700",
+        "name": "Sala 1",
+        "fullName": "Cinemark Raposo Tavares - Sala 1 ",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2701",
+        "name": "Sala 2",
+        "fullName": "Cinemark Raposo Tavares - Sala 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2702",
+        "name": "Sala 3",
+        "fullName": "Cinemark Raposo Tavares - Sala 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2703",
+        "name": "Sala 4",
+        "fullName": "Cinemark Raposo Tavares - Sala 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2704",
+        "name": "Sala 5",
+        "fullName": "Cinemark Raposo Tavares - Sala 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2705",
+        "name": "Sala 6",
+        "fullName": "Cinemark Raposo Tavares - Sala 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2706",
+        "name": "Sala 7",
+        "fullName": "Cinemark Raposo Tavares - Sala 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1313",
+    "boxOfficeId": "9154",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-shopping-cidade-sao-paulo",
+    "name": "Cinemark Shopping Cidade São Paulo",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-shopping-cidade-sao-paulo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-cidade-sao-paulo",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-shopping-cidade-sao-paulo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-cidade-sao-paulo",
+    "cnpj": "00779721007316",
+    "districtAuthorization": "",
+    "address": "Avenida Paulista",
+    "addressComplement": "Shopping Cidade São Paulo - 4 ANDAR",
+    "number": "1230",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Bela Vista",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3758-1670"
+    ],
+    "geolocation": {
+      "lat": -23.56348,
+      "lng": -46.65266
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "3883",
+        "name": "Sala 1",
+        "fullName": "Cinemark Shopping Cidade São Paulo 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3884",
+        "name": "Sala 2",
+        "fullName": "Cinemark Shopping Cidade São Paulo 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3885",
+        "name": "Sala 3",
+        "fullName": "Cinemark Shopping Cidade São Paulo 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3886",
+        "name": "Sala 4",
+        "fullName": "Cinemark Shopping Cidade São Paulo 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3887",
+        "name": "Sala 5",
+        "fullName": "Cinemark Shopping Cidade São Paulo 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3888",
+        "name": "Sala 6",
+        "fullName": "Cinemark Shopping Cidade São Paulo 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "154",
+    "boxOfficeId": "3187",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-shopping-d",
+    "name": "Cinemark Shopping D",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-shopping-d?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-d",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-shopping-d?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-d",
+    "cnpj": "00779721002519",
+    "districtAuthorization": "29537720",
+    "address": "Av. Cruzeiro do Sul",
+    "addressComplement": "Piso Superior",
+    "number": "1100",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Ponte Pequena",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 33269171"
+    ],
+    "geolocation": {
+      "lat": -23.52176,
+      "lng": -46.62408
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "556",
+        "name": "Sala 1",
+        "fullName": "Cinemark Shopping D 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "557",
+        "name": "Sala 2",
+        "fullName": "Cinemark Shopping D 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "558",
+        "name": "Sala 3",
+        "fullName": "Cinemark Shopping D 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "559",
+        "name": "Sala 4",
+        "fullName": "Cinemark Shopping D 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "560",
+        "name": "Sala 5",
+        "fullName": "Cinemark Shopping D 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "561",
+        "name": "Sala 6",
+        "fullName": "Cinemark Shopping D 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "562",
+        "name": "Sala 7",
+        "fullName": "Cinemark Shopping D 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "563",
+        "name": "Sala 8",
+        "fullName": "Cinemark Shopping D 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "564",
+        "name": "Sala 9",
+        "fullName": "Cinemark Shopping D 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "565",
+        "name": "Sala 10",
+        "fullName": "Cinemark Shopping D 10",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 10,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "329",
+    "boxOfficeId": "3270",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-shopping-iguatemi-sp",
+    "name": "Cinemark Shopping Iguatemi SP",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-shopping-iguatemi-sp?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-iguatemi-sp",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-shopping-iguatemi-sp?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-iguatemi-sp",
+    "cnpj": "00779721008711",
+    "districtAuthorization": "",
+    "address": "Av Brigadeiro Faria Lima",
+    "addressComplement": "Loja GR 8/Piso 8",
+    "number": "2232",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Jardim Paulista",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 38153389"
+    ],
+    "geolocation": {
+      "lat": -23.57651,
+      "lng": -46.68758
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "969",
+        "name": "Sala 1",
+        "fullName": "Cinemark Shopping Iguatemi SP 1",
+        "capacity": 0,
+        "documents": [
+          {
+            "name": "Alvará de Funcionamento",
+            "number": "2013/22327-00",
+            "expiration": "2014-12-03T00:00:00Z"
+          },
+          {
+            "name": "Auto de Vistoria do Corpo de Bombeiros",
+            "number": "084/13",
+            "expiration": "2014-12-03T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "id": "970",
+        "name": "Sala 2",
+        "fullName": "Cinemark Shopping Iguatemi SP 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "971",
+        "name": "Sala 3",
+        "fullName": "Cinemark Shopping Iguatemi SP 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "972",
+        "name": "Sala 4",
+        "fullName": "Cinemark Shopping Iguatemi SP 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "973",
+        "name": "Sala 5",
+        "fullName": "Cinemark Shopping Iguatemi SP 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "974",
+        "name": "Sala 6",
+        "fullName": "Cinemark Shopping Iguatemi SP 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "349",
+    "boxOfficeId": "3074",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-shopping-interlagos",
+    "name": "Cinemark Shopping Interlagos",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-shopping-interlagos?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-interlagos",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-shopping-interlagos?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-interlagos",
+    "cnpj": "00779721000818",
+    "districtAuthorization": "26906660",
+    "address": "Av. Interlagos",
+    "addressComplement": "Loja 157A",
+    "number": "2255",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Inglesa",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 55652570"
+    ],
+    "geolocation": {
+      "lat": -23.67579,
+      "lng": -46.67607
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "1054",
+        "name": "Sala 1",
+        "fullName": "Cinemark Shopping Interlagos 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1055",
+        "name": "Sala 2",
+        "fullName": "Cinemark Shopping Interlagos 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1057",
+        "name": "Sala 3",
+        "fullName": "Cinemark Shopping Interlagos 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1056",
+        "name": "Sala 4",
+        "fullName": "Cinemark Shopping Interlagos 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1058",
+        "name": "Sala 5",
+        "fullName": "Cinemark Shopping Interlagos 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1059",
+        "name": "Sala 6",
+        "fullName": "Cinemark Shopping Interlagos 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1060",
+        "name": "Sala 7",
+        "fullName": "Cinemark Shopping Interlagos 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1061",
+        "name": "Sala 8",
+        "fullName": "Cinemark Shopping Interlagos 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1062",
+        "name": "Sala 9",
+        "fullName": "Cinemark Shopping Interlagos 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1063",
+        "name": "Sala 10",
+        "fullName": "Cinemark Shopping Interlagos 10",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 10,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "138",
+    "boxOfficeId": "3152",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-shopping-metro-santa-cruz",
+    "name": "Cinemark Shopping Metrô Santa Cruz",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-shopping-metro-santa-cruz?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-metro-santa-cruz",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-shopping-metro-santa-cruz?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-shopping-metro-santa-cruz",
+    "cnpj": "00779721003086",
+    "districtAuthorization": "30658225",
+    "address": "R. Domingos de Moraes",
+    "addressComplement": "3º piso",
+    "number": "2564",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Mariana",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 34718070"
+    ],
+    "geolocation": {
+      "lat": -23.59875,
+      "lng": -46.63686
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "463",
+        "name": "Sala 1",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "464",
+        "name": "Sala 2",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "465",
+        "name": "Sala 3",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "466",
+        "name": "Sala 4",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "467",
+        "name": "Sala 5",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "468",
+        "name": "Sala 6",
+        "fullName": "Cinemark Shopping Metrô  Santa Cruz 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "469",
+        "name": "Sala 7",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "470",
+        "name": "Sala 8",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "471",
+        "name": "Sala 9",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "472",
+        "name": "Sala 10",
+        "fullName": "Cinemark Shopping Metrô Santa Cruz 10",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 10,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "378",
+    "boxOfficeId": "3112",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-sp-market",
+    "name": "Cinemark SP Market",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-sp-market?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-sp-market",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-sp-market?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-sp-market",
+    "cnpj": "00779721000656",
+    "districtAuthorization": "26704641",
+    "address": "Av. das Nações Unidas",
+    "addressComplement": "Bloco C",
+    "number": "22540 ",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Campo Grande",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 56862595"
+    ],
+    "geolocation": {
+      "lat": -23.67836,
+      "lng": -46.6989
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "1163",
+        "name": "Sala 1",
+        "fullName": "Cinemark SP Market 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1164",
+        "name": "Sala 2",
+        "fullName": "Cinemark SP Market 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1165",
+        "name": "Sala 3",
+        "fullName": "Cinemark SP Market 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1166",
+        "name": "Sala 4",
+        "fullName": "Cinemark SP Market 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1167",
+        "name": "Sala 5",
+        "fullName": "Cinemark SP Market 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1168",
+        "name": "Sala 6",
+        "fullName": "Cinemark SP Market 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1169",
+        "name": "Sala 7",
+        "fullName": "Cinemark SP Market 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1170",
+        "name": "Sala 8",
+        "fullName": "Cinemark SP Market 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1171",
+        "name": "Sala 9",
+        "fullName": "Cinemark SP Market 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1172",
+        "name": "Sala 10",
+        "fullName": "Cinemark SP Market 10",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1173",
+        "name": "Sala 11",
+        "fullName": "Cinemark SP Market 11",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 11,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1295",
+    "boxOfficeId": "9748",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-tiete-plaza",
+    "name": "Cinemark Tietê Plaza",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-tiete-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-tiete-plaza",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-tiete-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-tiete-plaza",
+    "cnpj": "00779721006344",
+    "districtAuthorization": "",
+    "address": "Av. Raimundo Pereira de Magalhães ",
+    "addressComplement": "",
+    "number": "1465",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Jardim Iris",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 5180-3550"
+    ],
+    "geolocation": {
+      "lat": -23.50643,
+      "lng": -46.71843
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "3829",
+        "name": "Sala 1",
+        "fullName": "Cinemark Tietê Plaza 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3830",
+        "name": "Sala 2",
+        "fullName": "Cinemark Tietê Plaza 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3831",
+        "name": "Sala 3",
+        "fullName": "Cinemark Tietê Plaza 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3832",
+        "name": "Sala 4",
+        "fullName": "Cinemark Tietê Plaza 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3833",
+        "name": "Sala 5",
+        "fullName": "Cinemark Tietê Plaza 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3834",
+        "name": "Sala 6",
+        "fullName": "Cinemark Tietê Plaza 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3835",
+        "name": "Sala 7",
+        "fullName": "Cinemark Tietê Plaza 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1096",
+    "boxOfficeId": "3648",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-tucuruvi",
+    "name": "Cinemark Tucuruvi",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-tucuruvi?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-tucuruvi",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-tucuruvi?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-tucuruvi",
+    "cnpj": "00779721005615",
+    "districtAuthorization": "",
+    "address": "AV DR ANTONIO MARIA LAET",
+    "addressComplement": "",
+    "number": "566",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Parada Inglesa",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 4873-0894"
+    ],
+    "geolocation": {
+      "lat": -23.47964,
+      "lng": -46.60222
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "3191",
+        "name": "Sala 1",
+        "fullName": "Cinemark Tucuruvi 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3192",
+        "name": "Sala 2",
+        "fullName": "Cinemark Tucuruvi 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3193",
+        "name": "Sala 3",
+        "fullName": "Cinemark Tucuruvi 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3194",
+        "name": "Sala 4",
+        "fullName": "Cinemark Tucuruvi 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3195",
+        "name": "Sala 5",
+        "fullName": "Cinemark Tucuruvi 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3196",
+        "name": "Sala 6",
+        "fullName": "Cinemark Tucuruvi 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "137",
+    "boxOfficeId": "3132",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-villa-lobos",
+    "name": "Cinemark Villa Lobos",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-villa-lobos?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-villa-lobos",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-villa-lobos?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-villa-lobos",
+    "cnpj": "00779721002195",
+    "districtAuthorization": "28951239",
+    "address": "Av. Dra. Ruth Cardoso",
+    "addressComplement": "Piso Lazer",
+    "number": "4777",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Lapa",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 30243851"
+    ],
+    "geolocation": {
+      "lat": -23.55092,
+      "lng": -46.72188
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "456",
+        "name": "Sala 1",
+        "fullName": "Cinemark Villa Lobos 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "457",
+        "name": "Sala 2",
+        "fullName": "Cinemark Villa Lobos 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "458",
+        "name": "Sala 3",
+        "fullName": "Cinemark Villa Lobos 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "459",
+        "name": "Sala 4",
+        "fullName": "Cinemark Villa Lobos 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "460",
+        "name": "Sala 5",
+        "fullName": "Cinemark Villa Lobos 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "461",
+        "name": "Sala 6",
+        "fullName": "Cinemark Villa Lobos 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "462",
+        "name": "Sala 7",
+        "fullName": "Cinemark Villa Lobos 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1468",
+    "boxOfficeId": "1279",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_1.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinemark-west-plaza",
+    "name": "Cinemark West Plaza",
+    "siteURL": "https://www.ingresso.com/cinema/cinemark-west-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-west-plaza",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinemark-west-plaza?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinemark-west-plaza",
+    "cnpj": "00779721007588",
+    "districtAuthorization": "511336",
+    "address": "AVENIDA ANTARTICA",
+    "addressComplement": "",
+    "number": "408",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Água Branca",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.52711,
+      "lng": -46.67411
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinemark",
+    "corporationId": "1",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#DD0000",
+    "rooms": [
+      {
+        "id": "4272",
+        "name": "Sala 1",
+        "fullName": "Cinemark West Plaza 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4273",
+        "name": "Sala 2",
+        "fullName": "Cinemark West Plaza 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4274",
+        "name": "Sala 3",
+        "fullName": "Cinemark West Plaza 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4275",
+        "name": "Sala 4",
+        "fullName": "Cinemark West Plaza 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4276",
+        "name": "Sala 5",
+        "fullName": "Cinemark West Plaza 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4277",
+        "name": "Sala 6",
+        "fullName": "Cinemark West Plaza 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4278",
+        "name": "Sala 7",
+        "fullName": "Cinemark West Plaza 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1056",
+    "boxOfficeId": "6128",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_5.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinepolis-itaquera",
+    "name": "Cinépolis Itaquera",
+    "siteURL": "https://www.ingresso.com/cinema/cinepolis-itaquera?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-itaquera",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinepolis-itaquera?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-itaquera",
+    "cnpj": "09652820004200",
+    "districtAuthorization": "",
+    "address": "Av. José Pinheiro Borges",
+    "addressComplement": "Gleba I",
+    "number": "0",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Itaquera",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.54034,
+      "lng": -46.4702
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinépolis",
+    "corporationId": "5",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#064a89",
+    "rooms": [
+      {
+        "id": "3038",
+        "name": "SALA 1 XE",
+        "fullName": "Cinépolis Itaquera 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3039",
+        "name": "Sala 2",
+        "fullName": "Cinépolis Itaquera 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3040",
+        "name": "Sala 3",
+        "fullName": "Cinépolis Itaquera 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3041",
+        "name": "Sala 4",
+        "fullName": "Cinépolis Itaquera 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3043",
+        "name": "Sala 5",
+        "fullName": "Cinépolis Itaquera 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3044",
+        "name": "Sala 6",
+        "fullName": "Cinépolis Itaquera 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3045",
+        "name": "Sala 7",
+        "fullName": "Cinépolis Itaquera 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3046",
+        "name": "Sala 8",
+        "fullName": "Cinépolis Itaquera 8",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 8,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1535",
+    "boxOfficeId": "0015",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_5.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinepolis-jardim-pamplona",
+    "name": "Cinépolis Jardim Pamplona",
+    "siteURL": "https://www.ingresso.com/cinema/cinepolis-jardim-pamplona?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-jardim-pamplona",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinepolis-jardim-pamplona?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-jardim-pamplona",
+    "cnpj": "09652820006416",
+    "districtAuthorization": "",
+    "address": "Rua Pamplona",
+    "addressComplement": "",
+    "number": "1704",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Jardim Paulista",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.57013,
+      "lng": -46.66049
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinépolis",
+    "corporationId": "5",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#064a89",
+    "rooms": [
+      {
+        "id": "4617",
+        "name": "Sala 1",
+        "fullName": "Cinépolis Jardim Pamplona 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4618",
+        "name": "Sala 2",
+        "fullName": "Cinépolis Jardim Pamplona 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4619",
+        "name": "Sala 3",
+        "fullName": "Cinépolis Jardim Pamplona 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4620",
+        "name": "Sala 4",
+        "fullName": "Cinépolis Jardim Pamplona 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4621",
+        "name": "Sala 5",
+        "fullName": "Cinépolis Jardim Pamplona 5",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "996",
+    "boxOfficeId": "6080",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_5.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinepolis-jk-iguatemi",
+    "name": "Cinépolis JK Iguatemi",
+    "siteURL": "https://www.ingresso.com/cinema/cinepolis-jk-iguatemi?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-jk-iguatemi",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinepolis-jk-iguatemi?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-jk-iguatemi",
+    "cnpj": "09652820001023",
+    "districtAuthorization": "",
+    "address": "Av. Presidente Juscelino Kubitschek",
+    "addressComplement": "lj 424",
+    "number": "2041",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Nova Conceição",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.59074,
+      "lng": -46.68956
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinépolis",
+    "corporationId": "5",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#064a89",
+    "rooms": [
+      {
+        "id": "2856",
+        "name": "Sala 1 - IMAX",
+        "fullName": "Cinépolis JK Iguatemi 1 - IMAX",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2857",
+        "name": "Sala 2 - Laser Lounge",
+        "fullName": "Cinépolis JK Iguatemi 2 - Laser Lounge",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2863",
+        "name": "Sala 3 - VIP",
+        "fullName": "Cinépolis JK Iguatemi 3 - VIP",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2858",
+        "name": "Sala 4 - VIP",
+        "fullName": "Cinépolis JK Iguatemi 4 - VIP",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2859",
+        "name": "Sala 5 - Onyx 4k LED",
+        "fullName": "Cinépolis JK Iguatemi 5 - Onyx 4k LED",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2860",
+        "name": "Sala 6 - VIP",
+        "fullName": "Cinépolis JK Iguatemi 6 - VIP",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2861",
+        "name": "Sala 7 - VIP",
+        "fullName": "Cinépolis JK Iguatemi 7 - VIP",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2862",
+        "name": "Sala 8 - VIP",
+        "fullName": "Cinépolis JK Iguatemi 8 - VIP",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "3959",
+        "name": "CineVista",
+        "fullName": "Cinépolis JK Iguatemi 9",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 9,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "877",
+    "boxOfficeId": "6015",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_5.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinepolis-mais-shopping",
+    "name": "Cinépolis Mais Shopping",
+    "siteURL": "https://www.ingresso.com/cinema/cinepolis-mais-shopping?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-mais-shopping",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinepolis-mais-shopping?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinepolis-mais-shopping",
+    "cnpj": "09652820001538",
+    "districtAuthorization": "",
+    "address": "Amador Bueno",
+    "addressComplement": "Loja 20.001",
+    "number": "219",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Santo Amaro",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.6529,
+      "lng": -46.71099
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinépolis",
+    "corporationId": "5",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#064a89",
+    "rooms": [
+      {
+        "id": "2531",
+        "name": "Sala 1",
+        "fullName": "Cinépolis Largo XIII - Sala 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2532",
+        "name": "Sala 2",
+        "fullName": "Cinépolis Largo XIII - Sala 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2533",
+        "name": "Sala 3",
+        "fullName": "Cinépolis Largo XIII - Sala 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2534",
+        "name": "Sala 4",
+        "fullName": "Cinépolis Largo XIII - Sala 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2535",
+        "name": "Sala 5",
+        "fullName": "Cinépolis Largo XIII - Sala 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2536",
+        "name": "Sala 6",
+        "fullName": "Cinépolis Largo XIII - Sala 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2537",
+        "name": "Sala 7",
+        "fullName": "Cinépolis Largo XIII - Sala 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2538",
+        "name": "Sala 8",
+        "fullName": "Cinépolis Largo XIII - Sala 8",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 8,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1607",
+    "boxOfficeId": "0087",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/f327d364-8147-4fca-960f-c342b2606124.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_1607.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "#FFFFFF",
+    "urlKey": "cinesystem-belas-artes-frei-caneca",
+    "name": "Cinesystem Belas Artes Frei Caneca",
+    "siteURL": "https://www.ingresso.com/cinema/cinesystem-belas-artes-frei-caneca?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-belas-artes-frei-caneca",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinesystem-belas-artes-frei-caneca?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-belas-artes-frei-caneca",
+    "cnpj": "15422993002372",
+    "districtAuthorization": "",
+    "address": "Rua Frei Caneca",
+    "addressComplement": "SUC 401B PV 3",
+    "number": "569",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Consolação",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": 0.0,
+      "lng": 0.0
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinesystem",
+    "corporationId": "9",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#d3312b",
+    "rooms": [
+      {
+        "id": "4889",
+        "name": "Sala 1",
+        "fullName": "Sala 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4890",
+        "name": "Sala 2",
+        "fullName": "Sala 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4891",
+        "name": "Sala 3",
+        "fullName": "Sala 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4892",
+        "name": "Sala 4",
+        "fullName": "Sala 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4893",
+        "name": "Sala 5",
+        "fullName": "Sala 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4894",
+        "name": "Sala 6",
+        "fullName": "Sala 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4895",
+        "name": "Sala 7",
+        "fullName": "Sala 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4896",
+        "name": "Sala 8",
+        "fullName": "Sala 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4897",
+        "name": "Sala 9",
+        "fullName": "Sala 9",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 9,
+    "enabled": true,
+    "blockMessage": "Infelizmente estamos sem comunicação com o local.",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1451",
+    "boxOfficeId": "9881",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/523ef859-88f1-488d-bbfc-a7ad07322b07.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_1451.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinesystem-morumbi-town",
+    "name": "Cinesystem Morumbi Town",
+    "siteURL": "https://www.ingresso.com/cinema/cinesystem-morumbi-town?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-morumbi-town",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinesystem-morumbi-town?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-morumbi-town",
+    "cnpj": "15422993000833",
+    "districtAuthorization": "",
+    "address": "Avenida Giovanni Gronchi",
+    "addressComplement": "",
+    "number": "5930",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Andrade",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.63157,
+      "lng": -46.73768
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinesystem",
+    "corporationId": "9",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#d3312b",
+    "rooms": [
+      {
+        "id": "4218",
+        "name": "Sala 1",
+        "fullName": "Cinesystem Morumbi Town 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4219",
+        "name": "Sala 2",
+        "fullName": "Cinesystem Morumbi Town 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4220",
+        "name": "Sala 3",
+        "fullName": "Cinesystem Morumbi Town 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4221",
+        "name": "Sala 4",
+        "fullName": "Cinesystem Morumbi Town 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4222",
+        "name": "Sala 5",
+        "fullName": "Cinesystem Morumbi Town 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4223",
+        "name": "Sala 6",
+        "fullName": "Cinesystem Morumbi Town 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4224",
+        "name": "Sala 7",
+        "fullName": "Cinesystem Morumbi Town 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4225",
+        "name": "Sala 8",
+        "fullName": "Cinesystem Morumbi Town 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4226",
+        "name": "Sala 9",
+        "fullName": "Cinesystem Morumbi Town 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4649",
+        "name": "Drive In",
+        "fullName": "Cinesystem Morumbi Town Drive In",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 10,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1608",
+    "boxOfficeId": "0088",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/523ef859-88f1-488d-bbfc-a7ad07322b07.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_1608.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "cinesystem-pompeia",
+    "name": "Cinesystem Pompéia",
+    "siteURL": "https://www.ingresso.com/cinema/cinesystem-pompeia?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-pompeia",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/cinesystem-pompeia?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=cinesystem-pompeia",
+    "cnpj": "15422993002291",
+    "districtAuthorization": "",
+    "address": "Rua Palestra Itália",
+    "addressComplement": "",
+    "number": "500",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Perdizes",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": 0.0,
+      "lng": 0.0
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinesystem",
+    "corporationId": "9",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#d3312b",
+    "rooms": [
+      {
+        "id": "4898",
+        "name": "Sala 1",
+        "fullName": "Sala 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4899",
+        "name": "Sala 2",
+        "fullName": "Sala 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4900",
+        "name": "Sala 3",
+        "fullName": "Sala 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4901",
+        "name": "Sala 4",
+        "fullName": "Sala 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4902",
+        "name": "Sala 5",
+        "fullName": "Sala 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4903",
+        "name": "Sala 6",
+        "fullName": "Sala 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4904",
+        "name": "Sala 7",
+        "fullName": "Sala 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4905",
+        "name": "Sala 8",
+        "fullName": "Sala 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4906",
+        "name": "Sala 9",
+        "fullName": "Sala 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4907",
+        "name": "Sala 10",
+        "fullName": "Sala 10",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4908",
+        "name": "Sala 11",
+        "fullName": "Sala 11",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 11,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1010",
+    "boxOfficeId": "4886",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/576b1efe-d6a2-433d-b17d-4804fc300dae.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "espaco-petrobras-de-cinema",
+    "name": "Espaço Petrobras de Cinema",
+    "siteURL": "https://www.ingresso.com/cinema/espaco-petrobras-de-cinema?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=espaco-petrobras-de-cinema",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/espaco-petrobras-de-cinema?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=espaco-petrobras-de-cinema",
+    "cnpj": "04969463000974",
+    "districtAuthorization": "",
+    "address": "R. Augusta",
+    "addressComplement": "",
+    "number": "1475",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Cerqueira César",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.55664,
+      "lng": -46.65837
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "CINEMA ARTEPLEX LTDA",
+    "corporationId": "206",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#F6F7F6",
+    "rooms": [
+      {
+        "id": "2902",
+        "name": "Sala 1",
+        "fullName": "Espaço Petrobras de Cinema - Sala 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2903",
+        "name": "Sala 2",
+        "fullName": "Espaço Petrobras de Cinema - Sala 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2904",
+        "name": "Sala 3",
+        "fullName": "Espaço Petrobras de Cinema - Sala 03",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 3,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1027",
+    "boxOfficeId": "4610",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/576b1efe-d6a2-433d-b17d-4804fc300dae.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "espaco-petrobras-de-cinema-anexo",
+    "name": "Espaço Petrobras de Cinema / Anexo",
+    "siteURL": "https://www.ingresso.com/cinema/espaco-petrobras-de-cinema-anexo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=espaco-petrobras-de-cinema-anexo",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/espaco-petrobras-de-cinema-anexo?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=espaco-petrobras-de-cinema-anexo",
+    "cnpj": "01216636000219",
+    "districtAuthorization": "27273164",
+    "address": "R. Augusta",
+    "addressComplement": "",
+    "number": "1470",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Cerqueira César",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": false,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.5564,
+      "lng": -46.65848
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "CINEMA ARTEPLEX LTDA",
+    "corporationId": "206",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#F6F7F6",
+    "rooms": [
+      {
+        "id": "2952",
+        "name": "Sala 4",
+        "fullName": "Espaço Petrobras Anexo - Sala 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2953",
+        "name": "Sala 5",
+        "fullName": "Espaço Petrobras Anexo - Sala 05",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 2,
+    "enabled": false,
+    "blockMessage": "Infelizmente estamos sem comunicação com o local.",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1476",
+    "boxOfficeId": "1310",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/img/cinema/avatar/avatarcorporation_default.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "instituto-moreira-salles-sp",
+    "name": "Instituto Moreira Salles SP",
+    "siteURL": "https://www.ingresso.com/cinema/instituto-moreira-salles-sp?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=instituto-moreira-salles-sp",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/instituto-moreira-salles-sp?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=instituto-moreira-salles-sp",
+    "cnpj": "58397563000145",
+    "districtAuthorization": "",
+    "address": "Av. Paulista",
+    "addressComplement": "",
+    "number": "2424",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Bela Vista",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": false,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.55609,
+      "lng": 46.66197
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM"
+    ],
+    "corporation": "Instituto Moreira Salles SP",
+    "corporationId": "170",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#252525",
+    "rooms": [
+      {
+        "id": "4303",
+        "name": "Sala 1",
+        "fullName": "Instituto Moreira Salles SP",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 1,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "153",
+    "boxOfficeId": "1157",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_2.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_153.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "kinoplex-itaim",
+    "name": "Kinoplex Itaim",
+    "siteURL": "https://www.ingresso.com/cinema/kinoplex-itaim?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-itaim",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/kinoplex-itaim?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-itaim",
+    "cnpj": "04006465000291",
+    "districtAuthorization": "",
+    "address": "R. Joaquim Floriano",
+    "addressComplement": "Lj.29",
+    "number": "462",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Itaim Bibi",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 31312004"
+    ],
+    "geolocation": {
+      "lat": -23.58452,
+      "lng": -46.67453
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Kinoplex",
+    "corporationId": "2",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#f26822",
+    "rooms": [
+      {
+        "id": "550",
+        "name": "Sala 1",
+        "fullName": "Kinoplex Itaim 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "551",
+        "name": "Sala 2",
+        "fullName": "Kinoplex Itaim 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "552",
+        "name": "Sala 3 - Projeção Laser",
+        "fullName": "Kinoplex Itaim 3 - Projeção Laser",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "553",
+        "name": "Sala 4 - Projeção Laser",
+        "fullName": "Kinoplex Itaim 4 - Projeção Laser",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "554",
+        "name": "Sala 5 - Projeção Laser",
+        "fullName": "Kinoplex Itaim 5 - Projeção Laser",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "555",
+        "name": "Sala 6 - Projeção Laser",
+        "fullName": "Kinoplex Itaim 6 - Projeção Laser",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1523",
+    "boxOfficeId": "0004",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_2.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "kinoplex-parque-da-cidade",
+    "name": "Kinoplex Parque da Cidade",
+    "siteURL": "https://www.ingresso.com/cinema/kinoplex-parque-da-cidade?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-parque-da-cidade",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/kinoplex-parque-da-cidade?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-parque-da-cidade",
+    "cnpj": "33497660002475",
+    "districtAuthorization": "",
+    "address": "Avenida das Nações Unidas",
+    "addressComplement": "LOJA 301",
+    "number": "14401",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Gertrudes",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.6258,
+      "lng": -46.70578
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Kinoplex",
+    "corporationId": "2",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#f26822",
+    "rooms": [
+      {
+        "id": "4548",
+        "name": "Sala 1",
+        "fullName": "Kinoplex Parque da Cidade 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4549",
+        "name": "Sala 2",
+        "fullName": "Kinoplex Parque da Cidade 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4550",
+        "name": "Sala 3",
+        "fullName": "Kinoplex Parque da Cidade 03",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4551",
+        "name": "Sala 4",
+        "fullName": "Kinoplex Parque da Cidade 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4552",
+        "name": "Sala 5",
+        "fullName": "Kinoplex Parque da Cidade 05",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4553",
+        "name": "Sala 6",
+        "fullName": "Kinoplex Parque da Cidade 06",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "850",
+    "boxOfficeId": "1222",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_2.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_850.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "kinoplex-vila-olimpia",
+    "name": "Kinoplex Vila Olímpia",
+    "siteURL": "https://www.ingresso.com/cinema/kinoplex-vila-olimpia?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-vila-olimpia",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/kinoplex-vila-olimpia?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=kinoplex-vila-olimpia",
+    "cnpj": "33497660000936",
+    "districtAuthorization": "",
+    "address": "Rua Olimpiadas",
+    "addressComplement": "603/604",
+    "number": "360",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Olímpia",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 3131-2006"
+    ],
+    "geolocation": {
+      "lat": -23.59577,
+      "lng": -46.68689
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Kinoplex",
+    "corporationId": "2",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#f26822",
+    "rooms": [
+      {
+        "id": "2448",
+        "name": "Sala 1",
+        "fullName": "Kinoplex Vila Olímpia 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2449",
+        "name": "Sala 2",
+        "fullName": "Kinoplex Vila Olímpia 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2450",
+        "name": "Sala 3",
+        "fullName": "Kinoplex Vila Olímpia 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2451",
+        "name": "Sala 4",
+        "fullName": "Kinoplex Vila Olímpia 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2452",
+        "name": "Sala 5",
+        "fullName": "Kinoplex Vila Olímpia 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2453",
+        "name": "Sala 6",
+        "fullName": "Kinoplex Vila Olímpia Platinum 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2454",
+        "name": "Sala 7",
+        "fullName": "Kinoplex Vila Olímpia Platinum 7",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 7,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "577",
+    "boxOfficeId": "4889",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_11.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "moviecom-boavista",
+    "name": "Moviecom BoaVista",
+    "siteURL": "https://www.ingresso.com/cinema/moviecom-boavista?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=moviecom-boavista",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/moviecom-boavista?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=moviecom-boavista",
+    "cnpj": "01688909000813",
+    "districtAuthorization": "",
+    "address": "R. Borba Gato",
+    "addressComplement": "401",
+    "number": "59",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Santo Amaro",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.65451,
+      "lng": -46.70063
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Moviecom",
+    "corporationId": "11",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#223ea1",
+    "rooms": [
+      {
+        "id": "1794",
+        "name": "Sala 1",
+        "fullName": "Moviecom Boa Vista - Sala 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1795",
+        "name": "Sala 2",
+        "fullName": "Moviecom Boa Vista - Sala 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1796",
+        "name": "Sala 3",
+        "fullName": "Moviecom Boa Vista - Sala 03",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1797",
+        "name": "Sala 4",
+        "fullName": "Moviecom Boa Vista - Sala 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1798",
+        "name": "Sala 5",
+        "fullName": "Moviecom Boa Vista - Sala 05",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "586",
+    "boxOfficeId": "4878",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_11.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "moviecom-penha",
+    "name": "Moviecom Penha",
+    "siteURL": "https://www.ingresso.com/cinema/moviecom-penha?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=moviecom-penha",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/moviecom-penha?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=moviecom-penha",
+    "cnpj": "01688909000732",
+    "districtAuthorization": "",
+    "address": "R. Dr. João Ribeiro ",
+    "addressComplement": " Âncora G - Shopping Penha",
+    "number": "304",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Penha",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 20916-300"
+    ],
+    "geolocation": {
+      "lat": -23.52446,
+      "lng": -46.54729
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Moviecom",
+    "corporationId": "11",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#223ea1",
+    "rooms": [
+      {
+        "id": "1755",
+        "name": "Sala 1",
+        "fullName": "Moviecom Penha - Sala 01",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1756",
+        "name": "Sala 2",
+        "fullName": "Moviecom Penha - Sala 02",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1757",
+        "name": "Sala 3",
+        "fullName": "Moviecom Penha - Sala 03",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1758",
+        "name": "Sala 4",
+        "fullName": "Moviecom Penha - Sala 04",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1759",
+        "name": "Sala 5",
+        "fullName": "Moviecom Penha - Sala 05",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "1760",
+        "name": "Sala 6",
+        "fullName": "Moviecom Penha - Sala 06",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1624",
+    "boxOfficeId": "0105",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/5104a23c-dcbd-4781-ba5a-87c641eb1ed8.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "playarte-multiplex-maraba",
+    "name": "Playarte Multiplex Marabá",
+    "siteURL": "https://www.ingresso.com/cinema/playarte-multiplex-maraba?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=playarte-multiplex-maraba",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/playarte-multiplex-maraba?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=playarte-multiplex-maraba",
+    "cnpj": "27595833000280",
+    "districtAuthorization": "",
+    "address": "Av. Ipiranga",
+    "addressComplement": "",
+    "number": "757",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "são joão",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 50536-881"
+    ],
+    "geolocation": {
+      "lat": -23.54269,
+      "lng": -46.641
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "PlayArte",
+    "corporationId": "158",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#ffffff",
+    "rooms": [
+      {
+        "id": "4958",
+        "name": "SALA 1",
+        "fullName": "Playarte Multiplex Marabá 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4959",
+        "name": "SALA 2",
+        "fullName": "Playarte Multiplex Marabá 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4960",
+        "name": "SALA 3",
+        "fullName": "Playarte Multiplex Marabá 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4961",
+        "name": "SALA 4",
+        "fullName": "Playarte Multiplex Marabá 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4962",
+        "name": "SALA 5",
+        "fullName": "Playarte Multiplex Marabá 5",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 5,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1591",
+    "boxOfficeId": "0071",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_199.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_1591.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "sato-cinema",
+    "name": "Sato Cinema",
+    "siteURL": "https://www.ingresso.com/cinema/sato-cinema?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=sato-cinema",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/sato-cinema?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=sato-cinema",
+    "cnpj": "33356343000142",
+    "districtAuthorization": "",
+    "address": "Rua São Joaquim",
+    "addressComplement": "",
+    "number": "381",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Liberdade",
+    "properties": {
+      "hasBomboniere": false,
+      "hasContactlessWithdrawal": true,
+      "hasSession": false,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.5611,
+      "lng": -46.63508
+    },
+    "deliveryType": [
+      "Bilheteria/ATM",
+      "Aplicativo/Scannerless"
+    ],
+    "corporation": "Cinema Sato",
+    "corporationId": "199",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#ffffff",
+    "rooms": [
+      {
+        "id": "4826",
+        "name": "Sala 01",
+        "fullName": "Sala 01",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 1,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "131",
+    "boxOfficeId": "2052",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_3.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_131.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "uci-analia-franco",
+    "name": "UCI Anália Franco",
+    "siteURL": "https://www.ingresso.com/cinema/uci-analia-franco?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-analia-franco",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/uci-analia-franco?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-analia-franco",
+    "cnpj": "01289530000750",
+    "districtAuthorization": "",
+    "address": "Av. Regente Feijó",
+    "addressComplement": "Quadra A",
+    "number": "1759",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Tatuapé",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 66434240"
+    ],
+    "geolocation": {
+      "lat": -23.56152,
+      "lng": -46.56271
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/DataMatrix"
+    ],
+    "corporation": "UCI",
+    "corporationId": "3",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#252764",
+    "rooms": [
+      {
+        "id": "408",
+        "name": "Sala 1",
+        "fullName": "UCI Analia Franco 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "409",
+        "name": "Sala 2",
+        "fullName": "UCI Analia Franco 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "410",
+        "name": "Sala 3",
+        "fullName": "UCI Analia Franco 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "411",
+        "name": "Sala 4",
+        "fullName": "UCI Analia Franco 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "412",
+        "name": "Sala 5",
+        "fullName": "UCI Analia Franco 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "413",
+        "name": "Sala 6",
+        "fullName": "UCI Analia Franco 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "414",
+        "name": "Sala 7",
+        "fullName": "UCI Analia Franco 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "415",
+        "name": "Sala 8",
+        "fullName": "UCI Analia Franco 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "416",
+        "name": "Sala 9",
+        "fullName": "UCI Analia Franco 9",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 9,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "132",
+    "boxOfficeId": "2042",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_3.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_132.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "uci-jardim-sul",
+    "name": "UCI Jardim Sul",
+    "siteURL": "https://www.ingresso.com/cinema/uci-jardim-sul?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-jardim-sul",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/uci-jardim-sul?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-jardim-sul",
+    "cnpj": "01289530000679",
+    "districtAuthorization": "",
+    "address": "Av. Giovanni Gronchi",
+    "addressComplement": "501 a 511 M",
+    "number": "5819",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Vila Andrade",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 21647-700"
+    ],
+    "geolocation": {
+      "lat": -23.63113,
+      "lng": -46.73585
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/DataMatrix"
+    ],
+    "corporation": "UCI",
+    "corporationId": "3",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#252764",
+    "rooms": [
+      {
+        "id": "417",
+        "name": "Sala 1",
+        "fullName": "UCI Jardim Sul 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "418",
+        "name": "Sala 2",
+        "fullName": "UCI Jardim Sul 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "427",
+        "name": "Sala 3",
+        "fullName": "UCI Jardim Sul 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "419",
+        "name": "Sala 4",
+        "fullName": "UCI Jardim Sul 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "420",
+        "name": "Sala 5",
+        "fullName": "UCI Jardim Sul 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "421",
+        "name": "Sala 6",
+        "fullName": "UCI Jardim Sul 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "422",
+        "name": "Sala 7",
+        "fullName": "UCI Jardim Sul 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "424",
+        "name": "Sala 8",
+        "fullName": "UCI Jardim Sul 8",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "423",
+        "name": "Sala 9",
+        "fullName": "UCI Jardim Sul 9",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "425",
+        "name": "Sala 10",
+        "fullName": "UCI Jardim Sul 10 (digital)",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "426",
+        "name": "Sala 11",
+        "fullName": "UCI Jardim Sul 11",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 11,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "1584",
+    "boxOfficeId": "0064",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_3.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://www.ingresso.com/images/placeholder-movie-banner.jpg",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "uci-plaza-sul",
+    "name": "UCI Plaza Sul",
+    "siteURL": "https://www.ingresso.com/cinema/uci-plaza-sul?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-plaza-sul",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/uci-plaza-sul?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-plaza-sul",
+    "cnpj": "01289530002108",
+    "districtAuthorization": "",
+    "address": "Praça Leonor Kaupa",
+    "addressComplement": "",
+    "number": "100",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Bosque da Saúde",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [],
+    "geolocation": {
+      "lat": -23.61986,
+      "lng": -46.62689
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/DataMatrix"
+    ],
+    "corporation": "UCI",
+    "corporationId": "3",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#252764",
+    "rooms": [
+      {
+        "id": "4784",
+        "name": "Sala 1",
+        "fullName": "UCI Plaza Sul - 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4785",
+        "name": "Sala 2",
+        "fullName": "UCI Plaza Sul - 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4786",
+        "name": "Sala 3",
+        "fullName": "UCI Plaza Sul - 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4787",
+        "name": "Sala 4",
+        "fullName": "UCI Plaza Sul - 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4788",
+        "name": "Sala 5",
+        "fullName": "UCI Plaza Sul - 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "4789",
+        "name": "Sala 6",
+        "fullName": "UCI Plaza Sul - 6",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 6,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  },
+  {
+    "id": "678",
+    "boxOfficeId": "2129",
+    "images": [
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/avatar/avatarcorporation_3.svg",
+        "type": "Logo"
+      },
+      {
+        "url": "https://ingresso-a.akamaihd.net/prd/img/cinema/cover/cover_theater_678.webp",
+        "type": "Banner"
+      }
+    ],
+    "theaterBackgroundColor": "",
+    "urlKey": "uci-santana",
+    "name": "UCI Santana",
+    "siteURL": "https://www.ingresso.com/cinema/uci-santana?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-santana",
+    "nationalSiteURL": "https://www.ingresso.com/cinema/uci-santana?city=sao-paulo&partnership=encora&ing_source=api&ing_medium=link-cinema&ing_campaign=encora&ing_content=uci-santana",
+    "cnpj": "01289530000830",
+    "districtAuthorization": "",
+    "address": "Rua Conselheiro Moreira de Barros",
+    "addressComplement": "LUC 4000",
+    "number": "2780",
+    "cityId": "1",
+    "cityName": "São Paulo",
+    "state": "São Paulo",
+    "uf": "SP",
+    "neighborhood": "Lauzane Paulista",
+    "properties": {
+      "hasBomboniere": true,
+      "hasContactlessWithdrawal": true,
+      "hasSession": true,
+      "hasSeatDistancePolicy": false,
+      "hasSeatDistancePolicyArena": false
+    },
+    "functionalities": {
+      "operationPolicyEnabled": true
+    },
+    "telephones": [
+      "(11) 2236-9762"
+    ],
+    "geolocation": {
+      "lat": -23.4831,
+      "lng": -46.64523
+    },
+    "deliveryType": [
+      "Impressão",
+      "Bilheteria/ATM",
+      "Aplicativo/DataMatrix"
+    ],
+    "corporation": "UCI",
+    "corporationId": "3",
+    "corporationPriority": 0,
+    "corporationAvatarBackground": "#252764",
+    "rooms": [
+      {
+        "id": "2066",
+        "name": "Sala 1",
+        "fullName": "UCI Santana 1",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2067",
+        "name": "Sala 2",
+        "fullName": "UCI Santana 2",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2068",
+        "name": "Sala 3",
+        "fullName": "UCI Santana 3",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2069",
+        "name": "Sala 4",
+        "fullName": "UCI Santana 4",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2070",
+        "name": "Sala 5",
+        "fullName": "UCI Santana 5",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2071",
+        "name": "Sala 6",
+        "fullName": "UCI Santana 6",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2072",
+        "name": "Sala 7",
+        "fullName": "UCI Santana 7",
+        "capacity": 0,
+        "documents": []
+      },
+      {
+        "id": "2073",
+        "name": "Sala 8",
+        "fullName": "UCI Santana 8",
+        "capacity": 0,
+        "documents": []
+      }
+    ],
+    "totalRooms": 8,
+    "enabled": true,
+    "blockMessage": "",
+    "partnershipType": null,
+    "operationPolicies": []
+  }
+]

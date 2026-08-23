@@ -10,6 +10,7 @@ import { chromium } from 'playwright';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { LOCATIONS } from './lib/test-harness.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -21,9 +22,9 @@ const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=
 const OVERVIEW_ZOOM = 13;
 
 const GROUP_FRIENDS = [
-  'CINUSP Paulo Emílio',
-  'Museu da Imagem e do Som',
-  'Cine Belas Artes, Consolação',
+  LOCATIONS.cinusp.shortLink,
+  LOCATIONS.museu.mapsUrl,
+  LOCATIONS.belasArtes.typedAddress,
 ];
 
 fs.mkdirSync(OUT, { recursive: true });
