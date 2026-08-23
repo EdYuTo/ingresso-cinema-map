@@ -978,10 +978,10 @@
             <button class="icm-chip" data-sort="name">A–Z</button>
           </div>
           <div id="icm-group-bar" class="icm-hidden">
-            <span class="icm-sort-label">Modo:</span>
-            <button class="icm-chip icm-chip-active" data-group-mode="centroid">Centroide</button>
-            <button class="icm-chip" data-group-mode="total-dist">Distância Total</button>
-            <button class="icm-chip" data-group-mode="per-friend">Por Amigo</button>
+            <span class="icm-sort-label">Modo: <span id="icm-group-help" class="icm-help-icon" title="Clique para saber mais">ℹ️</span></span>
+            <button class="icm-chip icm-chip-active" data-group-mode="centroid" title="Cinema mais próximo do ponto médio entre os amigos">Centroide</button>
+            <button class="icm-chip" data-group-mode="total-dist" title="Cinema que minimiza a soma das distâncias de todos">Distância Total</button>
+            <button class="icm-chip" data-group-mode="per-friend" title="Mostra distância de cada amigo para cada cinema">Por Amigo</button>
           </div>
           <button id="icm-btn-group-toggle" class="icm-btn-small">👥 Grupo</button>
           <button id="icm-btn-center-loc" class="icm-btn-small">📍</button>
@@ -1007,6 +1007,28 @@
             <div style="display: flex; gap: 8px; margin-top: 12px;">
               <button id="icm-group-done" class="icm-btn-primary" style="flex: 1;">Pronto</button>
               <button id="icm-group-exit" class="icm-btn-link" style="white-space: nowrap;">Sair</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="icm-help-modal" class="icm-hidden">
+        <div class="icm-group-panel">
+          <div class="icm-group-header">
+            <h3>Como funcionam os modos</h3>
+            <button id="icm-help-close" class="icm-group-close">✕</button>
+          </div>
+          <div class="icm-group-content">
+            <div class="icm-help-item">
+              <h4>📍 Centroide</h4>
+              <p>Encontra o cinema mais próximo do ponto médio entre todos os amigos. Ideal para dividir a distância igualmente.</p>
+            </div>
+            <div class="icm-help-item">
+              <h4>📊 Distância Total</h4>
+              <p>Encontra o cinema que minimiza a soma das distâncias de todos. Melhor para reduzir o total de km que o grupo viaja.</p>
+            </div>
+            <div class="icm-help-item">
+              <h4>👥 Por Amigo</h4>
+              <p>Mostra a distância de cada amigo para cada cinema. Você decide manualmente qual é melhor comparando as distâncias.</p>
             </div>
           </div>
         </div>
@@ -1055,6 +1077,19 @@
         reSort();
       });
     });
+
+    const helpModal = panel.querySelector('#icm-help-modal');
+    panel.querySelector('#icm-group-help').addEventListener('click', () => {
+      if (helpModal) helpModal.classList.toggle('icm-hidden');
+    });
+    panel.querySelector('#icm-help-close').addEventListener('click', () => {
+      if (helpModal) helpModal.classList.add('icm-hidden');
+    });
+    if (helpModal) {
+      helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) helpModal.classList.add('icm-hidden');
+      });
+    }
 
     return panel;
   }
