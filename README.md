@@ -4,7 +4,7 @@ Extensão para Chrome que embute um mapa interativo de cinemas diretamente nas p
 
 Veja os horários, compare distâncias e encontre o cinema mais conveniente — sem sair da página.
 
-![Mapa com cinemas numerados por distância](docs/screenshots/01-map-overview.png)
+![Mapa com cinemas numerados por distância](website/images/01-map-overview.png)
 
 ## Funcionalidades
 
@@ -19,6 +19,8 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 ## Instalação
 
 A extensão será publicada na **Chrome Web Store**. O link de instalação será adicionado aqui assim que estiver disponível.
+
+Site: [ingresso-cinema-map.pages.dev](https://ingresso-cinema-map.pages.dev) (landing page e [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html)). Publicado via GitHub Actions após merge em `main` — desative o build automático do Git no painel do Cloudflare Pages para evitar deploys em PRs.
 
 ### Para desenvolvedores
 
@@ -46,25 +48,25 @@ A extensão aparece em qualquer página `https://www.ingresso.com/filme/*`.
 
 ### Buscar endereço
 
-![Busca de endereço no mapa](docs/screenshots/02-location-search.png)
+![Busca de endereço no mapa](website/images/02-location-search.png)
 
 Digite o endereço e clique **Buscar**. A busca é limitada à cidade selecionada no ingresso.com (canto superior esquerdo).
 
 ### Confirmar localização
 
-![Pré-visualização com marcador ajustável](docs/screenshots/03-location-preview.png)
+![Pré-visualização com marcador ajustável](website/images/03-location-preview.png)
 
 O marcador laranja mostra a pré-visualização. Arraste para ajustar e clique **Confirmar localização**.
 
 ### Lista de cinemas ordenada
 
-![Cinema com badge de distância](docs/screenshots/04-cinema-list.png)
+![Cinema com badge de distância](website/images/04-cinema-list.png)
 
 Cada card na página recebe um badge numerado com a distância em km.
 
 ### Modo grupo
 
-![Endereços dos amigos no modal](docs/screenshots/05-group-friends.png)
+![Endereços dos amigos no modal](website/images/05-group-friends.png)
 
 Adicione endereços de amigos por busca ou clique no mapa. Escolha o modo de cálculo:
 
@@ -73,11 +75,11 @@ Adicione endereços de amigos por busca ou clique no mapa. Escolha o modo de cá
 | **Centroide** | Cinema mais próximo do ponto médio do grupo (pin amarelo) |
 | **Por Amigo** | Cor por amigo; pin colorido no cinema mais próximo de cada um |
 
-![Mapa Por Amigo com pins coloridos](docs/screenshots/06-group-per-friend-map.png)
+![Mapa Por Amigo com pins coloridos](website/images/06-group-per-friend-map.png)
 
 No modo **Por Amigo**, cada amigo recebe uma cor. O cinema mais próximo de cada um fica com pin na mesma cor; a lista abaixo mostra a distância individual.
 
-![Cinema com distâncias por amigo](docs/screenshots/07-cinema-list-per-friend.png)
+![Cinema com distâncias por amigo](website/images/07-cinema-list-per-friend.png)
 
 Cada card exibe uma linha por amigo (cor, endereço e distância). O ★ marca o cinema ideal daquele amigo.
 
@@ -91,16 +93,15 @@ npx playwright install chromium   # necessário na primeira vez
 npm run screenshots
 ```
 
-O script abre uma janela do **Chromium (Playwright)** com a extensão instalada via `--load-extension`, navega até uma página de filme no ingresso.com e salva as capturas em `docs/screenshots/`.
+O script abre uma janela do **Chromium (Playwright)** com a extensão instalada via `--load-extension`, navega até uma página de filme no ingresso.com e salva as capturas em `website/images/`.
 
 > **Nota:** use o Chromium do Playwright (`npx playwright install chromium`), não o Google Chrome — extensões MV3 não carregam corretamente com `channel: 'chrome'`.
 
 ## CI / Chrome Web Store
 
 - **Test** — roda em todo PR e push para `main` (testes de fixture)
-- **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store
-
-Configure os secrets e veja o fluxo completo em [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
+- **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
+- **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
 
 ## Tecnologias
 

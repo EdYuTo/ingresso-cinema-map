@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingresso Cinema Map — Mapa de cinemas no ingresso.com</title>
+  <meta name="description" content="Extensão para Chrome que embute um mapa interativo de cinemas nas páginas de filme do ingresso.com. Compare distâncias e encontre o cinema ideal.">
+  <link rel="icon" href="icon128.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="./">
+        <img src="icon128.png" alt="" width="36" height="36">
+        <span>Ingresso Cinema Map</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#recursos">Recursos</a>
+        <a href="privacy.html">Privacidade</a>
+        <a href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Encontre o cinema mais perto, sem sair do ingresso.com</h1>
+          <p>
+            Extensão para Chrome que embute um mapa interativo na página do filme.
+            Veja todos os cinemas, compare distâncias e descubra a sala ideal — sozinho ou com amigos.
+          </p>
+          <div class="cta-row">
+            <span class="button button-disabled">Em breve na Chrome Web Store</span>
+            <a class="button button-secondary" href="https://github.com/EdYuTo/ingresso-cinema-map">Ver código-fonte</a>
+          </div>
+        </div>
+        <img
+          class="hero-shot"
+          src="images/01-map-overview.png"
+          alt="Mapa embutido com cinemas numerados por distância no ingresso.com"
+          width="1280"
+          height="800"
+        >
+      </div>
+    </section>
+
+    <section class="section" id="recursos">
+      <h2>Recursos</h2>
+      <div class="features">
+        <article class="feature-card">
+          <h3>Mapa embutido</h3>
+          <p>Painel integrado ao layout do ingresso.com, com pins numerados por proximidade.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Ordenação automática</h3>
+          <p>Reordena a lista de cinemas e mostra a distância em km em cada card.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Localização flexível</h3>
+          <p>Use geolocalização, digite um endereço ou cole um link do Google Maps.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Modo grupo</h3>
+          <p>Adicione endereços de amigos e compare cinemas pelo centroide ou por pessoa.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Como funciona</h2>
+      <div class="gallery">
+        <img src="images/02-location-search.png" alt="Busca de endereço no mapa" width="1280" height="800">
+        <img src="images/04-cinema-list.png" alt="Badges de distância nos cards de cinema" width="1280" height="800">
+        <img src="images/06-group-per-friend-map.png" alt="Modo grupo com mapa por amigo" width="1280" height="800">
+        <img src="images/07-cinema-list-per-friend.png" alt="Distâncias por amigo na lista" width="1280" height="800">
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Privacidade</h2>
+      <p class="muted">
+        A extensão não envia seus dados para servidores dos desenvolvedores.
+        A localização é usada apenas para calcular distâncias no seu navegador.
+        <a href="privacy.html">Leia a política de privacidade</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>
+        Código aberto sob licença MIT —
+        <a href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a> ·
+        <a href="privacy.html">Privacidade</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
