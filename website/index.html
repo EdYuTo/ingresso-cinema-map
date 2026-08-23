@@ -5,97 +5,244 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ingresso Cinema Map — Mapa de cinemas no ingresso.com</title>
   <meta name="description" content="Extensão para Chrome que embute um mapa interativo de cinemas nas páginas de filme do ingresso.com. Compare distâncias e encontre o cinema ideal.">
+  <meta property="og:title" content="Ingresso Cinema Map">
+  <meta property="og:description" content="Encontre o cinema mais perto, sem sair do ingresso.com.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ingresso-cinema-map.pages.dev/">
+  <meta property="og:image" content="https://ingresso-cinema-map.pages.dev/images/01-map-overview.png">
   <link rel="icon" href="icon128.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
-    <div class="site-header-inner">
+    <div class="container site-header-inner">
       <a class="brand" href="./">
-        <img src="icon128.png" alt="" width="36" height="36">
+        <img src="icon128.png" alt="" width="34" height="34">
         <span>Ingresso Cinema Map</span>
       </a>
-      <nav class="site-nav">
+      <nav class="site-nav" aria-label="Principal">
         <a href="#recursos">Recursos</a>
+        <a href="#como-funciona">Como funciona</a>
         <a href="privacy.html">Privacidade</a>
-        <a href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a>
+        <a class="nav-cta" href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main>
     <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <h1>Encontre o cinema mais perto, sem sair do ingresso.com</h1>
-          <p>
-            Extensão para Chrome que embute um mapa interativo na página do filme.
-            Veja todos os cinemas, compare distâncias e descubra a sala ideal — sozinho ou com amigos.
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Extensão Chrome
+          </p>
+          <h1><span>Encontre o cinema mais perto</span>, sem sair do ingresso.com</h1>
+          <p class="hero-lead">
+            Mapa interativo embutido na página do filme. Veja todos os cinemas, compare distâncias
+            e descubra a sala ideal — sozinho ou com amigos.
           </p>
           <div class="cta-row">
-            <span class="button button-disabled">Em breve na Chrome Web Store</span>
-            <a class="button button-secondary" href="https://github.com/EdYuTo/ingresso-cinema-map">Ver código-fonte</a>
+            <span class="button button-disabled" aria-disabled="true">Em breve na Chrome Web Store</span>
+            <a class="button button-secondary" href="https://github.com/EdYuTo/ingresso-cinema-map">
+              Ver código-fonte
+            </a>
           </div>
+          <p class="hero-note">
+            Quer testar antes do lançamento?
+            <a href="#instalar">Instale manualmente</a> ou leia o
+            <a href="https://github.com/EdYuTo/ingresso-cinema-map#como-usar">guia de uso</a>.
+          </p>
         </div>
-        <img
-          class="hero-shot"
-          src="images/01-map-overview.png"
-          alt="Mapa embutido com cinemas numerados por distância no ingresso.com"
-          width="1280"
-          height="800"
-        >
+
+        <figure class="browser-frame">
+          <div class="browser-chrome" aria-hidden="true">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">ingresso.com/filme/…</div>
+          </div>
+          <img
+            src="images/01-map-overview.png"
+            alt="Mapa embutido com cinemas numerados por distância no ingresso.com"
+            width="1280"
+            height="800"
+          >
+        </figure>
+      </div>
+
+      <div class="container stats-strip" aria-label="Destaques">
+        <div class="stat">
+          <strong>Mapa embutido</strong>
+          <span>Direto na página do filme</span>
+        </div>
+        <div class="stat">
+          <strong>Distâncias em km</strong>
+          <span>Lista reordenada automaticamente</span>
+        </div>
+        <div class="stat">
+          <strong>Modo grupo</strong>
+          <span>Compare com amigos</span>
+        </div>
       </div>
     </section>
 
     <section class="section" id="recursos">
-      <h2>Recursos</h2>
-      <div class="features">
-        <article class="feature-card">
-          <h3>Mapa embutido</h3>
-          <p>Painel integrado ao layout do ingresso.com, com pins numerados por proximidade.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Ordenação automática</h3>
-          <p>Reordena a lista de cinemas e mostra a distância em km em cada card.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Localização flexível</h3>
-          <p>Use geolocalização, digite um endereço ou cole um link do Google Maps.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Modo grupo</h3>
-          <p>Adicione endereços de amigos e compare cinemas pelo centroide ou por pessoa.</p>
-        </article>
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Recursos</span>
+          <h2>Tudo que você precisa para escolher o cinema</h2>
+          <p class="section-intro">
+            A extensão se integra ao layout do ingresso.com e usa os dados que já estão na página —
+            sem cadastro, sem servidor nosso.
+          </p>
+        </header>
+
+        <div class="features">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3>Mapa embutido</h3>
+            <p>Painel integrado ao layout do ingresso.com, com pins numerados por proximidade.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Ordenação automática</h3>
+            <p>Reordena a lista de cinemas e mostra a distância em km em cada card.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 13v8M9 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Localização flexível</h3>
+            <p>Use geolocalização, digite um endereço ou cole um link do Google Maps.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="2"/>
+                <circle cx="16" cy="11" r="2.5" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 20c0-3 3-5 7-5s7 2 7 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Modo grupo</h3>
+            <p>Adicione endereços de amigos e compare cinemas pelo centroide ou por pessoa.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Como funciona</span>
+          <h2>Do endereço ao cinema ideal em poucos passos</h2>
+        </header>
+
+        <div class="steps">
+          <article class="step">
+            <div class="step-copy">
+              <div class="step-number">1</div>
+              <h3>Defina sua localização</h3>
+              <p>Permita a geolocalização ou busque um endereço. A busca respeita a cidade selecionada no ingresso.com.</p>
+            </div>
+            <figure class="step-media">
+              <img src="images/02-location-search.png" alt="Busca de endereço no mapa" width="1280" height="800">
+            </figure>
+          </article>
+
+          <article class="step">
+            <div class="step-copy">
+              <div class="step-number">2</div>
+              <h3>Compare distâncias</h3>
+              <p>Cada cinema recebe um badge numerado. A lista é reordenada para mostrar os mais próximos primeiro.</p>
+            </div>
+            <figure class="step-media">
+              <img src="images/04-cinema-list.png" alt="Badges de distância nos cards de cinema" width="1280" height="800">
+            </figure>
+          </article>
+
+          <article class="step">
+            <div class="step-copy">
+              <div class="step-number">3</div>
+              <h3>Escolha em grupo</h3>
+              <p>Adicione endereços de amigos e veja o cinema ideal para cada um — ou o ponto médio do grupo.</p>
+            </div>
+            <figure class="step-media">
+              <img src="images/06-group-per-friend-map.png" alt="Modo grupo com mapa por amigo" width="1280" height="800">
+            </figure>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="instalar">
+      <div class="container">
+        <div class="install-panel">
+          <header class="section-header">
+            <span class="section-label">Instalação</span>
+            <h2>Teste antes da Chrome Web Store</h2>
+            <p class="section-intro">
+              Enquanto aguardamos a publicação oficial, desenvolvedores e early adopters podem carregar a extensão localmente.
+            </p>
+          </header>
+          <ol class="install-steps">
+            <li>
+              <strong>1. Baixe o código</strong>
+              <span>Clone o repositório no GitHub ou baixe o ZIP da release.</span>
+            </li>
+            <li>
+              <strong>2. Abra extensões</strong>
+              <span>Acesse <code>chrome://extensions</code> e ative o Modo do desenvolvedor.</span>
+            </li>
+            <li>
+              <strong>3. Carregue a pasta</strong>
+              <span>Clique em <em>Carregar sem compactação</em> e selecione a pasta do projeto.</span>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
     <section class="section">
-      <h2>Como funciona</h2>
-      <div class="gallery">
-        <img src="images/02-location-search.png" alt="Busca de endereço no mapa" width="1280" height="800">
-        <img src="images/04-cinema-list.png" alt="Badges de distância nos cards de cinema" width="1280" height="800">
-        <img src="images/06-group-per-friend-map.png" alt="Modo grupo com mapa por amigo" width="1280" height="800">
-        <img src="images/07-cinema-list-per-friend.png" alt="Distâncias por amigo na lista" width="1280" height="800">
+      <div class="container">
+        <div class="privacy-callout">
+          <p>
+            <strong style="color: var(--text);">Privacidade em primeiro lugar.</strong>
+            A extensão não envia seus dados para servidores dos desenvolvedores.
+            A localização é usada apenas para calcular distâncias no seu navegador.
+          </p>
+          <a class="button button-secondary" href="privacy.html">Política de privacidade</a>
+        </div>
       </div>
-    </section>
-
-    <section class="section">
-      <h2>Privacidade</h2>
-      <p class="muted">
-        A extensão não envia seus dados para servidores dos desenvolvedores.
-        A localização é usada apenas para calcular distâncias no seu navegador.
-        <a href="privacy.html">Leia a política de privacidade</a>.
-      </p>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="site-footer-inner">
-      <p>
-        Código aberto sob licença MIT —
-        <a href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a> ·
+    <div class="container site-footer-inner">
+      <p>© 2026 Ingresso Cinema Map · Código aberto sob licença MIT</p>
+      <nav class="footer-links" aria-label="Rodapé">
+        <a href="https://github.com/EdYuTo/ingresso-cinema-map">GitHub</a>
         <a href="privacy.html">Privacidade</a>
-      </p>
+        <a href="mailto:edson.yudi.toma@gmail.com">Contato</a>
+      </nav>
     </div>
   </footer>
 </body>
