@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Ingresso Cinema Map",
   "version": "2.0.0",
-  "description": "Mapa de cinemas embutido no ingresso.com",
+  "description": "Mapa de cinemas no ingresso.com — onboarding: https://ingresso-cinema-map.pages.dev",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

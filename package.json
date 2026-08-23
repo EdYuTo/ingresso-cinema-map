@@ -1,5 +1,6 @@
 {
   "name": "ingresso-cinema-map",
+  "description": "Chrome extension — onboarding at https://ingresso-cinema-map.pages.dev",
   "private": true,
   "scripts": {
     "screenshots": "node scripts/capture-screenshots.mjs",
