@@ -99,6 +99,35 @@ async function shot(page, name, locator) {
   console.log('  ✓', name);
 }
 
+async function centerMapForScreenshot(page) {
+  await page.locator('#icm-btn-center-loc').click();
+  await page.waitForFunction(() => {
+    const map = document.querySelector('#icm-map')?._leaflet_map;
+    return map && map.getZoom() >= 14;
+  }, { timeout: 10000 }).catch(() => {});
+  await page.evaluate(() => {
+    const map = document.querySelector('#icm-map')?._leaflet_map;
+    if (!map) return;
+    const userPane = document.querySelector('.icm-user-dot-wrapper');
+    if (userPane) {
+      const marker = userPane.closest('.leaflet-marker-icon');
+      const mapEl = document.querySelector('#icm-map');
+      if (marker && mapEl) {
+        const m = mapEl.getBoundingClientRect();
+        const r = marker.getBoundingClientRect();
+        const point = map.mouseEventToContainerPoint({
+          clientX: r.left + r.width / 2,
+          clientY: r.top + r.height / 2,
+        });
+        map.setView(map.containerPointToLatLng(point), 15, { animate: false });
+        return;
+      }
+    }
+    map.setZoom(15, { animate: false });
+  });
+  await page.waitForTimeout(2000);
+}
+
 async function shotCinemaCard(page, name) {
   await dismissCookies(page);
   const card = page.locator('div.bg-ing-neutral-600.mt-6').first();
@@ -161,8 +190,7 @@ try {
   await ensureMapReady(page);
 
   console.log('Capturando screenshots…');
-  await page.locator('#icm-btn-center-loc').click();
-  await page.waitForTimeout(1200);
+  await centerMapForScreenshot(page);
   await shot(page, '01-map-overview.png', '#icm-map-section');
 
   await page.locator('#icm-btn-change-loc').click();
