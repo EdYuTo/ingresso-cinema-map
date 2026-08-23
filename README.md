@@ -97,10 +97,10 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 ## CI / Chrome Web Store
 
-- **Test** runs on every PR and push to `main`
-- **Release** is manual only: creates a git tag, GitHub Release with notes, and optionally uploads to the Chrome Web Store
+- **Test** — roda em todo PR e push para `main` (testes de fixture)
+- **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store
 
-Configure secrets and see the full release flow in [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
+Configure os secrets e veja o fluxo completo em [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
 
 ## Tecnologias
 
