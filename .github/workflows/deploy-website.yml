@@ -34,10 +34,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify Cloudflare Pages access
+        id: pages-check
+        continue-on-error: true
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages project list
+
+      - name: Pages token help
+        if: steps.pages-check.outcome == 'failure'
+        run: |
+          echo "::error::CLOUDFLARE_API_TOKEN is missing Cloudflare Pages permission."
+          echo "Recreate the token at https://dash.cloudflare.com/profile/api-tokens"
+          echo "Required: Account → Cloudflare Pages → Edit (Account → Account Settings → Read recommended)."
+          echo "Account ID: 7e983bf1138b95c26fb224d5575de726"
+          exit 1
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
