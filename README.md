@@ -97,9 +97,10 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 ## CI / Chrome Web Store
 
-Pull requests para `main` rodam os testes de fixture (`npm test`). Após o merge, o workflow de publicação empacota a extensão e envia para a Chrome Web Store.
+- **Test** — roda em todo PR e push para `main` (testes de fixture)
+- **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store
 
-Configure os secrets do GitHub e veja o passo a passo em [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
+Configure os secrets e veja o fluxo completo em [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
 
 ## Tecnologias
 

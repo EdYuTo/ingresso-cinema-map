@@ -1,0 +1,136 @@
+name: Release
+
+# Manual only — bump manifest.json version, merge to main, then run this workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      skip_store:
+        description: 'Skip Chrome Web Store upload (tag + GitHub Release only)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  extension-tests:
+    name: Fixture integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Run fixture tests
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1360x900x24' npm test
+        env:
+          CI: true
+
+  release:
+    name: Tag, GitHub Release, Chrome Web Store
+    runs-on: ubuntu-latest
+    needs: extension-tests
+    timeout-minutes: 20
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate release notes
+        run: npm run release-notes
+
+      - name: Build extension zip
+        run: npm run package
+
+      - name: Read version
+        id: version
+        run: echo "value=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Create annotated tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ steps.version.outputs.value }}" -F dist/release-notes.md
+          git push origin "v${{ steps.version.outputs.value }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          ZIP=$(ls dist/*.zip | head -n 1)
+          gh release create "v${VERSION}" "$ZIP" \
+            --title "v${VERSION}" \
+            --notes-file dist/release-notes.md
+
+      - name: Chrome Web Store release notes
+        run: |
+          {
+            echo "## Chrome Web Store release notes"
+            echo ""
+            echo "The API cannot set per-version release notes. Copy the text below into the Developer Dashboard when submitting:"
+            echo ""
+            echo '```'
+            cat dist/release-notes-store.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload extension package
+        if: ${{ !inputs.skip_store }}
+        run: |
+          ZIP_FILE=$(ls dist/*.zip | head -n 1)
+          echo "Uploading ${ZIP_FILE}"
+          npx chrome-webstore-upload upload --source "${ZIP_FILE}"
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+
+      - name: Publish extension
+        if: ${{ !inputs.skip_store }}
+        run: npx chrome-webstore-upload publish
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+
+      - name: Upload release notes artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes-v${{ steps.version.outputs.value }}
+          path: |
+            dist/release-notes.md
+            dist/release-notes-store.txt

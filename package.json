@@ -6,7 +6,8 @@
     "test": "node scripts/test-extension.mjs",
     "test:short-links": "node scripts/test-short-links.mjs",
     "test:dump-fixture": "node scripts/dump-ingresso-fixture.mjs",
-    "package": "node scripts/package-extension.mjs"
+    "package": "node scripts/package-extension.mjs",
+    "release-notes": "node scripts/release-notes.mjs"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.0",
