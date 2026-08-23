@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths:
       - 'website/**'
+      - 'wrangler.toml'
       - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
 
 concurrency:
   group: deploy-website
@@ -21,13 +23,20 @@ jobs:
       deployments: write
 
     steps:
+      - name: Verify Cloudflare secrets
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "::error::Missing GitHub Actions secrets. Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy website --project-name=ingresso-cinema-map --branch main
+          command: pages deploy --project-name=ingresso-cinema-map --branch main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
