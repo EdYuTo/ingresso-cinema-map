@@ -20,7 +20,7 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 
 A extensão será publicada na **Chrome Web Store**. O link de instalação será adicionado aqui assim que estiver disponível.
 
-Site: [ingresso-cinema-map.pages.dev](https://ingresso-cinema-map.pages.dev) (landing page e [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html)).
+Site: [ingresso-cinema-map.pages.dev](https://ingresso-cinema-map.pages.dev) (landing page e [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html)). Publicado via GitHub Actions após merge em `main` — desative o build automático do Git no painel do Cloudflare Pages para evitar deploys em PRs.
 
 ### Para desenvolvedores
 
@@ -101,6 +101,7 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 - **Test** — roda em todo PR e push para `main` (testes de fixture)
 - **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
+- **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
 
 ## Tecnologias
 
