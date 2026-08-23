@@ -17,6 +17,12 @@ const OUT = path.join(ROOT, 'docs', 'screenshots');
 const PROFILE = path.join(ROOT, '.playwright-profile');
 const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo';
 
+const GROUP_FRIENDS = [
+  'CINUSP Paulo Emílio',
+  'Museu da Imagem e do Som',
+  'Cine Belas Artes, Consolação',
+];
+
 fs.mkdirSync(OUT, { recursive: true });
 
 async function dismissCookies(page) {
@@ -93,6 +99,27 @@ async function shot(page, name, locator) {
   console.log('  ✓', name);
 }
 
+async function shotCinemaCard(page, name) {
+  await dismissCookies(page);
+  const card = page.locator('div.bg-ing-neutral-600.mt-6').first();
+  await card.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await page.waitForTimeout(600);
+  await card.screenshot({ path: path.join(OUT, name) });
+  console.log('  ✓', name);
+}
+
+async function addGroupFriend(page, address) {
+  const before = await page.locator('#icm-group-list .icm-group-item').count();
+  await page.locator('#icm-group-search').fill(address);
+  await page.locator('#icm-group-add-btn').click();
+  await page.waitForFunction(
+    n => document.querySelectorAll('#icm-group-list .icm-group-item').length > n,
+    before,
+    { timeout: 90000 }
+  );
+  await page.waitForTimeout(800);
+}
+
 console.log('Abrindo Chromium com extensão…');
 const context = await chromium.launchPersistentContext(PROFILE, {
   headless: false,
@@ -134,6 +161,8 @@ try {
   await ensureMapReady(page);
 
   console.log('Capturando screenshots…');
+  await page.locator('#icm-btn-center-loc').click();
+  await page.waitForTimeout(1200);
   await shot(page, '01-map-overview.png', '#icm-map-section');
 
   await page.locator('#icm-btn-change-loc').click();
@@ -149,19 +178,38 @@ try {
   await page.locator('#icm-loc-preview-cancel').click();
   await page.waitForTimeout(1000);
 
+  await shotCinemaCard(page, '04-cinema-list.png');
+
   await page.locator('#icm-btn-group-toggle').click();
   await page.waitForSelector('#icm-group-modal:not(.icm-hidden)', { timeout: 15000 });
-  await shot(page, '04-group-mode.png', '#icm-map-section');
 
-  await page.locator('#icm-group-close').click();
-  await page.waitForTimeout(800);
+  for (const address of GROUP_FRIENDS) {
+    console.log('  + amigo:', address);
+    await addGroupFriend(page, address);
+  }
 
   await dismissCookies(page);
-  const cinemaCard = page.locator('div.bg-ing-neutral-600.mt-6').first();
-  await cinemaCard.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  const panel = page.locator('#icm-group-modal .icm-group-panel').first();
+  await panel.scrollIntoViewIfNeeded();
   await page.waitForTimeout(600);
-  await cinemaCard.screenshot({ path: path.join(OUT, '05-cinema-list.png') });
-  console.log('  ✓ 05-cinema-list.png');
+  await panel.screenshot({ path: path.join(OUT, '05-group-friends.png') });
+  console.log('  ✓ 05-group-friends.png');
+
+  await page.locator('#icm-group-done').click();
+  await page.waitForFunction(
+    () => document.getElementById('icm-group-modal')?.classList.contains('icm-hidden'),
+    { timeout: 15000 }
+  );
+  await page.locator('[data-group-mode="per-friend"]').click();
+  await page.waitForFunction(
+    n => document.querySelectorAll('.icm-friend-marker').length >= n,
+    GROUP_FRIENDS.length,
+    { timeout: 60000 }
+  );
+  await page.waitForTimeout(2000);
+  await shot(page, '06-group-per-friend-map.png', '#icm-map-section');
+
+  await shotCinemaCard(page, '07-cinema-list-per-friend.png');
 
   console.log(`\nConcluído → ${OUT}`);
 } finally {

@@ -13,7 +13,7 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 - **Localização flexível** — geolocalização automática, busca por endereço ou arraste do marcador no mapa
 - **Pré-visualização** — confirme o endereço no mapa antes de aplicar (marcador laranja → azul ao confirmar)
 - **Restrito à cidade** — geocodificação e cinemas respeitam a cidade selecionada no site
-- **Modo grupo** — adicione endereços de amigos e encontre o cinema ideal (centroide, distância total ou por amigo)
+- **Modo grupo** — adicione endereços de amigos e compare cinemas (centroide ou por amigo)
 - **Atualização automática** — detecta troca de dia e mudança de cidade na página
 
 ## Instalação
@@ -41,7 +41,7 @@ A extensão aparece em qualquer página `https://www.ingresso.com/filme/*`.
 1. Abra um filme em cartaz no ingresso.com (ex.: [Homem-Aranha](https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo))
 2. O mapa carrega no topo da lista de cinemas
 3. Permita a localização ou use **Inserir outro endereço** para buscar manualmente
-4. Use os chips **Mais próximo / Mais distante / A–Z** para ordenar
+4. Use os chips **Mais próximo / Mais distante / A–Z** para ordenar — o pin amarelo destaca o cinema correspondente ao filtro
 5. Clique em **Grupo** para comparar cinemas com amigos
 
 ### Buscar endereço
@@ -56,26 +56,34 @@ Digite o endereço e clique **Buscar**. A busca é limitada à cidade selecionad
 
 O marcador laranja mostra a pré-visualização. Arraste para ajustar e clique **Confirmar localização**.
 
+### Lista de cinemas ordenada
+
+![Cinema com badge de distância](docs/screenshots/04-cinema-list.png)
+
+Cada card na página recebe um badge numerado com a distância em km.
+
 ### Modo grupo
 
-![Modal de modo grupo](docs/screenshots/04-group-mode.png)
+![Endereços dos amigos no modal](docs/screenshots/05-group-friends.png)
 
 Adicione endereços de amigos por busca ou clique no mapa. Escolha o modo de cálculo:
 
 | Modo | Descrição |
 |------|-----------|
-| **Centroide** | Cinema mais próximo do ponto médio do grupo |
+| **Centroide** | Cinema mais próximo do ponto médio do grupo (pin amarelo) |
 | **Por Amigo** | Cor por amigo; pin colorido no cinema mais próximo de cada um |
 
-### Lista de cinemas ordenada
+![Mapa Por Amigo com pins coloridos](docs/screenshots/06-group-per-friend-map.png)
 
-![Cinema com badge de distância](docs/screenshots/05-cinema-list.png)
+No modo **Por Amigo**, cada amigo recebe uma cor. O cinema mais próximo de cada um fica com pin na mesma cor; a lista abaixo mostra a distância individual.
 
-Cada card na página recebe um badge numerado com a distância em km.
+![Cinema com distâncias por amigo](docs/screenshots/07-cinema-list-per-friend.png)
+
+Cada card exibe uma linha por amigo (cor, endereço e distância). O ★ marca o cinema ideal daquele amigo.
 
 ## Capturas de tela
 
-As imagens acima são geradas automaticamente com Playwright, carregando a extensão real no Chrome:
+As imagens acima são geradas automaticamente com Playwright, carregando a extensão real no Chromium:
 
 ```bash
 npm install
