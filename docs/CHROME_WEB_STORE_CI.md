@@ -1,11 +1,37 @@
 # Chrome Web Store CI
 
-Two GitHub Actions workflows automate testing and publishing.
+## Workflows
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| **Test** (`.github/workflows/test.yml`) | Pull request → `main` | Runs Playwright fixture tests |
-| **Publish** (`.github/workflows/publish.yml`) | Push to `main` (after merge) | Re-runs tests, builds zip, uploads + publishes to Chrome Web Store |
+| **Test** (`.github/workflows/test.yml`) | PR or push to `main` | Runs Playwright fixture tests |
+| **Release** (`.github/workflows/release.yml`) | **Manual only** (`workflow_dispatch`) | Tests → release notes → git tag → GitHub Release → optional Chrome Web Store upload |
+
+**Release does not run automatically on merge.** You control when to ship.
+
+## Release process
+
+1. Bump `version` in `manifest.json` on a PR and merge to `main`
+2. Confirm **Test** passed on `main`
+3. Add Chrome Web Store secrets (see below) when ready to ship
+4. **Actions → Release → Run workflow**
+   - Leave **Skip Chrome Web Store upload** checked until secrets are configured (creates tag + GitHub Release only)
+   - Uncheck it when secrets are ready to upload and publish
+
+The release job will:
+
+1. Collect commits since the previous `v*` tag
+2. Write `dist/release-notes.md` (GitHub) and `dist/release-notes-store.txt` (Chrome Web Store)
+3. Create annotated tag `v{manifest.version}` and push it
+4. Create a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github) with the zip attached
+5. Upload/publish to Chrome Web Store (unless skipped)
+6. Post store release notes in the job summary — **paste these manually** in the Developer Dashboard (the API cannot set per-version release notes)
+
+Preview notes locally:
+
+```bash
+npm run release-notes
+```
 
 ## One-time setup
 
@@ -65,20 +91,15 @@ In the repo: **Settings → Secrets and variables → Actions → New repository
 | `CHROME_REFRESH_TOKEN` | Long-lived refresh token |
 | `CHROME_PUBLISHER_ID` | Publisher ID from the developer dashboard |
 
-The publish workflow uses the `production` GitHub Environment so you can add required reviewers before releases if desired (**Settings → Environments → production**).
-
-## Version bumps
-
-Each Chrome Web Store upload requires a **new version** in `manifest.json`. Bump `version` before merging to `main`, or the publish step will fail.
+The release workflow uses the `production` GitHub Environment so you can add required reviewers before releases if desired (**Settings → Environments → production**).
 
 ## Local commands
 
 ```bash
 npm test              # fixture integration tests
 npm run package       # build dist/ingresso-cinema-map-vX.Y.Z.zip (allowlist only; no fixtures)
+npm run release-notes # preview changelog for current manifest.json version
 ```
-
-The package script uses an explicit allowlist of extension files and fails if `fixtures/`, `scripts/`, tests, or other dev-only paths appear in the zip.
 
 ## Manual publish (optional)
 
