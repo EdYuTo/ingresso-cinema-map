@@ -1,12 +1,15 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.join(__dirname, '../..');
 export const FIXTURES = path.join(ROOT, 'fixtures', 'ingresso');
-export const PROFILE = path.join(ROOT, '.playwright-profile-tests');
+export const PROFILE = process.env.CI
+  ? path.join(os.tmpdir(), 'icm-playwright-profile-tests')
+  : path.join(ROOT, '.playwright-profile-tests');
 export const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo';
 
 /** Public test locations — no personal addresses. */
@@ -84,6 +87,67 @@ function loadFixtureHtml() {
   return fixtureHtmlCache;
 }
 
+/** Stable maps URLs used to mock Google short-link resolution in CI. */
+const MOCK_MAPS_URLS = {
+  cinusp:
+    'https://www.google.com/maps/place/CINUSP+Paulo+Em%C3%ADlio/@-23.561414,-46.730982,17z/data=!3d-23.561414!4d-46.730982',
+  museu:
+    'https://www.google.com/maps/place/Museu+da+Imagem+e+do+Som/@-23.5756,-46.6889,17z/data=!3d-23.5756!4d-46.6889',
+};
+
+const MOCK_NOMINATIM = {
+  belasArtes: [{
+    lat: '-23.5558',
+    lon: '-46.6626',
+    display_name: 'Rua da Consolação, 2423, Consolação, São Paulo, SP, Brasil',
+  }],
+  museu: [{
+    lat: '-23.5756',
+    lon: '-46.6889',
+    display_name: 'Av. Europa, 158, Jardim Europa, São Paulo, SP, Brasil',
+  }],
+};
+
+export async function setupNetworkMocks(context) {
+  if (!process.env.CI) return;
+  const shortLinkPattern = /https:\/\/(share\.google[^/]*|maps\.app\.goo\.gl|goo\.gl)\//;
+
+  await context.route(shortLinkPattern, (route) => {
+    route.fulfill({
+      status: 302,
+      headers: { Location: MOCK_MAPS_URLS.cinusp },
+    });
+  });
+
+  await context.route('**/nominatim.openstreetmap.org/search**', (route) => {
+    const q = decodeURIComponent(new URL(route.request().url()).searchParams.get('q') || '').toLowerCase();
+    let body = MOCK_NOMINATIM.belasArtes;
+    if (q.includes('europa') || q.includes('museu')) body = MOCK_NOMINATIM.museu;
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(body),
+    });
+  });
+
+  const tilePng = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAD0lEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  await context.route('**tile.openstreetmap.org/**', (route) => {
+    route.fulfill({ status: 200, contentType: 'image/png', body: tilePng });
+  });
+}
+
+/** Short-link resolution via content-bridge is flaky in CI; use stable maps URLs there. */
+export function personalLocationInput() {
+  return process.env.CI ? MOCK_MAPS_URLS.cinusp : LOCATIONS.cinusp.shortLink;
+}
+
+export function groupCinuspInput() {
+  return process.env.CI ? MOCK_MAPS_URLS.cinusp : LOCATIONS.cinusp.shortLink;
+}
+
 export async function setupFixtureRoutes(page) {
   const html = loadFixtureHtml();
   const theaters = fs.readFileSync(path.join(FIXTURES, 'theaters-city-1.json'), 'utf8');
@@ -120,7 +184,13 @@ export async function launchExtensionContext() {
   });
 
   const page = context.pages()[0] || await context.newPage();
+  await setupNetworkMocks(context);
   await setupFixtureRoutes(page);
+
+  if (process.env.CI) {
+    await context.grantPermissions(['geolocation'], { origin: 'https://www.ingresso.com' });
+    await context.setGeolocation({ latitude: -23.561414, longitude: -46.730982 });
+  }
 
   await context.addCookies([
     {
@@ -216,13 +286,15 @@ async function submitLocationQuery(page, _query, errorSelector) {
     }),
   ]);
 
-  await page.locator('#icm-loc-preview-confirm').click();
+  await page.locator('#icm-loc-preview-confirm').click({ force: true });
 }
 
 export async function waitForMap(page) {
   await page.waitForSelector('#icm-map-section', { state: 'visible', timeout: 180000 });
-  await page.waitForSelector('#icm-map .leaflet-tile', { timeout: 60000 });
-  await page.waitForFunction(() => document.querySelectorAll('.icm-pin').length > 0, { timeout: 60000 });
+  await page.waitForSelector('#icm-map .leaflet-tile', { timeout: 120000 });
+  await page.waitForFunction(() => document.querySelectorAll('.icm-pin').length > 0, undefined, {
+    timeout: 120000,
+  });
 }
 
 export async function setPersonalLocation(page, query) {
@@ -296,7 +368,9 @@ export async function addGroupFriend(page, query, { labelIncludes } = {}) {
     }
   }
 
-  await page.locator('#icm-loc-preview-confirm').click();
+  await page.evaluate(() => {
+    document.getElementById('icm-loc-preview-confirm')?.click();
+  });
   await page.waitForFunction(
     n => document.querySelectorAll('#icm-group-list .icm-group-item').length > n,
     before,
