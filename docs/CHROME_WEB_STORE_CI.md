@@ -13,6 +13,8 @@ Two GitHub Actions workflows automate testing and publishing.
 
 Upload the first version manually (or via `npm run package` + dashboard upload) so you have an **Extension ID** (32-character string from `chrome://extensions` or the developer dashboard URL).
 
+`npm run package` ships only the extension allowlist (`manifest.json`, scripts, `icons/`, `lib/`). Test fixtures and dev files are excluded and verified before the zip is written.
+
 ### 2. Enable the Chrome Web Store API
 
 1. Open [Google Cloud Console](https://console.cloud.google.com/)
@@ -73,8 +75,10 @@ Each Chrome Web Store upload requires a **new version** in `manifest.json`. Bump
 
 ```bash
 npm test              # fixture integration tests
-npm run package       # build dist/ingresso-cinema-map-vX.Y.Z.zip
+npm run package       # build dist/ingresso-cinema-map-vX.Y.Z.zip (allowlist only; no fixtures)
 ```
+
+The package script uses an explicit allowlist of extension files and fails if `fixtures/`, `scripts/`, tests, or other dev-only paths appear in the zip.
 
 ## Manual publish (optional)
 
