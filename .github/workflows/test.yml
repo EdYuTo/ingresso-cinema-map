@@ -3,26 +3,43 @@ name: Test
 on:
   pull_request:
     branches: [main]
-    paths:
-      - '*.js'
-      - 'inpage.css'
-      - 'manifest.json'
-      - 'icons/**'
-      - 'lib/**'
-      - 'fixtures/**'
-      - 'scripts/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/test.yml'
-      - '.github/workflows/release.yml'
 
 concurrency:
   group: test-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect source changes
+    runs-on: ubuntu-latest
+    outputs:
+      source_changed: ${{ steps.filter.outputs.source }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Filter paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            source:
+              - '*.js'
+              - 'inpage.css'
+              - 'manifest.json'
+              - 'icons/**'
+              - 'lib/**'
+              - 'fixtures/**'
+              - 'scripts/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/test.yml'
+              - '.github/workflows/release.yml'
+
   extension-tests:
-    name: Fixture integration tests
+    name: Run fixture tests
+    needs: changes
+    if: needs.changes.outputs.source_changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -46,3 +63,30 @@ jobs:
         run: xvfb-run --auto-servernum --server-args='-screen 0 1360x900x24' npm test
         env:
           CI: true
+
+  # Required ruleset check. Always runs so docs-only PRs are not blocked waiting
+  # for a skipped job, while still failing when source changed and tests failed.
+  fixture-integration-tests:
+    name: Fixture integration tests
+    needs: [changes, extension-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check result
+        run: |
+          if [[ "${{ needs.changes.result }}" != "success" ]]; then
+            echo "Change detection failed."
+            exit 1
+          fi
+
+          if [[ "${{ needs.changes.outputs.source_changed }}" == "true" &&
+                "${{ needs.extension-tests.result }}" != "success" ]]; then
+            echo "Source changed and tests did not pass (result: ${{ needs.extension-tests.result }})."
+            exit 1
+          fi
+
+          if [[ "${{ needs.changes.outputs.source_changed }}" == "true" ]]; then
+            echo "Source changed and tests passed."
+          else
+            echo "Tests not required for this PR."
+          fi
