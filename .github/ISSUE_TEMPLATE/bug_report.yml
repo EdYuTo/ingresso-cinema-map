@@ -53,6 +53,7 @@ body:
     id: chrome
     attributes:
       label: Versão do Chrome
+      description: 'Abra chrome://version (ou Menu → Ajuda → Sobre o Google Chrome) e copie o número em "Google Chrome".'
       placeholder: "Ex.: 128.0.6613.84"
     validations:
       required: true
