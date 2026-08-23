@@ -258,9 +258,21 @@
     return friends.map(f => haversine(f.lat, f.lng, cinema.lat, cinema.lng));
   }
 
+  function truncateText(text, maxLen = 26) {
+    const s = String(text).trim();
+    if (!s) return '';
+    if (s.length <= maxLen) return s;
+    return `${s.slice(0, maxLen - 1)}…`;
+  }
+
   function friendShortLabel(friend, idx) {
-    const raw = (friend.label || `Amigo ${idx + 1}`).split(',')[0].trim();
-    return raw.length > 14 ? `#${idx + 1}` : raw;
+    const full = friend.label || `Amigo ${idx + 1}`;
+    const raw = full.split(',')[0].trim() || full.trim();
+    return truncateText(raw);
+  }
+
+  function friendDisplayLabel(friend, idx) {
+    return friend.label || `Amigo ${idx + 1}`;
   }
 
   function escapeHtml(text) {
@@ -274,6 +286,7 @@
     return friends.map((friend, idx) => {
       const dist = distances[idx];
       const label = escapeHtml(friendShortLabel(friend, idx));
+      const fullLabel = escapeHtml(friendDisplayLabel(friend, idx));
       const value = dist != null ? `${dist.toFixed(1)} km` : '?';
       const color = getFriendColor(idx);
       const isClosest = closestFriendIndices?.includes(idx);
@@ -283,7 +296,7 @@
         const marker = isClosest ? ' ★' : '';
         return `<div style="display:flex;align-items:center;gap:6px;margin:1px 0;font-size:11px;line-height:1.35">` +
           `<span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 6px ${color}88"></span>` +
-          `<span style="color:rgba(240,240,240,0.78);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</span>` +
+          `<span style="color:rgba(240,240,240,0.78);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${fullLabel}">${label}</span>` +
           `<span style="color:${color};font-weight:${weight};white-space:nowrap">${value}${marker}</span>` +
           `</div>`;
       }
@@ -1055,12 +1068,16 @@
     const input = document.getElementById('icm-group-search');
     if (!input || !input.value.trim()) return;
 
+    const query = input.value.trim();
+
     try {
-      const coords = await geocodeManualInput(input.value);
+      const coords = await geocodeManualInput(query);
+      const label = query.split(',').map(s => s.trim()).filter(Boolean).slice(0, 2).join(', ')
+        || coords.label.split(',')[0].trim();
       friendLocations.push({
         lat: coords.lat,
         lng: coords.lng,
-        label: coords.label
+        label
       });
       input.value = '';
       updateGroupList();
@@ -1101,7 +1118,7 @@
       <div class="icm-group-item">
         <span style="display:flex;align-items:center;gap:8px;min-width:0">
           <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 8px ${color}88"></span>
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${friend.label}</span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(friend.label)}">${escapeHtml(friendShortLabel(friend, idx))}</span>
         </span>
         <button class="icm-group-remove" data-idx="${idx}">✕</button>
       </div>`;
