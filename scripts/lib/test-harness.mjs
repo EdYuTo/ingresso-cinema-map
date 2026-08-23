@@ -1,12 +1,15 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.join(__dirname, '../..');
 export const FIXTURES = path.join(ROOT, 'fixtures', 'ingresso');
-export const PROFILE = path.join(ROOT, '.playwright-profile-tests');
+export const PROFILE = process.env.CI
+  ? path.join(os.tmpdir(), 'icm-playwright-profile-tests')
+  : path.join(ROOT, '.playwright-profile-tests');
 export const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo';
 
 /** Public test locations — no personal addresses. */
