@@ -31,6 +31,9 @@
   let previewMarker = null;
   let previewLabel = '';
   let locationPreviewActive = false;
+  let previewContext = null; // null | 'user' | 'group' | 'group-pin'
+  let groupPreviewQuery = '';
+  let groupPinDropHandler = null;
   let cachedCinemas = null;
   let cachedUserCoords = null;
   let currentSort = 'dist-asc';
@@ -196,11 +199,90 @@
 
   function buildGeocodeQuery(query) {
     const city = pageCity || DEFAULT_CITY;
-    return `${query.trim()}, ${city.name}, ${city.uf}, Brasil`;
+    const formatted = formatGoogleAddressForGeocode(query);
+    if (formatted.city && formatted.uf) return formatted.query;
+
+    const trimmed = query.trim();
+    const normalized = normalizeName(trimmed);
+    const cityNorm = normalizeName(city.name);
+    const ufNorm = normalizeName(city.uf);
+    if (normalized.includes(cityNorm) && normalized.includes(ufNorm)) {
+      return `${trimmed}, Brasil`;
+    }
+    return `${trimmed}, ${city.name}, ${city.uf}, Brasil`;
+  }
+
+  function expandStreetAbbreviations(text) {
+    return String(text)
+      .replace(/\bR\.\s*/gi, 'Rua ')
+      .replace(/\bAv\.\s*/gi, 'Avenida ')
+      .replace(/\bAl\.\s*/gi, 'Alameda ')
+      .replace(/\bTrav\.\s*/gi, 'Travessa ')
+      .replace(/\bRod\.\s*/gi, 'Rodovia ')
+      .replace(/\bPç\.\s*/gi, 'Praça ')
+      .replace(/\bPc\.\s*/gi, 'Praça ')
+      .trim();
+  }
+
+  function formatGoogleAddressForGeocode(raw) {
+    const decoded = decodeMapsText(raw);
+    let segments = decoded.split(',').map(s => s.trim()).filter(Boolean);
+    if (!segments.length) return { query: decoded, city: null, uf: null };
+
+    const cepRe = /^\d{5}-?\d{3}$/;
+    const cityUfRe = /^(.+?)\s*-\s*([A-Z]{2})$/i;
+
+    if (cepRe.test(segments[segments.length - 1])) segments.pop();
+
+    let city = null;
+    let uf = null;
+    if (cityUfRe.test(segments[segments.length - 1] || '')) {
+      const match = segments.pop().match(cityUfRe);
+      city = match[1].trim();
+      uf = match[2].toUpperCase();
+    } else if (segments.length >= 2 && /^[A-Z]{2}$/i.test(segments[segments.length - 1])) {
+      uf = segments.pop().toUpperCase();
+      city = segments.pop();
+    }
+
+    let streetNumber = '';
+    if (segments.length >= 2) {
+      const tail = segments[segments.length - 1];
+      const numMatch = tail.match(/^(\d+)\s*-\s*.+$/);
+      if (numMatch) {
+        streetNumber = numMatch[1];
+        segments.pop();
+      }
+    }
+
+    let street = expandStreetAbbreviations(segments.join(', '));
+    if (streetNumber) street = `${street} ${streetNumber}`.trim();
+
+    if (city && uf) {
+      return { query: `${street}, ${city}, ${uf}, Brasil`, city, uf };
+    }
+    return { query: street || decoded, city: null, uf: null };
+  }
+
+  async function geocodeResolvedAddress(query) {
+    const formatted = formatGoogleAddressForGeocode(query);
+    const data = await nominatimSearch(formatted.query, 5);
+    if (!data.length) {
+      throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
+    }
+
+    if (formatted.city) {
+      const cityNorm = normalizeName(formatted.city);
+      return data.find(item => normalizeName(item.display_name).includes(cityNorm)) || data[0];
+    }
+    return data[0];
   }
 
   const GOOGLE_MAPS_URL_RE =
     /^(https?:\/\/)?((www\.)?(google\.[a-z.]+\/maps|maps\.google\.[a-z.]+)|maps\.app\.goo\.gl|goo\.gl\/maps)/i;
+
+  const MAPS_SHORT_LINK_RE =
+    /^(https?:\/\/)?(share\.google(\.com)?\/[^\s/?#]+|maps\.app\.goo\.gl\/[^\s/?#]+|goo\.gl\/maps\/[^\s/?#]+)/i;
 
   function decodeMapsText(text) {
     return decodeURIComponent(String(text).replace(/\+/g, ' ')).trim();
@@ -209,6 +291,41 @@
   function isValidCoord(lat, lng) {
     return Number.isFinite(lat) && Number.isFinite(lng)
       && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+  }
+
+  function extractGooglePlaceCoords(href) {
+    const m34 = href.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+    if (m34) {
+      const lat = parseFloat(m34[1]);
+      const lng = parseFloat(m34[2]);
+      if (isValidCoord(lat, lng)) return { lat, lng };
+    }
+
+    const m12 = href.match(/!1d(-?\d+(?:\.\d+)?)!2d(-?\d+(?:\.\d+)?)/);
+    if (m12) {
+      const lng = parseFloat(m12[1]);
+      const lat = parseFloat(m12[2]);
+      if (isValidCoord(lat, lng)) return { lat, lng };
+    }
+
+    const m23 = href.match(/!2d(-?\d+(?:\.\d+)?)!3d(-?\d+(?:\.\d+)?)/);
+    if (m23) {
+      const lat = parseFloat(m23[1]);
+      const lng = parseFloat(m23[2]);
+      if (isValidCoord(lat, lng)) return { lat, lng };
+    }
+
+    return null;
+  }
+
+  function cleanMapsAddressLabel(raw) {
+    const decoded = decodeMapsText(raw);
+    const segments = decoded.split(',').map(s => s.trim()).filter(Boolean);
+    if (segments.length <= 1) return decoded;
+    if (/^(av\.?|r\.?|rua|al\.?|trav\.?|rod\.?|praça|pc\.?)/i.test(segments[1])) {
+      return segments.slice(1).join(', ');
+    }
+    return decoded;
   }
 
   function parseGoogleMapsUrl(input) {
@@ -223,34 +340,18 @@
     }
 
     const href = url.href;
-    const queryParam = url.searchParams.get('query') || url.searchParams.get('q');
+    const addressParam = extractMapsAddressParam(url);
+    const addressLabel = addressParam ? cleanMapsAddressLabel(addressParam) : '';
     const placeMatch = url.pathname.match(/\/place\/([^/@?]+)/);
     const placeName = placeMatch ? decodeMapsText(placeMatch[1]) : '';
 
-    const dataMatch = href.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
-    if (dataMatch) {
-      const lat = parseFloat(dataMatch[1]);
-      const lng = parseFloat(dataMatch[2]);
-      if (isValidCoord(lat, lng)) {
-        return {
-          lat,
-          lng,
-          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
-        };
-      }
-    }
-
-    const atMatch = href.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
-    if (atMatch) {
-      const lat = parseFloat(atMatch[1]);
-      const lng = parseFloat(atMatch[2]);
-      if (isValidCoord(lat, lng)) {
-        return {
-          lat,
-          lng,
-          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
-        };
-      }
+    const placeCoords = extractGooglePlaceCoords(href);
+    if (placeCoords) {
+      return {
+        lat: placeCoords.lat,
+        lng: placeCoords.lng,
+        label: placeName || addressLabel || `${placeCoords.lat}, ${placeCoords.lng}`
+      };
     }
 
     const ll = url.searchParams.get('ll');
@@ -262,13 +363,13 @@
         return {
           lat,
           lng,
-          label: placeName || (queryParam ? decodeMapsText(queryParam) : `${lat}, ${lng}`)
+          label: placeName || addressLabel || `${lat}, ${lng}`
         };
       }
     }
 
-    if (queryParam) {
-      const decoded = decodeMapsText(queryParam);
+    if (addressParam) {
+      const decoded = decodeMapsText(addressParam);
       const coordMatch = decoded.match(/^(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)$/);
       if (coordMatch) {
         const lat = parseFloat(coordMatch[1]);
@@ -277,10 +378,41 @@
           return { lat, lng, label: `${lat}, ${lng}` };
         }
       }
-      return { query: decoded };
+      return { query: cleanMapsAddressLabel(addressParam) };
+    }
+
+    const atMatch = href.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if (atMatch) {
+      const lat = parseFloat(atMatch[1]);
+      const lng = parseFloat(atMatch[2]);
+      if (isValidCoord(lat, lng)) {
+        return {
+          lat,
+          lng,
+          label: placeName || addressLabel || `${lat}, ${lng}`
+        };
+      }
     }
 
     if (placeName) return { query: placeName };
+    return null;
+  }
+
+  function extractMapsAddressParam(url) {
+    for (const key of ['query', 'q', 'daddr', 'saddr']) {
+      const value = url.searchParams.get(key);
+      if (value?.trim()) return value;
+    }
+
+    const dirMatch = url.pathname.match(/\/maps\/dir\/(.+)/);
+    if (!dirMatch) return null;
+
+    const parts = dirMatch[1].split('/').filter(Boolean);
+    for (const part of parts) {
+      if (part.startsWith('@')) continue;
+      if (part.startsWith('data=')) continue;
+      return part;
+    }
     return null;
   }
 
@@ -735,6 +867,7 @@
   }
 
   function onPreviewMarkerDragged() {
+    if (previewContext === 'group') return;
     if (!cachedCinemas || !previewMarker) return;
     const latlng = previewMarker.getLatLng();
     applyDistancesFromPoint({ lat: latlng.lat, lng: latlng.lng }, false);
@@ -781,11 +914,12 @@
     if (updatePageSort) sortPageCinemas(sorted);
   }
 
-  function renderMap(cinemas, userCoords, { preview = false } = {}) {
+  function renderMap(cinemas, userCoords, { preview = false, previewCoords = null } = {}) {
     const mapEl = document.getElementById('icm-map');
     if (!mapEl) return;
 
     if (leafletMap) { leafletMap.remove(); leafletMap = null; }
+    mapEl._leaflet_map = null;
     cinemaMarkers = [];
     userMarker = null;
     previewMarker = null;
@@ -793,6 +927,7 @@
     friendMarkers = [];
 
     leafletMap = L.map(mapEl, { zoomControl: true });
+    mapEl._leaflet_map = leafletMap;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19
@@ -800,9 +935,31 @@
 
     const validCoords = [[userCoords.lat, userCoords.lng]];
 
-    if (preview) {
-      const previewIcon = L.divIcon({
+    if (previewCoords) {
+      const userIcon = L.divIcon({
         className: '',
+        html: '<div class="icm-user-dot-wrapper"><div class="icm-user-dot"></div></div>',
+        iconSize: [16, 16], iconAnchor: [8, 8]
+      });
+      userMarker = L.marker([userCoords.lat, userCoords.lng], { icon: userIcon, draggable: false })
+        .addTo(leafletMap)
+        .bindPopup(`<strong>Você</strong>`);
+
+      const previewIcon = L.divIcon({
+        className: 'icm-preview-marker-icon',
+        html: '<div class="icm-preview-dot-wrapper"><div class="icm-preview-dot"></div></div>',
+        iconSize: [22, 22], iconAnchor: [11, 11]
+      });
+      previewMarker = L.marker([previewCoords.lat, previewCoords.lng], { icon: previewIcon, draggable: true, zIndexOffset: 1000 })
+        .addTo(leafletMap)
+        .bindPopup(
+          `<strong>Novo amigo</strong><br><span style="font-size:11px;color:rgba(240,240,240,0.5)">Arraste para ajustar</span>`
+        );
+      previewMarker.on('dragend', onPreviewMarkerDragged);
+      validCoords.push([previewCoords.lat, previewCoords.lng]);
+    } else if (preview) {
+      const previewIcon = L.divIcon({
+        className: 'icm-preview-marker-icon',
         html: '<div class="icm-preview-dot-wrapper"><div class="icm-preview-dot"></div></div>',
         iconSize: [22, 22], iconAnchor: [11, 11]
       });
@@ -934,8 +1091,87 @@
     }
   }
 
+  function isMapsShortLink(input) {
+    return MAPS_SHORT_LINK_RE.test(input.trim());
+  }
+
+  function extractSearchQueryFromUrl(url) {
+    try {
+      const parsed = new URL(url);
+      const q = parsed.searchParams.get('q');
+      if (!q) return null;
+      if (parsed.pathname.includes('/search') || parsed.hostname.includes('google.')) {
+        return decodeMapsText(q);
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }
+
+  function resolveMapsShortLinkViaExtension(input) {
+    return new Promise((resolve, reject) => {
+      const requestId = `icm-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const timeoutMs = 25000;
+
+      const onMessage = (event) => {
+        if (event.source !== window || event.data?.type !== 'icm-resolve-short-link-response') return;
+        if (event.data.requestId !== requestId) return;
+        cleanup();
+        if (event.data.error) {
+          reject(new Error(event.data.error));
+          return;
+        }
+        const resp = event.data.resp;
+        if (!resp?.success || !resp.resolvedUrl) {
+          reject(new Error(resp?.error || 'Não foi possível resolver o link curto.'));
+          return;
+        }
+        resolve(resp.resolvedUrl);
+      };
+
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('Tempo limite ao resolver o link curto.'));
+      }, timeoutMs);
+
+      function cleanup() {
+        clearTimeout(timer);
+        window.removeEventListener('message', onMessage);
+      }
+
+      window.addEventListener('message', onMessage);
+      window.postMessage({
+        type: 'icm-resolve-short-link-request',
+        requestId,
+        url: input.trim()
+      }, '*');
+    });
+  }
+
+  async function normalizeMapsInput(query) {
+    const trimmed = query.trim();
+    if (!isMapsShortLink(trimmed)) return trimmed;
+
+    const resolvedUrl = await resolveMapsShortLinkViaExtension(trimmed);
+    if (isMapsShortLink(resolvedUrl) && !extractSearchQueryFromUrl(resolvedUrl)) {
+      throw new Error('Não foi possível extrair a localização deste link curto.');
+    }
+
+    const searchQuery = extractSearchQueryFromUrl(resolvedUrl);
+    if (searchQuery) return searchQuery;
+    return resolvedUrl;
+  }
+
   async function geocodeManualInput(query) {
-    const mapsInput = parseGoogleMapsUrl(query);
+    let normalizedQuery;
+    try {
+      normalizedQuery = await normalizeMapsInput(query);
+    } catch (err) {
+      throw new Error(err.message || 'Não foi possível resolver o link curto.');
+    }
+
+    const mapsInput = parseGoogleMapsUrl(normalizedQuery);
     if (mapsInput?.lat != null && mapsInput?.lng != null) {
       return {
         lat: mapsInput.lat,
@@ -944,12 +1180,15 @@
       };
     }
 
-    const searchQuery = mapsInput?.query || query;
-    const match = await geocodeInPageCity(searchQuery);
+    const searchQuery = mapsInput?.query || normalizedQuery;
+    const formatted = formatGoogleAddressForGeocode(searchQuery);
+    const match = formatted.city && formatted.uf
+      ? await geocodeResolvedAddress(searchQuery)
+      : await geocodeInPageCity(searchQuery);
     return {
       lat: parseFloat(match.lat),
       lng: parseFloat(match.lon),
-      label: match.display_name
+      label: cleanMapsAddressLabel(searchQuery) || match.display_name
     };
   }
 
@@ -1083,16 +1322,70 @@
     if (!locationPreviewActive) setMapOverlayVisibility(true);
   }
 
+  function setPreviewOverlayUI(mode) {
+    const labelEl = document.getElementById('icm-loc-preview-label');
+    const hintEl = document.querySelector('#icm-loc-preview .icm-loc-preview-hint');
+    const confirmBtn = document.getElementById('icm-loc-preview-confirm');
+    if (!labelEl || !hintEl || !confirmBtn) return;
+
+    if (mode === 'group-pin') {
+      labelEl.textContent = 'Marcar localização no mapa';
+      hintEl.textContent = 'Clique no mapa onde o amigo está. Pressione Cancelar para voltar.';
+      confirmBtn.classList.add('icm-hidden');
+      return;
+    }
+
+    confirmBtn.classList.remove('icm-hidden');
+    if (mode === 'group') {
+      labelEl.textContent = previewLabel || `Amigo ${friendLocations.length + 1}`;
+      hintEl.textContent = 'Arraste o marcador para ajustar. Confirme para adicionar à lista.';
+      confirmBtn.textContent = 'Adicionar amigo';
+      return;
+    }
+
+    labelEl.textContent = previewLabel;
+    hintEl.textContent = 'Arraste o marcador para ajustar a posição';
+    confirmBtn.textContent = 'Confirmar localização';
+  }
+
+  function clearGroupSearchFeedback() {
+    const errEl = document.getElementById('icm-group-search-error');
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('icm-hidden'); }
+    document.getElementById('icm-group-pin-drop')?.classList.remove('icm-pin-drop-highlight');
+  }
+
+  function buildFriendLabel(query, coords) {
+    if (coords?.label) {
+      const fromCoords = coords.label.split(',').map(s => s.trim()).filter(Boolean).slice(0, 2).join(', ');
+      if (fromCoords) return fromCoords;
+    }
+    const mapsInput = query ? parseGoogleMapsUrl(query) : null;
+    const textQuery = mapsInput?.query || (!mapsInput ? query : null);
+    if (textQuery) {
+      const fromQuery = textQuery.split(',').map(s => s.trim()).filter(Boolean).slice(0, 2).join(', ');
+      if (fromQuery) return fromQuery;
+    }
+    return `Amigo ${friendLocations.length + 1}`;
+  }
+
+  function stopGroupPinDropMode() {
+    if (groupPinDropHandler && leafletMap) {
+      leafletMap.off('click', groupPinDropHandler);
+      groupPinDropHandler = null;
+    }
+    leafletMap?.getContainer().style.removeProperty('cursor');
+  }
+
   function enterLocationPreview(coords) {
     if (!cachedCinemas) return;
+    previewContext = 'user';
     previewLabel = coords.label || '';
     locationPreviewActive = true;
 
     setState('icm-map-section');
     closeLocationSearch();
     document.getElementById('icm-loc-preview')?.classList.remove('icm-hidden');
-    const labelEl = document.getElementById('icm-loc-preview-label');
-    if (labelEl) labelEl.textContent = previewLabel;
+    setPreviewOverlayUI('user');
     setMapOverlayVisibility(false);
 
     const withDist = cachedCinemas.map(c => ({
@@ -1111,10 +1404,97 @@
     }, 50);
   }
 
+  function enterGroupFriendPreview(coords, query) {
+    if (!cachedCinemas || !cachedUserCoords) return;
+    stopGroupPinDropMode();
+    previewContext = 'group';
+    groupPreviewQuery = query || '';
+    previewLabel = coords.label || buildFriendLabel(query, coords);
+    locationPreviewActive = true;
+
+    document.getElementById('icm-group-modal')?.classList.add('icm-hidden');
+    setState('icm-map-section');
+    document.getElementById('icm-loc-preview')?.classList.remove('icm-hidden');
+    setPreviewOverlayUI('group');
+    setMapOverlayVisibility(false);
+
+    setTimeout(() => {
+      renderMap(cachedCinemas, cachedUserCoords, { previewCoords: coords });
+      if (leafletMap) {
+        leafletMap.fitBounds(L.latLngBounds([
+          [cachedUserCoords.lat, cachedUserCoords.lng],
+          [coords.lat, coords.lng]
+        ]), { padding: [40, 40] });
+        leafletMap.invalidateSize();
+      }
+    }, 50);
+  }
+
+  function startGroupPinDrop() {
+    if (!leafletMap || !cachedCinemas || !cachedUserCoords) return;
+    stopGroupPinDropMode();
+    clearGroupSearchFeedback();
+    previewContext = 'group-pin';
+    previewLabel = '';
+    groupPreviewQuery = '';
+    locationPreviewActive = true;
+
+    document.getElementById('icm-group-modal')?.classList.add('icm-hidden');
+    setState('icm-map-section');
+    document.getElementById('icm-loc-preview')?.classList.remove('icm-hidden');
+    setPreviewOverlayUI('group-pin');
+    setMapOverlayVisibility(false);
+    refreshMapDisplay();
+
+    leafletMap.getContainer().style.cursor = 'crosshair';
+    groupPinDropHandler = (e) => {
+      stopGroupPinDropMode();
+      enterGroupFriendPreview(
+        { lat: e.latlng.lat, lng: e.latlng.lng, label: `Amigo ${friendLocations.length + 1}` },
+        ''
+      );
+    };
+    leafletMap.once('click', groupPinDropHandler);
+  }
+
+  function confirmGroupFriendPreview() {
+    if (!previewMarker) return;
+    const latlng = previewMarker.getLatLng();
+    friendLocations.push({
+      lat: latlng.lat,
+      lng: latlng.lng,
+      label: buildFriendLabel(groupPreviewQuery, { label: previewLabel })
+    });
+    resetGroupPreviewState(true);
+    updateGroupList();
+    updateGroupBarState();
+    refreshMapDisplay();
+  }
+
+  function resetGroupPreviewState(reopenModal) {
+    stopGroupPinDropMode();
+    previewContext = null;
+    locationPreviewActive = false;
+    previewMarker = null;
+    previewLabel = '';
+    groupPreviewQuery = '';
+    document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
+    if (reopenModal) {
+      clearGroupSearchFeedback();
+      document.getElementById('icm-group-modal')?.classList.remove('icm-hidden');
+      setMapOverlayVisibility(true);
+    }
+  }
+
   function confirmLocationPreview() {
+    if (previewContext === 'group') {
+      confirmGroupFriendPreview();
+      return;
+    }
     if (!previewMarker) return;
     const latlng = previewMarker.getLatLng();
     locationPreviewActive = false;
+    previewContext = null;
     previewMarker = null;
     document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
     setMapOverlayVisibility(true);
@@ -1123,7 +1503,14 @@
   }
 
   function cancelLocationPreview(restore = true) {
+    if (previewContext === 'group' || previewContext === 'group-pin') {
+      resetGroupPreviewState(restore);
+      if (restore && cachedCinemas && cachedUserCoords) refreshMapDisplay();
+      return;
+    }
+
     locationPreviewActive = false;
+    previewContext = null;
     previewMarker = null;
     previewLabel = '';
     document.getElementById('icm-loc-search')?.classList.add('icm-hidden');
@@ -1168,6 +1555,8 @@
   }
 
   function exitGroupMode() {
+    stopGroupPinDropMode();
+    resetGroupPreviewState(false);
     groupMode = false;
     currentGroupMode = 'centroid';
     const modal = document.getElementById('icm-group-modal');
@@ -1200,46 +1589,31 @@
 
   async function addFriendLocation() {
     const input = document.getElementById('icm-group-search');
+    const btn = document.getElementById('icm-group-add-btn');
     if (!input || !input.value.trim()) return;
 
     const query = input.value.trim();
+    clearGroupSearchFeedback();
+    if (btn) { btn.disabled = true; btn.textContent = 'Buscando...'; }
 
     try {
       const coords = await geocodeManualInput(query);
-      const label = query.split(',').map(s => s.trim()).filter(Boolean).slice(0, 2).join(', ')
-        || coords.label.split(',')[0].trim();
-      friendLocations.push({
-        lat: coords.lat,
-        lng: coords.lng,
-        label
-      });
+      const label = buildFriendLabel(query, coords);
       input.value = '';
-      updateGroupList();
-      updateGroupBarState();
-      refreshMapDisplay();
+      enterGroupFriendPreview({ ...coords, label }, query);
     } catch (err) {
-      const errEl = document.getElementById('icm-manual-error');
-      if (errEl) {
-        errEl.textContent = err.message;
-        errEl.classList.remove('icm-hidden');
-      }
+      showSearchError(
+        'icm-group-search-error',
+        `${err.message} Você pode marcar a localização no mapa abaixo.`
+      );
+      document.getElementById('icm-group-pin-drop')?.classList.add('icm-pin-drop-highlight');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Adicionar'; }
     }
   }
 
   function enablePinDrop() {
-    if (!leafletMap) return;
-    const modal = document.getElementById('icm-group-modal');
-    if (modal) modal.classList.add('icm-hidden');
-
-    leafletMap.once('click', (e) => {
-      const coords = { lat: e.latlng.lat, lng: e.latlng.lng, label: `Amigo ${friendLocations.length + 1}` };
-      friendLocations.push(coords);
-      const modal2 = document.getElementById('icm-group-modal');
-      if (modal2) modal2.classList.remove('icm-hidden');
-      updateGroupList();
-      updateGroupBarState();
-      refreshMapDisplay();
-    });
+    startGroupPinDrop();
   }
 
   function updateGroupList() {
@@ -1627,7 +2001,8 @@
                 <input id="icm-group-search" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
                 <button id="icm-group-add-btn" class="icm-btn-primary">Adicionar</button>
               </div>
-              <button id="icm-group-pin-drop" class="icm-btn-link">ou clique no mapa</button>
+              <button id="icm-group-pin-drop" class="icm-btn-link">ou marque no mapa</button>
+              <p id="icm-group-search-error" class="icm-group-search-error icm-hidden"></p>
             </div>
             <div id="icm-group-list" class="icm-group-list"></div>
             <div style="display: flex; gap: 8px; margin-top: 12px;">

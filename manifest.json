@@ -15,16 +15,26 @@
     },
     "default_title": "Abrir/Fechar Mapa de Cinemas"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "host_permissions": [
     "https://www.ingresso.com/*",
     "https://api-content.ingresso.com/*",
-    "https://nominatim.openstreetmap.org/*"
+    "https://nominatim.openstreetmap.org/*",
+    "https://share.google/*",
+    "https://maps.app.goo.gl/*",
+    "https://goo.gl/*",
+    "https://www.google.com/*",
+    "https://maps.google.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
+    {
+      "matches": ["https://www.ingresso.com/filme/*"],
+      "js": ["content-bridge.js"],
+      "run_at": "document_idle"
+    },
     {
       "matches": ["https://www.ingresso.com/filme/*"],
       "js": ["lib/leaflet.js", "inpage.js"],
