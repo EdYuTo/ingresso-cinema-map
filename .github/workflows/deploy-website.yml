@@ -23,36 +23,54 @@ jobs:
       deployments: write
 
     steps:
-      - name: Verify Cloudflare API token
-        run: |
-          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
-            echo "::error::Missing CLOUDFLARE_API_TOKEN in Settings → Secrets and variables → Actions."
-            exit 1
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Cloudflare Pages access
-        id: pages-check
-        continue-on-error: true
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages project list
-
-      - name: Pages token help
-        if: steps.pages-check.outcome == 'failure'
+      - name: Diagnose Cloudflare credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          echo "::error::CLOUDFLARE_API_TOKEN is missing Cloudflare Pages permission."
-          echo "Recreate the token at https://dash.cloudflare.com/profile/api-tokens"
-          echo "Required: Account → Cloudflare Pages → Edit (Account → Account Settings → Read recommended)."
-          echo "Account ID: 7e983bf1138b95c26fb224d5575de726"
-          exit 1
+          set -euo pipefail
+
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            echo "::error::Missing CLOUDFLARE_ACCOUNT_ID."
+            exit 1
+          fi
+
+          export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
+          export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')"
+
+          echo "Token length: ${#CLOUDFLARE_API_TOKEN}"
+          echo "Account ID length: ${#CLOUDFLARE_ACCOUNT_ID}"
+
+          echo "=== Token verify ==="
+          curl -fsS -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+            | jq '{success, status: .result.status, id: .result.id}'
+
+          echo "=== Pages projects API ==="
+          HTTP=$(curl -sS -o /tmp/pages.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects")
+          echo "HTTP ${HTTP}"
+          jq '{success, errors, project_count: (.result|length)}' /tmp/pages.json
+
+          if [ "$HTTP" != "200" ] || [ "$(jq -r '.success' /tmp/pages.json)" != "true" ]; then
+            echo "::error::Cloudflare Pages API rejected this token/account pair."
+            echo "Recreate CLOUDFLARE_API_TOKEN with Account → Cloudflare Pages → Edit."
+            echo "Set CLOUDFLARE_ACCOUNT_ID to: 7e983bf1138b95c26fb224d5575de726"
+            exit 1
+          fi
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy --project-name=ingresso-cinema-map --branch main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
