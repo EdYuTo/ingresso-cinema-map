@@ -13,7 +13,7 @@ body:
     attributes:
       label: Descrição
       description: Resumo claro do que aconteceu.
-      placeholder: Ex.: O mapa não aparece na página do filme após permitir a localização.
+      placeholder: "Ex.: O mapa não aparece na página do filme após permitir a localização."
     validations:
       required: true
 
@@ -53,7 +53,7 @@ body:
     id: chrome
     attributes:
       label: Versão do Chrome
-      placeholder: Ex.: 128.0.6613.84
+      placeholder: "Ex.: 128.0.6613.84"
     validations:
       required: true
 
@@ -61,7 +61,7 @@ body:
     id: os
     attributes:
       label: Sistema operacional
-      placeholder: Ex.: macOS 15, Windows 11, Ubuntu 24.04
+      placeholder: "Ex.: macOS 15, Windows 11, Ubuntu 24.04"
     validations:
       required: true
 
@@ -69,8 +69,8 @@ body:
     id: extension
     attributes:
       label: Versão da extensão
-      description: Em chrome://extensions, ative “Detalhes” ou veja a versão no manifesto carregado.
-      placeholder: Ex.: 1.0.0 (ou “carregada sem compactação”)
+      description: 'Em chrome://extensions, ative "Detalhes" ou veja a versão no manifesto carregado.'
+      placeholder: 'Ex.: 1.0.0 (ou "carregada sem compactação")'
     validations:
       required: false
 
@@ -78,6 +78,6 @@ body:
     id: extras
     attributes:
       label: Informações adicionais
-      description: Prints, URL do filme, cidade selecionada no ingresso.com, erros no console (F12), etc.
+      description: "Prints, URL do filme, cidade selecionada no ingresso.com, erros no console (F12), etc."
     validations:
       required: false
