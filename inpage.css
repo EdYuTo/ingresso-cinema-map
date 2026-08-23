@@ -420,6 +420,13 @@
   color: #98aaec !important;
 }
 
+#icm-panel .icm-chip.icm-chip-disabled,
+#icm-panel .icm-chip:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
 /* ── User location marker ────────────────────────────────────────────── */
 
 .icm-user-dot-wrapper { position: relative; width: 16px; height: 16px; cursor: grab; }
