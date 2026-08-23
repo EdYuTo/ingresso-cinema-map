@@ -597,28 +597,38 @@
   // ── Group mode ─────────────────────────────────────────────────────────
 
   function toggleGroupMode() {
-    groupMode = !groupMode;
     const modal = document.getElementById('icm-group-modal');
-    const bar = document.getElementById('icm-sort-bar');
-    const groupBar = document.getElementById('icm-group-bar');
-    const btn = document.getElementById('icm-btn-group-toggle');
 
     if (groupMode) {
+      if (modal) modal.classList.toggle('icm-hidden');
+    } else {
+      groupMode = true;
+      const bar = document.getElementById('icm-sort-bar');
+      const groupBar = document.getElementById('icm-group-bar');
+      const btn = document.getElementById('icm-btn-group-toggle');
       if (modal) modal.classList.remove('icm-hidden');
       if (bar) bar.style.display = 'none';
       if (groupBar) groupBar.classList.remove('icm-hidden');
       if (btn) btn.classList.add('icm-active');
-    } else {
-      if (modal) modal.classList.add('icm-hidden');
-      if (bar) bar.style.display = 'flex';
-      if (groupBar) groupBar.classList.add('icm-hidden');
-      if (btn) btn.classList.remove('icm-active');
-      friendLocations = [];
-      friendMarkers.forEach(m => m.remove?.());
-      friendMarkers = [];
-      if (cachedCinemas && cachedUserCoords) {
-        renderMap(cachedCinemas, cachedUserCoords);
-      }
+    }
+    updateGroupList();
+  }
+
+  function exitGroupMode() {
+    groupMode = false;
+    const modal = document.getElementById('icm-group-modal');
+    const bar = document.getElementById('icm-sort-bar');
+    const groupBar = document.getElementById('icm-group-bar');
+    const btn = document.getElementById('icm-btn-group-toggle');
+    if (modal) modal.classList.add('icm-hidden');
+    if (bar) bar.style.display = 'flex';
+    if (groupBar) groupBar.classList.add('icm-hidden');
+    if (btn) btn.classList.remove('icm-active');
+    friendLocations = [];
+    friendMarkers.forEach(m => m.remove?.());
+    friendMarkers = [];
+    if (cachedCinemas && cachedUserCoords) {
+      renderMap(cachedCinemas, cachedUserCoords);
     }
     updateGroupList();
   }
@@ -994,7 +1004,10 @@
               <button id="icm-group-pin-drop" class="icm-btn-link">ou clique no mapa</button>
             </div>
             <div id="icm-group-list" class="icm-group-list"></div>
-            <button id="icm-group-done" class="icm-btn-primary" style="width: 100%; margin-top: 12px;">Pronto</button>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button id="icm-group-done" class="icm-btn-primary" style="flex: 1;">Pronto</button>
+              <button id="icm-group-exit" class="icm-btn-link" style="white-space: nowrap;">Sair</button>
+            </div>
           </div>
         </div>
       </div>`;
@@ -1017,6 +1030,7 @@
     panel.querySelector('#icm-btn-group-toggle').addEventListener('click', toggleGroupMode);
     panel.querySelector('#icm-group-close').addEventListener('click', closeGroupModal);
     panel.querySelector('#icm-group-done').addEventListener('click', closeGroupModal);
+    panel.querySelector('#icm-group-exit').addEventListener('click', exitGroupMode);
     panel.querySelector('#icm-group-add-btn').addEventListener('click', addFriendLocation);
     panel.querySelector('#icm-group-search').addEventListener('keydown', e => {
       if (e.key === 'Enter') addFriendLocation();
