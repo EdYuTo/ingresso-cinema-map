@@ -15,3 +15,8 @@ Thumbs.db
 
 # Claude
 .claude/
+
+# Playwright (local screenshot capture)
+.playwright-profile/
+.playwright-profile-*/
+node_modules/
