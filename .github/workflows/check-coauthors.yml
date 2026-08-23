@@ -1,0 +1,67 @@
+name: Check Co-Authors
+
+on:
+  pull_request_target:
+    branches: '*'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-coauthors:
+    name: Check for co-authored commits
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Co-Authored-By footer
+        id: check
+        run: |
+          set +e
+
+          # Get list of commits in this PR
+          commits=$(gh api repos/"${{ github.repository }}"/pulls/"${{ github.event.pull_request.number }}"/commits --jq '.[].commit.message' 2>/dev/null || echo "")
+
+          # Check for Co-Authored-By footer (case-insensitive)
+          if echo "$commits" | grep -qi "co-authored-by:"; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            violations=$(echo "$commits" | grep -i "co-authored-by:" || true)
+            # Use delimited string for multiline output
+            violations_encoded="${violations//$'\n'/'%0A'}"
+            echo "violations=${violations_encoded}" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Comment on PR if co-authors found
+        if: failure() && steps.check.outputs.found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get violations from previous step output
+            const violationsEncoded = '${{ steps.check.outputs.violations }}';
+
+            // Validate that violations are present
+            if (!violationsEncoded) {
+              console.warn('Warning: No violations output found');
+              return;
+            }
+
+            // Decode the violations (replace URL-encoded newlines)
+            const violations = violationsEncoded.replace(/%0A/g, '\n').trim();
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ Co-authored commits detected\n\nPull requests must have a single author. Found Co-Authored-By footer in commits:\n\`\`\`\n${violations}\n\`\`\`\n\nPlease amend to remove Co-Authored-By footers or create new PR with single author.`
+            });
