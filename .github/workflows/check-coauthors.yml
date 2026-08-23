@@ -63,5 +63,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `❌ Co-authored commits detected\n\nPull requests must have a single author. Found Co-Authored-By footer in commits:\n\`\`\`\n${violations}\n\`\`\`\n\nPlease amend to remove Co-Authored-By footers or create new PR with single author.`
+              body: `❌ Co-authored commits detected\n\nPull requests must have a single author. Found Co-Authored-By footer in commits:\n\`\`\`\n${violations}\n\`\`\`\n\nPlease:\n- Amend commits to remove \`Co-Authored-By\` footers, or open a new PR with a single author\n- Update the PR description to remove any \`Co-Authored-By\` lines or "Made with …" attribution`
             });
