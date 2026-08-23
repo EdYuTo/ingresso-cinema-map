@@ -8,8 +8,17 @@
 
   // ── Constants ──────────────────────────────────────────────────────────
   const THEATERS_API = 'https://api-content.ingresso.com/v0/theaters/city';
+  const CITY_API = 'https://api-content.ingresso.com/v0/states/city/name';
   const NOMINATIM_API = 'https://nominatim.openstreetmap.org/search';
   const NOMINATIM_DELAY = 1100;
+
+  const DEFAULT_CITY = {
+    id: '1',
+    name: 'São Paulo',
+    uf: 'SP',
+    state: 'São Paulo',
+    urlKey: 'sao-paulo'
+  };
 
   const TIME_RE = /^\d{2}:\d{2}$/;
   const SESSION_TYPES = ['VIP', 'LASER', 'DUBLADO', 'LEGENDADO', 'NORMAL'];
@@ -19,11 +28,16 @@
   let leafletMap = null;
   let cinemaMarkers = [];
   let userMarker = null;
+  let previewMarker = null;
+  let previewLabel = '';
+  let locationPreviewActive = false;
   let cachedCinemas = null;
   let cachedUserCoords = null;
   let currentSort = 'dist-asc';
   let cinemaContainer = null;
   let refreshVersion = 0;
+  let pageCity = null;
+  let pageCityKey = null;
 
   const geocodeCache = new Map(); // cinemaName → { lat, lng }
 
@@ -52,6 +66,137 @@
       .replace(/[^a-z0-9 ]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  // ── Page city (from ingresso.com selector) ─────────────────────────────
+
+  function readCookie(name) {
+    const escaped = name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1');
+    const match = document.cookie.match(new RegExp(`(?:^|; )${escaped}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function readSiteCityCookie() {
+    const raw = readCookie('SiteCity');
+    if (!raw) return null;
+    try {
+      const c = JSON.parse(raw);
+      return {
+        id: String(c.Id ?? c.id ?? ''),
+        name: c.Name ?? c.name,
+        uf: c.UF ?? c.uf,
+        urlKey: c.UrlKey ?? c.urlKey,
+        state: c.State ?? c.state
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function readCityHistoryLatest() {
+    try {
+      const hist = JSON.parse(localStorage.getItem('cityHistory') || '[]');
+      if (!Array.isArray(hist) || !hist.length) return null;
+      const c = hist[hist.length - 1];
+      return {
+        id: String(c.id),
+        name: c.name,
+        uf: c.uf,
+        urlKey: c.urlKey,
+        state: c.state
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function getCityLookupKey() {
+    const urlKey = new URLSearchParams(location.search).get('city');
+    if (urlKey) return urlKey;
+    const cookie = readSiteCityCookie();
+    if (cookie?.urlKey) return cookie.urlKey;
+    const hist = readCityHistoryLatest();
+    if (hist?.urlKey) return hist.urlKey;
+    return DEFAULT_CITY.urlKey;
+  }
+
+  async function fetchCityByUrlKey(urlKey) {
+    const res = await fetch(`${CITY_API}/${encodeURIComponent(urlKey)}`);
+    if (!res.ok) return null;
+    const c = await res.json();
+    return {
+      id: String(c.id),
+      name: c.name,
+      uf: c.uf,
+      urlKey: c.urlKey,
+      state: c.state
+    };
+  }
+
+  async function resolvePageCity() {
+    const key = getCityLookupKey();
+    if (pageCity && pageCityKey === key) return pageCity;
+
+    const cookie = readSiteCityCookie();
+    if (cookie?.urlKey === key && cookie.name && cookie.uf && cookie.id) {
+      pageCity = cookie;
+      pageCityKey = key;
+      return pageCity;
+    }
+
+    const hist = readCityHistoryLatest();
+    if (hist?.urlKey === key && hist.name && hist.uf && hist.id) {
+      pageCity = hist;
+      pageCityKey = key;
+      return pageCity;
+    }
+
+    pageCity = (await fetchCityByUrlKey(key)) || DEFAULT_CITY;
+    pageCityKey = key;
+    return pageCity;
+  }
+
+  function buildGeocodeQuery(query) {
+    const city = pageCity || DEFAULT_CITY;
+    return `${query.trim()}, ${city.name}, ${city.uf}, Brasil`;
+  }
+
+  function geocodeResultMatchesCity(item, city) {
+    const hay = normalizeName(item.display_name || '');
+    const cityNorm = normalizeName(city.name);
+    if (hay.includes(cityNorm)) return true;
+    const words = cityNorm.split(' ').filter(w => w.length > 3);
+    return words.length > 0 && words.every(w => hay.includes(w));
+  }
+
+  async function nominatimSearch(q, limit = 5) {
+    const params = new URLSearchParams({
+      q,
+      format: 'json',
+      limit: String(limit),
+      countrycodes: 'br'
+    });
+    const res = await fetch(`${NOMINATIM_API}?${params}`, {
+      headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
+    });
+    if (!res.ok) throw new Error('Serviço de geocodificação indisponível.');
+    return res.json();
+  }
+
+  async function geocodeInPageCity(query) {
+    await resolvePageCity();
+    const city = pageCity || DEFAULT_CITY;
+    const data = await nominatimSearch(buildGeocodeQuery(query), 5);
+    if (!data.length) {
+      throw new Error(`Endereço não encontrado em ${city.name}. Tente incluir o bairro.`);
+    }
+    const match = data.find(item => geocodeResultMatchesCity(item, city));
+    if (!match) {
+      throw new Error(
+        `Nenhum resultado em ${city.name} para "${query}". Verifique o endereço ou a cidade selecionada no site.`
+      );
+    }
+    return match;
   }
 
   // ── Group mode calculations ────────────────────────────────────────────
@@ -327,14 +472,22 @@
     if (!cachedCinemas || !userMarker) return;
     const latlng = userMarker.getLatLng();
     cachedUserCoords = { lat: latlng.lat, lng: latlng.lng };
+    applyDistancesFromPoint(cachedUserCoords, true);
+  }
 
+  function onPreviewMarkerDragged() {
+    if (!cachedCinemas || !previewMarker) return;
+    const latlng = previewMarker.getLatLng();
+    applyDistancesFromPoint({ lat: latlng.lat, lng: latlng.lng }, false);
+  }
+
+  function applyDistancesFromPoint(point, updatePageSort) {
     const withDist = cachedCinemas.map(c => ({
       ...c,
-      distance: c.lat !== null ? haversine(cachedUserCoords.lat, cachedUserCoords.lng, c.lat, c.lng) : null
+      distance: c.lat !== null ? haversine(point.lat, point.lng, c.lat, c.lng) : null
     }));
     const sorted = sortCinemas(withDist);
 
-    // Update markers in-place — no map teardown
     sorted.forEach((cinema, idx) => {
       const entry = cinemaMarkers.find(m => m.name === cinema.name);
       if (!entry) return;
@@ -353,15 +506,17 @@
         </div>`);
     });
 
-    sortPageCinemas(sorted);
+    if (updatePageSort) sortPageCinemas(sorted);
   }
 
-  function renderMap(cinemas, userCoords) {
+  function renderMap(cinemas, userCoords, { preview = false } = {}) {
     const mapEl = document.getElementById('icm-map');
     if (!mapEl) return;
 
     if (leafletMap) { leafletMap.remove(); leafletMap = null; }
     cinemaMarkers = [];
+    userMarker = null;
+    previewMarker = null;
     friendMarkers.forEach(m => m.remove?.());
     friendMarkers = [];
 
@@ -371,19 +526,33 @@
       maxZoom: 19
     }).addTo(leafletMap);
 
-    const userIcon = L.divIcon({
-      className: '',
-      html: '<div class="icm-user-dot-wrapper"><div class="icm-user-dot"></div></div>',
-      iconSize: [16, 16], iconAnchor: [8, 8]
-    });
-    userMarker = L.marker([userCoords.lat, userCoords.lng], { icon: userIcon, draggable: true })
-      .addTo(leafletMap)
-      .bindPopup(
-        `<strong>Você está aqui</strong><br><span style="font-size:11px;color:rgba(240,240,240,0.5)">Arraste para mover</span>`
-      );
-    userMarker.on('dragend', onUserMarkerDragged);
-
     const validCoords = [[userCoords.lat, userCoords.lng]];
+
+    if (preview) {
+      const previewIcon = L.divIcon({
+        className: '',
+        html: '<div class="icm-preview-dot-wrapper"><div class="icm-preview-dot"></div></div>',
+        iconSize: [22, 22], iconAnchor: [11, 11]
+      });
+      previewMarker = L.marker([userCoords.lat, userCoords.lng], { icon: previewIcon, draggable: true, zIndexOffset: 1000 })
+        .addTo(leafletMap)
+        .bindPopup(
+          `<strong>Pré-visualização</strong><br><span style="font-size:11px;color:rgba(240,240,240,0.5)">Arraste para ajustar</span>`
+        );
+      previewMarker.on('dragend', onPreviewMarkerDragged);
+    } else {
+      const userIcon = L.divIcon({
+        className: '',
+        html: '<div class="icm-user-dot-wrapper"><div class="icm-user-dot"></div></div>',
+        iconSize: [16, 16], iconAnchor: [8, 8]
+      });
+      userMarker = L.marker([userCoords.lat, userCoords.lng], { icon: userIcon, draggable: true })
+        .addTo(leafletMap)
+        .bindPopup(
+          `<strong>Você está aqui</strong><br><span style="font-size:11px;color:rgba(240,240,240,0.5)">Arraste para mover</span>`
+        );
+      userMarker.on('dragend', onUserMarkerDragged);
+    }
 
     if (groupMode && friendLocations.length > 0) {
       friendLocations.forEach((friend, idx) => {
@@ -470,33 +639,36 @@
 
   // ── API ────────────────────────────────────────────────────────────────
 
-  async function fetchTheaters(cityId = 1) {
+  async function fetchTheaters() {
+    await resolvePageCity();
+    const cityId = pageCity?.id || DEFAULT_CITY.id;
     const res = await fetch(`${THEATERS_API}/${cityId}?partnership=encora`);
     if (!res.ok) throw new Error(`Theater API ${res.status}`);
     return res.json();
   }
 
   async function geocodeAddress(address) {
-    const q = address.replace('|', ',').trim() + ', Brasil';
-    const params = new URLSearchParams({ q, format: 'json', limit: '1', countrycodes: 'br' });
-    const res = await fetch(`${NOMINATIM_API}?${params}`, {
-      headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.length ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
+    await resolvePageCity();
+    const city = pageCity || DEFAULT_CITY;
+    const base = address.replace('|', ',').trim();
+    const q = `${base}, ${city.name}, ${city.uf}, Brasil`;
+    try {
+      const data = await nominatimSearch(q, 3);
+      const match = data.find(item => geocodeResultMatchesCity(item, city)) || data[0];
+      if (!match) return null;
+      return { lat: parseFloat(match.lat), lng: parseFloat(match.lon) };
+    } catch {
+      return null;
+    }
   }
 
   async function geocodeManualInput(query) {
-    const q = query.trim() + ', Brasil';
-    const params = new URLSearchParams({ q, format: 'json', limit: '1', countrycodes: 'br' });
-    const res = await fetch(`${NOMINATIM_API}?${params}`, {
-      headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
-    });
-    if (!res.ok) throw new Error('Serviço de geocodificação indisponível.');
-    const data = await res.json();
-    if (!data.length) throw new Error('Endereço não encontrado. Tente ser mais específico.');
-    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), label: data[0].display_name };
+    const match = await geocodeInPageCity(query);
+    return {
+      lat: parseFloat(match.lat),
+      lng: parseFloat(match.lon),
+      label: match.display_name
+    };
   }
 
   // ── Match & geocode (cache-aware) ──────────────────────────────────────
@@ -586,12 +758,105 @@
   }
 
   function showManualInput() {
+    if (cachedCinemas) {
+      openLocationSearch();
+      return;
+    }
     const inp = document.getElementById('icm-manual-input');
     const err = document.getElementById('icm-manual-error');
     if (inp) inp.value = '';
     if (err) { err.textContent = ''; err.classList.add('icm-hidden'); }
     setState('icm-manual');
     setTimeout(() => inp?.focus(), 50);
+  }
+
+  function setMapOverlayVisibility(visible) {
+    document.querySelector('.icm-map-overlays')?.classList.toggle('icm-hidden', !visible);
+  }
+
+  async function openLocationSearch() {
+    if (locationPreviewActive) {
+      cancelLocationPreview(false);
+      if (cachedUserCoords && cachedCinemas) renderWithLocation(cachedUserCoords);
+    }
+    await resolvePageCity();
+    setState('icm-map-section');
+    document.getElementById('icm-loc-search')?.classList.remove('icm-hidden');
+    document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
+    const errEl = document.getElementById('icm-loc-search-error');
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('icm-hidden'); }
+    setMapOverlayVisibility(false);
+    const inp = document.getElementById('icm-loc-search-input');
+    if (inp) {
+      inp.placeholder = `Ex: R. da Consolação, 2423 (${pageCity?.name || 'sua cidade'})`;
+      inp.value = '';
+      setTimeout(() => inp.focus(), 50);
+    }
+  }
+
+  function closeLocationSearch() {
+    document.getElementById('icm-loc-search')?.classList.add('icm-hidden');
+    const errEl = document.getElementById('icm-loc-search-error');
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('icm-hidden'); }
+    if (!locationPreviewActive) setMapOverlayVisibility(true);
+  }
+
+  function enterLocationPreview(coords) {
+    if (!cachedCinemas) return;
+    previewLabel = coords.label || '';
+    locationPreviewActive = true;
+
+    setState('icm-map-section');
+    closeLocationSearch();
+    document.getElementById('icm-loc-preview')?.classList.remove('icm-hidden');
+    const labelEl = document.getElementById('icm-loc-preview-label');
+    if (labelEl) labelEl.textContent = previewLabel;
+    setMapOverlayVisibility(false);
+
+    const withDist = cachedCinemas.map(c => ({
+      ...c,
+      distance: c.lat !== null ? haversine(coords.lat, coords.lng, c.lat, c.lng) : null
+    }));
+    const sorted = sortCinemas(withDist);
+    updateMapCount(sorted);
+
+    setTimeout(() => {
+      renderMap(sorted, coords, { preview: true });
+      if (leafletMap) {
+        leafletMap.setView([coords.lat, coords.lng], 15);
+        leafletMap.invalidateSize();
+      }
+    }, 50);
+  }
+
+  function confirmLocationPreview() {
+    if (!previewMarker) return;
+    const latlng = previewMarker.getLatLng();
+    locationPreviewActive = false;
+    previewMarker = null;
+    document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
+    setMapOverlayVisibility(true);
+    renderWithLocation({ lat: latlng.lat, lng: latlng.lng, label: previewLabel });
+    previewLabel = '';
+  }
+
+  function cancelLocationPreview(restore = true) {
+    locationPreviewActive = false;
+    previewMarker = null;
+    previewLabel = '';
+    document.getElementById('icm-loc-search')?.classList.add('icm-hidden');
+    document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
+    document.getElementById('icm-loc-search-error')?.classList.add('icm-hidden');
+
+    if (!restore) return;
+
+    if (cachedUserCoords && cachedCinemas) {
+      setMapOverlayVisibility(true);
+      renderWithLocation(cachedUserCoords);
+    } else {
+      setMapOverlayVisibility(true);
+      setState('icm-manual');
+    }
   }
 
   // ── Group mode ─────────────────────────────────────────────────────────
@@ -808,23 +1073,37 @@
 
   // ── Manual location ────────────────────────────────────────────────────
 
-  async function submitManualLocation() {
-    const inp = document.getElementById('icm-manual-input');
-    const errEl = document.getElementById('icm-manual-error');
-    const btn = document.getElementById('icm-btn-manual-go');
-    const query = inp?.value.trim();
+  function showSearchError(errElId, message) {
+    const errEl = document.getElementById(errElId);
+    if (errEl) { errEl.textContent = message; errEl.classList.remove('icm-hidden'); }
+  }
+
+  async function searchAndPreviewLocation(query, errElId, btn) {
     if (!query) return;
+    const errEl = document.getElementById(errElId);
     if (errEl) errEl.classList.add('icm-hidden');
     if (btn) { btn.disabled = true; btn.textContent = 'Buscando...'; }
     try {
       const coords = await geocodeManualInput(query);
-      const shortLabel = coords.label.split(',').slice(0, 2).join(',').trim();
-      renderWithLocation({ ...coords, label: shortLabel });
+      const shortLabel = coords.label.split(',').slice(0, 3).join(',').trim();
+      enterLocationPreview({ ...coords, label: shortLabel });
     } catch (e) {
-      if (errEl) { errEl.textContent = e.message; errEl.classList.remove('icm-hidden'); }
+      showSearchError(errElId, e.message);
     } finally {
       if (btn) { btn.disabled = false; btn.textContent = 'Buscar'; }
     }
+  }
+
+  async function submitManualLocation() {
+    const inp = document.getElementById('icm-manual-input');
+    const btn = document.getElementById('icm-btn-manual-go');
+    await searchAndPreviewLocation(inp?.value.trim(), 'icm-manual-error', btn);
+  }
+
+  async function submitLocationSearch() {
+    const inp = document.getElementById('icm-loc-search-input');
+    const btn = document.getElementById('icm-loc-search-go');
+    await searchAndPreviewLocation(inp?.value.trim(), 'icm-loc-search-error', btn);
   }
 
   // ── Auto location ──────────────────────────────────────────────────────
@@ -857,7 +1136,7 @@
     if (fresh) cinemaContainer = fresh;
 
     let apiTheaters = [];
-    try { apiTheaters = await fetchTheaters(1); } catch (_) {}
+    try { apiTheaters = await fetchTheaters(); } catch (_) {}
 
     // Abort if a newer refresh was started while we were awaiting
     if (version !== refreshVersion) return;
@@ -886,6 +1165,19 @@
     }).observe(document.body, { childList: true, subtree: true });
   }
 
+  function watchForCityChanges() {
+    let lastKey = getCityLookupKey();
+    setInterval(async () => {
+      const key = getCityLookupKey();
+      if (key === lastKey) return;
+      lastKey = key;
+      pageCityKey = null;
+      geocodeCache.clear();
+      await resolvePageCity();
+      if (cachedCinemas) refreshCinemas();
+    }, 1500);
+  }
+
   // ── Main data load ─────────────────────────────────────────────────────
 
   async function loadData() {
@@ -896,7 +1188,7 @@
 
     setLoading('Buscando coordenadas dos cinemas...');
     let apiTheaters = [];
-    try { apiTheaters = await fetchTheaters(1); } catch (_) {}
+    try { apiTheaters = await fetchTheaters(); } catch (_) {}
 
     cachedCinemas = await matchAndGeocode(domCinemas, apiTheaters, (i, total) => {
       setLoading(`Geocodificando ${i} de ${total} cinemas...`);
@@ -961,14 +1253,42 @@
         <p class="icm-state-icon">📍</p>
         <p class="icm-manual-label">Digite seu endereço ou bairro</p>
         <div class="icm-manual-row">
-          <input id="icm-manual-input" type="text" placeholder="Ex: Av. Paulista, São Paulo" autocomplete="off">
+          <input id="icm-manual-input" type="text" placeholder="Ex: R. da Consolação, 2423, São Paulo" autocomplete="off">
           <button id="icm-btn-manual-go" class="icm-btn-primary">Buscar</button>
         </div>
         <p id="icm-manual-error" class="icm-hidden"></p>
         <button id="icm-btn-use-auto" class="icm-btn-link">Usar localização automática</button>
       </div>
       <div id="icm-map-section">
-        <div id="icm-map"></div>
+        <div id="icm-map-wrap">
+          <div id="icm-map"></div>
+          <div id="icm-loc-search" class="icm-loc-overlay icm-hidden">
+            <div class="icm-loc-search-row">
+              <input id="icm-loc-search-input" type="text" placeholder="Digite seu endereço ou bairro" autocomplete="off">
+              <button id="icm-loc-search-go" class="icm-btn-primary" type="button">Buscar</button>
+              <button id="icm-loc-search-close" class="icm-loc-search-close" type="button" aria-label="Fechar">✕</button>
+            </div>
+            <p id="icm-loc-search-error" class="icm-loc-search-error icm-hidden"></p>
+          </div>
+          <div id="icm-loc-preview" class="icm-loc-overlay icm-hidden">
+            <p id="icm-loc-preview-label" class="icm-loc-preview-label"></p>
+            <p class="icm-loc-preview-hint">Arraste o marcador para ajustar a posição</p>
+            <div class="icm-loc-preview-actions">
+              <button id="icm-loc-preview-cancel" class="icm-btn-link" type="button">Cancelar</button>
+              <button id="icm-loc-preview-confirm" class="icm-btn-primary" type="button">Confirmar localização</button>
+            </div>
+          </div>
+          <div class="icm-map-overlays">
+            <button id="icm-btn-center-loc" class="icm-overlay-btn" type="button">
+              <span class="icm-overlay-icon" aria-hidden="true">📍</span>
+              <span class="icm-overlay-label">Centralizar na minha localização</span>
+            </button>
+            <button id="icm-btn-change-loc" class="icm-overlay-btn" type="button">
+              <span class="icm-overlay-icon" aria-hidden="true">✏️</span>
+              <span class="icm-overlay-label">Inserir outro endereço</span>
+            </button>
+          </div>
+        </div>
         <div id="icm-toolbar">
           <span id="icm-count"></span>
           <div id="icm-sort-bar">
@@ -984,8 +1304,6 @@
             <button class="icm-chip" data-group-mode="per-friend" title="Mostra distância de cada amigo para cada cinema">Por Amigo</button>
           </div>
           <button id="icm-btn-group-toggle" class="icm-btn-small">👥 Grupo</button>
-          <button id="icm-btn-center-loc" class="icm-btn-small">📍</button>
-          <button id="icm-btn-change-loc" class="icm-btn-small">Inserir endereço</button>
         </div>
       </div>
       <div id="icm-group-modal" class="icm-hidden">
@@ -998,7 +1316,7 @@
             <div class="icm-group-section">
               <label>Adicionar endereço do amigo:</label>
               <div class="icm-manual-row">
-                <input id="icm-group-search" type="text" placeholder="Ex: Rua das Flores, São Paulo" autocomplete="off">
+                <input id="icm-group-search" type="text" placeholder="Ex: R. da Consolação, 2423, São Paulo" autocomplete="off">
                 <button id="icm-group-add-btn" class="icm-btn-primary">Adicionar</button>
               </div>
               <button id="icm-group-pin-drop" class="icm-btn-link">ou clique no mapa</button>
@@ -1042,13 +1360,25 @@
     panel.querySelector('#icm-btn-manual-loading').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-use-auto').addEventListener('click', runAutoLocation);
     panel.querySelector('#icm-btn-center-loc').addEventListener('click', () => {
-      if (leafletMap && userMarker) leafletMap.setView(userMarker.getLatLng(), 14);
+      if (!leafletMap) return;
+      const marker = locationPreviewActive ? previewMarker : userMarker;
+      if (marker) leafletMap.setView(marker.getLatLng(), 14);
     });
     panel.querySelector('#icm-btn-change-loc').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-manual-go').addEventListener('click', submitManualLocation);
     panel.querySelector('#icm-manual-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitManualLocation();
     });
+    panel.querySelector('#icm-loc-search-go').addEventListener('click', submitLocationSearch);
+    panel.querySelector('#icm-loc-search-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitLocationSearch();
+    });
+    panel.querySelector('#icm-loc-search-close').addEventListener('click', () => {
+      closeLocationSearch();
+      setMapOverlayVisibility(true);
+    });
+    panel.querySelector('#icm-loc-preview-confirm').addEventListener('click', confirmLocationPreview);
+    panel.querySelector('#icm-loc-preview-cancel').addEventListener('click', () => cancelLocationPreview(true));
     panel.querySelector('#icm-btn-group-toggle').addEventListener('click', toggleGroupMode);
     panel.querySelector('#icm-group-close').addEventListener('click', closeGroupModal);
     panel.querySelector('#icm-group-done').addEventListener('click', closeGroupModal);
@@ -1116,6 +1446,7 @@
     await loadData();
 
     watchForDayChanges();
+    watchForCityChanges();
   }
 
   if (document.readyState === 'loading') {
