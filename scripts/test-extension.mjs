@@ -19,6 +19,8 @@ import {
   openGroupModal,
   addGroupFriend,
   resolveViaBackground,
+  personalLocationInput,
+  groupCinuspInput,
   isSortedAsc,
   isSortedDesc,
   isSortedLocaleNames,
@@ -27,8 +29,10 @@ import {
 const report = createReporter();
 
 async function testPersonalShortLink(page) {
-  report.section('Personal location: share.google short link');
-  await setPersonalLocation(page, LOCATIONS.cinusp.shortLink);
+  report.section(process.env.CI
+    ? 'Personal location: Google Maps URL (CI)'
+    : 'Personal location: share.google short link');
+  await setPersonalLocation(page, personalLocationInput());
 
   const mapVisible = await page.locator('#icm-map-section').isVisible();
   report.assert('map section visible after short link', mapVisible);
@@ -82,9 +86,11 @@ async function testBackgroundShortLink(context) {
 }
 
 async function testGroupFriends(page) {
-  report.section('Group: friend via share.google short link');
+  report.section(process.env.CI
+    ? 'Group: friend via Google Maps URL (CI stand-in for short link)'
+    : 'Group: friend via share.google short link');
   await openGroupModal(page);
-  await addGroupFriend(page, LOCATIONS.cinusp.shortLink, {
+  await addGroupFriend(page, groupCinuspInput(), {
     labelIncludes: LOCATIONS.cinusp.labelIncludes,
   });
   report.assert('CINUSP friend in list', await page.locator('#icm-group-list').textContent()
