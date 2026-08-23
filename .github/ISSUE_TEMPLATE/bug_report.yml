@@ -1,0 +1,83 @@
+name: Relatório de bug
+description: Algo não está funcionando como deveria
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por reportar um problema. Quanto mais detalhes, mais rápido conseguimos investigar.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: Resumo claro do que aconteceu.
+      placeholder: Ex.: O mapa não aparece na página do filme após permitir a localização.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos na ordem em que ocorrem.
+      placeholder: |
+        1. Abra uma página de filme no ingresso.com
+        2. Permita a localização
+        3. …
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      placeholder: O que deveria acontecer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamento atual
+      placeholder: O que aconteceu de fato.
+    validations:
+      required: true
+
+  - type: input
+    id: chrome
+    attributes:
+      label: Versão do Chrome
+      placeholder: Ex.: 128.0.6613.84
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Sistema operacional
+      placeholder: Ex.: macOS 15, Windows 11, Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: input
+    id: extension
+    attributes:
+      label: Versão da extensão
+      description: Em chrome://extensions, ative “Detalhes” ou veja a versão no manifesto carregado.
+      placeholder: Ex.: 1.0.0 (ou “carregada sem compactação”)
+    validations:
+      required: false
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Informações adicionais
+      description: Prints, URL do filme, cidade selecionada no ingresso.com, erros no console (F12), etc.
+    validations:
+      required: false

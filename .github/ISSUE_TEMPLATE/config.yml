@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Página de onboarding
+    url: https://ingresso-cinema-map.pages.dev/
+    about: Recursos, guia visual e instalação da extensão
+  - name: Contato por e-mail
+    url: mailto:mobyleofficial@gmail.com
+    about: Para assuntos que não cabem em uma issue pública

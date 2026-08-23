@@ -1,0 +1,43 @@
+name: Sugestão de funcionalidade
+description: Proponha uma melhoria ou um novo recurso
+title: "[Funcionalidade]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado pela ideia. Descreva o problema que você quer resolver — isso ajuda a priorizar.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema ou motivação
+      description: Qual necessidade ou frustração essa funcionalidade resolveria?
+      placeholder: Ex.: Quero filtrar cinemas por tipo de sala (IMAX, VIP) no mapa.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: Como você imagina que isso funcionaria?
+      placeholder: Ex.: Um filtro no painel do mapa com chips por tipo de sala.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Outras soluções que você já pensou ou usou.
+    validations:
+      required: false
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Informações adicionais
+      description: Mockups, links, exemplos de outros apps, etc.
+    validations:
+      required: false

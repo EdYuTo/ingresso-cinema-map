@@ -107,6 +107,15 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 - **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
 - **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secret: `CLOUDFLARE_API_TOKEN` com permissão **Account → Cloudflare Pages → Edit**)
 
+## Feedback
+
+Encontrou um bug ou tem uma ideia? Use os formulários de issue (em português):
+
+- [Relatar um bug](https://github.com/mobyleOfficial/ingresso-cinema-map/issues/new?template=bug_report.yml)
+- [Sugerir funcionalidade](https://github.com/mobyleOfficial/ingresso-cinema-map/issues/new?template=feature_request.yml)
+
+Também há uma seção **Feedback** na [página de onboarding](https://ingresso-cinema-map.pages.dev/#feedback).
+
 ## Tecnologias
 
 - [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) — Chrome Extension
