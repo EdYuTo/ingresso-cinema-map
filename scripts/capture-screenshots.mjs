@@ -147,6 +147,7 @@ async function addGroupFriend(page, address) {
   const before = await page.locator('#icm-group-list .icm-group-item').count();
   await page.locator('#icm-group-search').fill(address);
   await page.locator('#icm-group-add-btn').click();
+  await page.locator('#icm-loc-preview-confirm').click({ timeout: 90000 });
   await page.waitForFunction(
     n => document.querySelectorAll('#icm-group-list .icm-group-item').length > n,
     before,

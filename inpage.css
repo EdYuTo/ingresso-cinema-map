@@ -154,6 +154,18 @@
 #icm-panel .icm-manual-row input::placeholder { color: rgba(240,240,240,0.35) !important; }
 #icm-panel #icm-manual-error { font-size: 12px !important; color: #f87171 !important; margin: 0 !important; }
 
+#icm-panel .icm-group-search-error {
+  font-size: 12px !important;
+  color: #f87171 !important;
+  margin: 8px 0 0 0 !important;
+  line-height: 1.4 !important;
+}
+
+#icm-panel .icm-pin-drop-highlight {
+  color: #fbbf24 !important;
+  font-weight: 600 !important;
+}
+
 /* ── Map section — card matching ingresso's cinema cards ─────────────── */
 
 #icm-panel #icm-map-section {
@@ -249,6 +261,14 @@
   padding: 12px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
   box-sizing: border-box !important;
+  pointer-events: none !important;
+}
+
+#icm-panel .icm-loc-overlay button,
+#icm-panel .icm-loc-overlay input,
+#icm-panel .icm-loc-overlay .icm-loc-preview-actions,
+#icm-panel .icm-loc-overlay .icm-loc-search-row {
+  pointer-events: auto !important;
 }
 
 #icm-panel #icm-loc-search {
@@ -445,6 +465,11 @@
 /* Leaflet sets cursor on the marker element itself */
 .leaflet-marker-draggable { cursor: grab !important; }
 .leaflet-marker-draggable:active { cursor: grabbing !important; }
+
+#icm-panel .icm-preview-marker-icon {
+  background: transparent !important;
+  border: none !important;
+}
 
 @keyframes icm-pulse {
   0%, 100% { box-shadow: 0 0 0 3px rgba(50,85,226,0.3); }
