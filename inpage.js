@@ -43,8 +43,46 @@
 
   let groupMode = false;
   let friendLocations = []; // { lat, lng, label, marker }
-  let currentGroupMode = 'centroid'; // 'centroid', 'total-dist', 'per-friend'
+  let currentGroupMode = 'centroid'; // 'centroid' | 'per-friend'
   let friendMarkers = [];
+
+  const FRIEND_COLORS = ['#ec4899', '#06b6d4', '#22c55e', '#f97316', '#a855f7', '#14b8a6', '#f43f5e'];
+
+  function getFriendColor(idx) {
+    return FRIEND_COLORS[idx % FRIEND_COLORS.length];
+  }
+
+  function findClosestCinemaPerFriend(cinemas, friends) {
+    const byCinema = new Map();
+    friends.forEach((friend, friendIdx) => {
+      let best = null;
+      let bestDist = Infinity;
+      for (const cinema of cinemas) {
+        if (cinema.lat == null) continue;
+        const d = haversine(friend.lat, friend.lng, cinema.lat, cinema.lng);
+        if (d < bestDist) {
+          bestDist = d;
+          best = cinema;
+        }
+      }
+      if (!best) return;
+      const key = best.name;
+      if (!byCinema.has(key)) byCinema.set(key, []);
+      byCinema.get(key).push(friendIdx);
+    });
+    return byCinema;
+  }
+
+  function friendPinStyle(friendIndices) {
+    const colors = friendIndices.map(getFriendColor);
+    if (colors.length === 1) {
+      const c = colors[0];
+      return `background:${c};box-shadow:0 0 12px ${c}99,0 2px 8px rgba(0,0,0,0.45)`;
+    }
+    const slice = 100 / colors.length;
+    const stops = colors.map((c, i) => `${c} ${i * slice}% ${(i + 1) * slice}%`).join(', ');
+    return `background:conic-gradient(${stops});box-shadow:0 0 12px rgba(255,255,255,0.35),0 2px 8px rgba(0,0,0,0.45)`;
+  }
 
   // ── Utilities ──────────────────────────────────────────────────────────
 
@@ -215,33 +253,53 @@
     }));
   }
 
-  function calculateGroupDistances(cinemas, friends) {
-    return cinemas.map(cinema => {
-      if (!cinema.lat || !cinema.lng) {
-        return { ...cinema, friendDistances: friends.map(() => null), totalDistance: null };
+  function friendDistancesForCinema(cinema, friends) {
+    if (!cinema.lat || !cinema.lng) return friends.map(() => null);
+    return friends.map(f => haversine(f.lat, f.lng, cinema.lat, cinema.lng));
+  }
+
+  function friendShortLabel(friend, idx) {
+    const raw = (friend.label || `Amigo ${idx + 1}`).split(',')[0].trim();
+    return raw.length > 14 ? `#${idx + 1}` : raw;
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function formatPerFriendDistances(friends, distances, { compact = false, closestFriendIndices = null } = {}) {
+    return friends.map((friend, idx) => {
+      const dist = distances[idx];
+      const label = escapeHtml(friendShortLabel(friend, idx));
+      const value = dist != null ? `${dist.toFixed(1)} km` : '?';
+      const color = getFriendColor(idx);
+      const isClosest = closestFriendIndices?.includes(idx);
+
+      if (compact) {
+        const weight = isClosest ? '700' : '600';
+        const marker = isClosest ? ' ★' : '';
+        return `<div style="display:flex;align-items:center;gap:6px;margin:1px 0;font-size:11px;line-height:1.35">` +
+          `<span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 6px ${color}88"></span>` +
+          `<span style="color:rgba(240,240,240,0.78);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</span>` +
+          `<span style="color:${color};font-weight:${weight};white-space:nowrap">${value}${marker}</span>` +
+          `</div>`;
       }
-      const friendDistances = friends.map(friend =>
-        haversine(friend.lat, friend.lng, cinema.lat, cinema.lng)
-      );
-      const totalDistance = friendDistances.reduce((sum, d) => sum + d, 0);
-      return { ...cinema, friendDistances, totalDistance };
-    });
+
+      return `<div class="icm-friend-dist-row">` +
+        `<span class="icm-friend-dist-name"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle"></span>${label}${isClosest ? ' ★' : ''}</span>` +
+        `<span class="icm-friend-dist-val" style="color:${color}">${value}</span></div>`;
+    }).join('');
   }
 
   function findBestCinemaByMode(cinemas, friends, mode) {
-    if (friends.length === 0 || cinemas.length === 0) return null;
+    if (friends.length === 0 || cinemas.length === 0 || mode === 'per-friend') return null;
 
-    if (mode === 'centroid') {
-      const centroid = calculateCentroid(friends);
-      const withDist = calculateDistancesToPoint(centroid, cinemas);
-      return withDist.filter(c => c.distance !== null).sort((a, b) => a.distance - b.distance)[0] || null;
-    } else if (mode === 'total-dist') {
-      const withGroupDist = calculateGroupDistances(cinemas, friends);
-      return withGroupDist.filter(c => c.totalDistance !== null).sort((a, b) => a.totalDistance - b.totalDistance)[0] || null;
-    } else if (mode === 'per-friend') {
-      return cinemas[0];
-    }
-    return null;
+    const centroid = calculateCentroid(friends);
+    const withDist = calculateDistancesToPoint(centroid, cinemas);
+    return withDist.filter(c => c.distance !== null).sort((a, b) => a.distance - b.distance)[0] || null;
   }
 
   function prepareCinemasForGroup(cinemas, friends, mode) {
@@ -252,18 +310,15 @@
         distance: c.lat != null ? haversine(centroid.lat, centroid.lng, c.lat, c.lng) : null
       }));
     }
-    if (mode === 'total-dist') {
-      return calculateGroupDistances(cinemas, friends).map(c => ({
-        ...c,
-        distance: c.totalDistance
-      }));
-    }
-    return cinemas.map(c => ({
-      ...c,
-      distance: c.lat != null
-        ? Math.max(...friends.map(f => haversine(f.lat, f.lng, c.lat, c.lng)))
-        : null
-    }));
+
+    return cinemas.map(c => {
+      const friendDistances = friendDistancesForCinema(c, friends);
+      const valid = friendDistances.filter(d => d != null);
+      const distance = valid.length
+        ? valid.reduce((sum, d) => sum + d, 0) / valid.length
+        : null;
+      return { ...c, distance, friendDistances };
+    });
   }
 
   function sortByDistanceAsc(cinemas) {
@@ -491,6 +546,9 @@
     // Remove existing distance badges
     document.querySelectorAll('[data-icm-dist]').forEach(el => el.remove());
 
+    const isPerFriend = groupMode && friendLocations.length > 0 && currentGroupMode === 'per-friend';
+    const closestByCinema = isPerFriend ? findClosestCinemaPerFriend(sortedCinemas, friendLocations) : null;
+
     // Reorder: appendChild moves the child to end, building sorted order
     sortedCinemas.forEach((cinema, idx) => {
       const entry = cardEls.find(c => normalizeName(c.name) === normalizeName(cinema.name));
@@ -502,20 +560,30 @@
       const badge = document.createElement('div');
       badge.setAttribute('data-icm-dist', '1');
       badge.style.cssText = [
-        'display:flex', 'align-items:center', 'gap:8px',
+        'display:flex', 'align-items:flex-start', 'gap:8px',
         'padding:6px 12px 2px', 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
-        'font-size:12px', 'line-height:1'
+        'font-size:12px', 'line-height:1.4'
       ].join(';');
 
       const numColor = cinema.lat ? '#3255e2' : '#4b5563';
-      const distLabel = cinema.distance != null
-        ? `<span style="color:#98aaec;font-weight:600;">${cinema.distance.toFixed(1)} km</span>`
-        : `<span style="color:rgba(240,240,240,0.4);">distância desconhecida</span>`;
+      let distLabel;
+
+      if (isPerFriend) {
+        const distances = cinema.friendDistances || friendDistancesForCinema(cinema, friendLocations);
+        const closestFriendIndices = closestByCinema?.get(cinema.name) || null;
+        distLabel = `<div style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:1">` +
+          formatPerFriendDistances(friendLocations, distances, { compact: true, closestFriendIndices }) +
+          `</div>`;
+      } else {
+        distLabel = cinema.distance != null
+          ? `<span style="color:#98aaec;font-weight:600;">${cinema.distance.toFixed(1)} km</span>`
+          : `<span style="color:rgba(240,240,240,0.4);">distância desconhecida</span>`;
+      }
 
       badge.innerHTML = `
         <span style="background:${numColor};color:#fff;min-width:20px;height:20px;border-radius:50%;
           display:inline-flex;align-items:center;justify-content:center;
-          font-size:11px;font-weight:700;flex-shrink:0;">${idx + 1}</span>
+          font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;">${idx + 1}</span>
         ${distLabel}`;
 
       entry.card.insertAdjacentElement('afterbegin', badge);
@@ -620,29 +688,36 @@
 
     if (groupMode && friendLocations.length > 0) {
       friendLocations.forEach((friend, idx) => {
+        const color = getFriendColor(idx);
         const friendIcon = L.divIcon({
           className: '',
-          html: `<div class="icm-friend-marker"><span class="icm-friend-marker-label">${idx + 1}</span></div>`,
+          html: `<div class="icm-friend-marker" style="background:${color};box-shadow:0 0 10px ${color}88,0 2px 8px rgba(0,0,0,0.4)"><span class="icm-friend-marker-label">${idx + 1}</span></div>`,
           iconSize: [24, 24], iconAnchor: [12, 12]
         });
         const m = L.marker([friend.lat, friend.lng], { icon: friendIcon })
           .addTo(leafletMap)
-          .bindPopup(`<strong>${friend.label || `Amigo ${idx + 1}`}</strong>`);
+          .bindPopup(`<strong style="color:${color}">${friend.label || `Amigo ${idx + 1}`}</strong>`);
         friendMarkers.push(m);
         validCoords.push([friend.lat, friend.lng]);
       });
     }
 
-    const bestCinema = groupMode && friendLocations.length > 0
+    const bestCinema = groupMode && friendLocations.length > 0 && currentGroupMode === 'centroid'
       ? findBestCinemaByMode(cinemas, friendLocations, currentGroupMode)
+      : null;
+
+    const closestByCinema = groupMode && friendLocations.length > 0 && currentGroupMode === 'per-friend'
+      ? findClosestCinemaPerFriend(cinemas, friendLocations)
       : null;
 
     cinemas.forEach((cinema, idx) => {
       if (cinema.lat === null) return;
       const isBest = bestCinema && bestCinema.name === cinema.name;
+      const closestFriends = closestByCinema?.get(cinema.name) || [];
+      const pinStyle = closestFriends.length ? friendPinStyle(closestFriends) : '';
       const icon = L.divIcon({
         className: '',
-        html: `<div class="icm-pin ${isBest ? 'icm-pin-best' : ''}"><span class="icm-pin-n">${idx + 1}</span></div>`,
+        html: `<div class="icm-pin ${isBest ? 'icm-pin-best' : ''}" style="${pinStyle}"><span class="icm-pin-n">${idx + 1}</span></div>`,
         iconSize: [26, 26], iconAnchor: [13, 26]
       });
 
@@ -652,13 +727,9 @@
           const centroid = calculateCentroid(friendLocations);
           const dist = haversine(centroid.lat, centroid.lng, cinema.lat, cinema.lng);
           distText = `${dist.toFixed(1)} km (centroide)`;
-        } else if (currentGroupMode === 'total-dist') {
-          const dists = friendLocations.map(f => haversine(f.lat, f.lng, cinema.lat, cinema.lng));
-          const total = dists.reduce((a, b) => a + b, 0);
-          distText = `${total.toFixed(1)} km (total)`;
         } else if (currentGroupMode === 'per-friend') {
-          const dists = friendLocations.map((f, i) => `${haversine(f.lat, f.lng, cinema.lat, cinema.lng).toFixed(1)}`);
-          distText = `Distâncias: ${dists.join(', ')} km`;
+          const distances = cinema.friendDistances || friendDistancesForCinema(cinema, friendLocations);
+          distText = formatPerFriendDistances(friendLocations, distances, { closestFriendIndices: closestFriends });
         }
       } else if (cinema.distance != null) {
         distText = `${cinema.distance.toFixed(1)} km`;
@@ -1024,12 +1095,17 @@
     const list = document.getElementById('icm-group-list');
     if (!list) return;
 
-    list.innerHTML = friendLocations.map((friend, idx) => `
+    list.innerHTML = friendLocations.map((friend, idx) => {
+      const color = getFriendColor(idx);
+      return `
       <div class="icm-group-item">
-        <span>${friend.label}</span>
+        <span style="display:flex;align-items:center;gap:8px;min-width:0">
+          <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 8px ${color}88"></span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${friend.label}</span>
+        </span>
         <button class="icm-group-remove" data-idx="${idx}">✕</button>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
 
     list.querySelectorAll('.icm-group-remove').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1045,9 +1121,16 @@
   function updateMapCount(cinemas) {
     const countEl = document.getElementById('icm-count');
     if (countEl) {
-      const text = groupMode && friendLocations.length > 0
-        ? `${cinemas.length} cinemas • ${friendLocations.length} amigos`
-        : `${cinemas.length} cinema${cinemas.length !== 1 ? 's' : ''}`;
+      let text;
+      if (groupMode && friendLocations.length > 0) {
+        if (currentGroupMode === 'per-friend') {
+          text = `${cinemas.length} cinemas • pin colorido = mais próximo de cada amigo`;
+        } else {
+          text = `${cinemas.length} cinemas • ${friendLocations.length} amigos`;
+        }
+      } else {
+        text = `${cinemas.length} cinema${cinemas.length !== 1 ? 's' : ''}`;
+      }
       countEl.textContent = text;
     }
   }
@@ -1375,8 +1458,7 @@
           <div id="icm-group-bar" class="icm-hidden">
             <span class="icm-sort-label">Modo: <span id="icm-group-help" class="icm-help-icon" title="Clique para saber mais">ℹ️</span></span>
             <button class="icm-chip icm-chip-active" data-group-mode="centroid" title="Cinema mais próximo do ponto médio entre os amigos">Centroide</button>
-            <button class="icm-chip" data-group-mode="total-dist" title="Cinema que minimiza a soma das distâncias de todos">Distância Total</button>
-            <button class="icm-chip" data-group-mode="per-friend" title="Mostra distância de cada amigo para cada cinema">Por Amigo</button>
+            <button class="icm-chip" data-group-mode="per-friend" title="Mostra a distância de cada amigo em cada cinema">Por Amigo</button>
           </div>
           <button id="icm-btn-group-toggle" class="icm-btn-small">👥 Grupo</button>
         </div>
@@ -1416,12 +1498,8 @@
               <p>Encontra o cinema mais próximo do ponto médio entre todos os amigos. Ideal para dividir a distância igualmente.</p>
             </div>
             <div class="icm-help-item">
-              <h4>📊 Distância Total</h4>
-              <p>Encontra o cinema que minimiza a soma das distâncias de todos. Melhor para reduzir o total de km que o grupo viaja.</p>
-            </div>
-            <div class="icm-help-item">
               <h4>👥 Por Amigo</h4>
-              <p>Mostra a distância de cada amigo para cada cinema. Você decide manualmente qual é melhor comparando as distâncias.</p>
+              <p>Cada amigo recebe uma cor. O pin do cinema mais próximo dele fica na mesma cor (amarelo continua reservado ao centroide). Distâncias aparecem nos cards e no mapa — ★ marca o cinema ideal daquele amigo.</p>
             </div>
           </div>
         </div>

@@ -480,6 +480,26 @@
 
 .icm-popup-name { font-weight: 700; font-size: 13px; color: #f0f0f0; margin-bottom: 2px; }
 .icm-popup-dist { font-size: 11px; color: #98aaec; margin-bottom: 3px; }
+.icm-popup-dist .icm-friend-dist-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 1px 0; color: rgba(240, 240, 240, 0.85);
+}
+.icm-popup-dist .icm-friend-dist-name { color: rgba(240, 240, 240, 0.65); }
+.icm-popup-dist .icm-friend-dist-val { color: #98aaec; font-weight: 600; white-space: nowrap; }
+
+.icm-friend-dist-list {
+  display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center;
+}
+.icm-friend-dist-compact {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: #98aaec; font-weight: 600; font-size: 11px; white-space: nowrap;
+}
+.icm-friend-dist-n {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 16px; height: 16px; border-radius: 50%;
+  background: rgba(50, 85, 226, 0.35); color: #c5d0f5;
+  font-size: 10px; font-weight: 700;
+}
 .icm-popup-addr { font-size: 11px; color: rgba(240,240,240,0.5); margin-bottom: 5px; }
 .icm-popup-sessions { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
 

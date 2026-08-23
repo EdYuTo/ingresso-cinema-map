@@ -65,8 +65,7 @@ Adicione endereços de amigos por busca ou clique no mapa. Escolha o modo de cá
 | Modo | Descrição |
 |------|-----------|
 | **Centroide** | Cinema mais próximo do ponto médio do grupo |
-| **Distância Total** | Minimiza a soma das distâncias de todos |
-| **Por Amigo** | Mostra a distância individual de cada um |
+| **Por Amigo** | Cor por amigo; pin colorido no cinema mais próximo de cada um |
 
 ### Lista de cinemas ordenada
 
