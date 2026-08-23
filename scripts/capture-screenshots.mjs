@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Captures README screenshots with the extension loaded in Chromium via Playwright.
+ * Captures marketing screenshots with the extension loaded in Chromium via Playwright.
+ * Saves PNGs to website/images/ (used by the landing page and README).
  *
  * Usage: npm run screenshots
  * Requires: npm install && npx playwright install chromium
@@ -14,7 +15,7 @@ import { LOCATIONS } from './lib/test-harness.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
-const OUT = path.join(ROOT, 'docs', 'screenshots');
+const OUT = path.join(ROOT, 'website', 'images');
 const PROFILE = path.join(ROOT, '.playwright-profile');
 const MOVIE_URL = 'https://www.ingresso.com/filme/homem-aranha-um-novo-dia?city=sao-paulo';
 
