@@ -244,6 +244,70 @@
     return null;
   }
 
+  function prepareCinemasForGroup(cinemas, friends, mode) {
+    if (mode === 'centroid') {
+      const centroid = calculateCentroid(friends);
+      return cinemas.map(c => ({
+        ...c,
+        distance: c.lat != null ? haversine(centroid.lat, centroid.lng, c.lat, c.lng) : null
+      }));
+    }
+    if (mode === 'total-dist') {
+      return calculateGroupDistances(cinemas, friends).map(c => ({
+        ...c,
+        distance: c.totalDistance
+      }));
+    }
+    return cinemas.map(c => ({
+      ...c,
+      distance: c.lat != null
+        ? Math.max(...friends.map(f => haversine(f.lat, f.lng, c.lat, c.lng)))
+        : null
+    }));
+  }
+
+  function sortByDistanceAsc(cinemas) {
+    return [...cinemas].sort((a, b) => {
+      if (a.distance == null && b.distance == null) return 0;
+      if (a.distance == null) return 1;
+      if (b.distance == null) return -1;
+      return a.distance - b.distance;
+    });
+  }
+
+  function refreshMapDisplay() {
+    if (!cachedCinemas || !cachedUserCoords) return;
+
+    if (groupMode && friendLocations.length > 0) {
+      const withMetrics = prepareCinemasForGroup(cachedCinemas, friendLocations, currentGroupMode);
+      const sorted = sortByDistanceAsc(withMetrics);
+      updateMapCount(sorted);
+      renderMap(sorted, cachedUserCoords);
+      if (leafletMap) leafletMap.invalidateSize();
+      sortPageCinemas(sorted);
+      return;
+    }
+
+    reSort();
+  }
+
+  function updateGroupBarState() {
+    const hasFriends = friendLocations.length > 0;
+    document.querySelectorAll('#icm-group-bar [data-group-mode]').forEach(chip => {
+      chip.disabled = !hasFriends;
+      chip.classList.toggle('icm-chip-disabled', !hasFriends);
+      if (!hasFriends) chip.classList.remove('icm-chip-active');
+    });
+    if (hasFriends) {
+      const active = document.querySelector(`#icm-group-bar [data-group-mode="${currentGroupMode}"]`);
+      active?.classList.add('icm-chip-active');
+    } else {
+      document.querySelector('#icm-group-bar [data-group-mode="centroid"]')
+        ?.classList.add('icm-chip-active');
+      currentGroupMode = 'centroid';
+    }
+  }
+
   // ── DOM scraping ───────────────────────────────────────────────────────
 
   function getDirectText(el) {
@@ -863,8 +927,13 @@
 
   function toggleGroupMode() {
     const modal = document.getElementById('icm-group-modal');
+    const modalHidden = !modal || modal.classList.contains('icm-hidden');
 
     if (groupMode) {
+      if (friendLocations.length === 0 && modalHidden) {
+        exitGroupMode();
+        return;
+      }
       if (modal) modal.classList.toggle('icm-hidden');
     } else {
       groupMode = true;
@@ -877,10 +946,12 @@
       if (btn) btn.classList.add('icm-active');
     }
     updateGroupList();
+    updateGroupBarState();
   }
 
   function exitGroupMode() {
     groupMode = false;
+    currentGroupMode = 'centroid';
     const modal = document.getElementById('icm-group-modal');
     const bar = document.getElementById('icm-sort-bar');
     const groupBar = document.getElementById('icm-group-bar');
@@ -892,19 +963,21 @@
     friendLocations = [];
     friendMarkers.forEach(m => m.remove?.());
     friendMarkers = [];
-    if (cachedCinemas && cachedUserCoords) {
-      renderMap(cachedCinemas, cachedUserCoords);
-    }
     updateGroupList();
+    updateGroupBarState();
+    if (cachedCinemas && cachedUserCoords) {
+      reSort();
+    }
   }
 
   function closeGroupModal() {
+    if (friendLocations.length === 0) {
+      exitGroupMode();
+      return;
+    }
     const modal = document.getElementById('icm-group-modal');
     if (modal) modal.classList.add('icm-hidden');
-    if (cachedCinemas && cachedUserCoords) {
-      renderMap(cachedCinemas, cachedUserCoords);
-      updateMapCount(cachedCinemas);
-    }
+    refreshMapDisplay();
   }
 
   async function addFriendLocation() {
@@ -920,6 +993,8 @@
       });
       input.value = '';
       updateGroupList();
+      updateGroupBarState();
+      refreshMapDisplay();
     } catch (err) {
       const errEl = document.getElementById('icm-manual-error');
       if (errEl) {
@@ -940,7 +1015,8 @@
       const modal2 = document.getElementById('icm-group-modal');
       if (modal2) modal2.classList.remove('icm-hidden');
       updateGroupList();
-      renderMap(cachedCinemas, cachedUserCoords);
+      updateGroupBarState();
+      refreshMapDisplay();
     });
   }
 
@@ -960,9 +1036,8 @@
         const idx = parseInt(btn.dataset.idx, 10);
         friendLocations.splice(idx, 1);
         updateGroupList();
-        if (cachedCinemas && cachedUserCoords) {
-          renderMap(cachedCinemas, cachedUserCoords);
-        }
+        updateGroupBarState();
+        refreshMapDisplay();
       });
     });
   }
@@ -1390,13 +1465,11 @@
     panel.querySelector('#icm-group-pin-drop').addEventListener('click', enablePinDrop);
     panel.querySelectorAll('[data-group-mode]').forEach(chip => {
       chip.addEventListener('click', () => {
+        if (friendLocations.length === 0) return;
         panel.querySelectorAll('[data-group-mode]').forEach(c => c.classList.remove('icm-chip-active'));
         chip.classList.add('icm-chip-active');
         currentGroupMode = chip.dataset.groupMode;
-        if (cachedCinemas && cachedUserCoords) {
-          renderMap(cachedCinemas, cachedUserCoords);
-          updateMapCount(cachedCinemas);
-        }
+        refreshMapDisplay();
       });
     });
     panel.querySelectorAll('.icm-chip[data-sort]').forEach(chip => {

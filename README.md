@@ -18,6 +18,12 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 
 ## Instalação
 
+A extensão será publicada na **Chrome Web Store**. O link de instalação será adicionado aqui assim que estiver disponível.
+
+### Para desenvolvedores
+
+Para testar localmente ou contribuir com o projeto:
+
 1. Clone o repositório:
 
    ```bash
