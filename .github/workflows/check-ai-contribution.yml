@@ -1,0 +1,16 @@
+name: Check AI Contribution
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-ai-contribution:
+    uses: mobyleOfficial/shared-workflows/.github/workflows/check-ai-contribution.yml@main
+    permissions:
+      contents: read
+      pull-requests: write
