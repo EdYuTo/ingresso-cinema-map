@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "screenshots": "node scripts/capture-screenshots.mjs",
-    "test:short-links": "node scripts/test-short-links.mjs"
+    "test": "node scripts/test-extension.mjs",
+    "test:short-links": "node scripts/test-short-links.mjs",
+    "test:dump-fixture": "node scripts/dump-ingresso-fixture.mjs"
   },
   "devDependencies": {
     "playwright": "^1.62.1"
