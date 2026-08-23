@@ -20,3 +20,6 @@ Thumbs.db
 .playwright-profile/
 .playwright-profile-*/
 node_modules/
+
+# CI package output
+dist/

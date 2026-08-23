@@ -95,6 +95,12 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 > **Nota:** use o Chromium do Playwright (`npx playwright install chromium`), não o Google Chrome — extensões MV3 não carregam corretamente com `channel: 'chrome'`.
 
+## CI / Chrome Web Store
+
+Pull requests para `main` rodam os testes de fixture (`npm test`). Após o merge, o workflow de publicação empacota a extensão e envia para a Chrome Web Store.
+
+Configure os secrets do GitHub e veja o passo a passo em [docs/CHROME_WEB_STORE_CI.md](docs/CHROME_WEB_STORE_CI.md).
+
 ## Tecnologias
 
 - [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) — Chrome Extension
