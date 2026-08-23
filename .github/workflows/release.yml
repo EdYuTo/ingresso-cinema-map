@@ -7,6 +7,10 @@ on:
       skip_store:
         description: 'Skip Chrome Web Store upload (tag + GitHub Release only)'
         type: boolean
+        default: true
+      store_only:
+        description: 'Retry Chrome Web Store upload only (tag + GitHub Release must already exist)'
+        type: boolean
         default: false
 
 concurrency:
@@ -45,6 +49,7 @@ jobs:
 
   release:
     name: Tag, GitHub Release, Chrome Web Store
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: extension-tests
     timeout-minutes: 20
@@ -65,34 +70,59 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate release notes
-        run: npm run release-notes
-
-      - name: Build extension zip
-        run: npm run package
-
       - name: Read version
         id: version
         run: echo "value=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Create annotated tag
+      - name: Verify release tag exists
+        if: inputs.store_only
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${{ steps.version.outputs.value }}" -F dist/release-notes.md
-          git push origin "v${{ steps.version.outputs.value }}"
+          TAG="v${{ steps.version.outputs.value }}"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag ${TAG} not found. Run a full release first (with Skip store checked)."
+            exit 1
+          fi
+
+      - name: Generate release notes
+        if: ${{ !inputs.store_only }}
+        run: npm run release-notes
+        env:
+          RELEASE_NOTES_ALLOW_EXISTING_TAG: ${{ github.run_attempt > 1 && '1' || '' }}
+
+      - name: Build extension zip
+        run: npm run package
+
+      - name: Create annotated tag
+        if: ${{ !inputs.store_only }}
+        run: |
+          TAG="v${{ steps.version.outputs.value }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists, skipping."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" -F dist/release-notes.md
+            git push origin "$TAG"
+          fi
 
       - name: Create GitHub Release
+        if: ${{ !inputs.store_only }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           VERSION="${{ steps.version.outputs.value }}"
-          ZIP=$(ls dist/*.zip | head -n 1)
-          gh release create "v${VERSION}" "$ZIP" \
-            --title "v${VERSION}" \
-            --notes-file dist/release-notes.md
+          TAG="v${VERSION}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists, skipping."
+          else
+            ZIP=$(ls dist/*.zip | head -n 1)
+            gh release create "$TAG" "$ZIP" \
+              --title "$TAG" \
+              --notes-file dist/release-notes.md
+          fi
 
       - name: Chrome Web Store release notes
+        if: ${{ !inputs.store_only }}
         run: |
           {
             echo "## Chrome Web Store release notes"
@@ -105,7 +135,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload extension package
-        if: ${{ !inputs.skip_store }}
+        if: ${{ inputs.store_only || !inputs.skip_store }}
         run: |
           ZIP_FILE=$(ls dist/*.zip | head -n 1)
           echo "Uploading ${ZIP_FILE}"
@@ -118,7 +148,7 @@ jobs:
           PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
 
       - name: Publish extension
-        if: ${{ !inputs.skip_store }}
+        if: ${{ inputs.store_only || !inputs.skip_store }}
         run: npx chrome-webstore-upload publish
         env:
           EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
@@ -128,6 +158,7 @@ jobs:
           PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
 
       - name: Upload release notes artifact
+        if: ${{ !inputs.store_only }}
         uses: actions/upload-artifact@v4
         with:
           name: release-notes-v${{ steps.version.outputs.value }}

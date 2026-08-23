@@ -35,10 +35,13 @@ function listVersionTags() {
 }
 
 function assertTagAvailable(tags) {
-  if (tags.includes(tag)) {
-    console.error(`Tag ${tag} already exists. Bump version in manifest.json before releasing.`);
-    process.exit(1);
+  if (!tags.includes(tag)) return;
+  if (process.env.RELEASE_NOTES_ALLOW_EXISTING_TAG === '1') {
+    console.warn(`Tag ${tag} already exists; regenerating release notes for retry.`);
+    return;
   }
+  console.error(`Tag ${tag} already exists. Bump version in manifest.json before releasing.`);
+  process.exit(1);
 }
 
 function previousTag(tags) {

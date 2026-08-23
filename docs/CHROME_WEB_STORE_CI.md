@@ -14,9 +14,11 @@
 1. Bump `version` in `manifest.json` on a PR and merge to `main`
 2. Confirm **Test** passed on `main`
 3. Add Chrome Web Store secrets (see below) when ready to ship
-4. **Actions → Release → Run workflow**
-   - Leave **Skip Chrome Web Store upload** checked until secrets are configured (creates tag + GitHub Release only)
-   - Uncheck it when secrets are ready to upload and publish
+4. **Actions → Release → Run workflow** (from `main`)
+   - **Skip Chrome Web Store upload** is checked by default — creates tag + GitHub Release only
+   - Uncheck it when secrets are ready to upload and publish in the same run
+   - Or run again with **Chrome Web Store upload only** after a successful tag + GitHub Release (retries store upload without re-tagging)
+   - Re-run a failed workflow to retry from the failed step (tag and GitHub Release steps skip if they already exist)
 
 The release job will:
 
