@@ -2,6 +2,7 @@ name: Check Co-Authors
 
 on:
   pull_request_target:
+    types: [opened, edited, synchronize, reopened]
     branches: '*'
 
 permissions:
@@ -24,21 +25,50 @@ jobs:
         run: |
           set +e
 
-          # Get list of commits in this PR
-          commits=$(gh api repos/"${{ github.repository }}"/pulls/"${{ github.event.pull_request.number }}"/commits --jq '.[].commit.message' 2>/dev/null || echo "")
+          pr_number="${{ github.event.pull_request.number }}"
+          found=false
+          violations=""
 
-          # Check for Co-Authored-By footer (case-insensitive)
-          if echo "$commits" | grep -qi "co-authored-by:"; then
-            echo "found=true" >> $GITHUB_OUTPUT
-            violations=$(echo "$commits" | grep -i "co-authored-by:" || true)
-            # Use delimited string for multiline output
-            violations_encoded="${violations//$'\n'/'%0A'}"
-            echo "violations=${violations_encoded}" >> $GITHUB_OUTPUT
-            exit 1
-          else
-            echo "found=false" >> $GITHUB_OUTPUT
-            exit 0
+          append_violation() {
+            local label="$1"
+            local match="$2"
+            found=true
+            while IFS= read -r line; do
+              [ -z "$line" ] && continue
+              violations="${violations}${violations:+$'\n'}[${label}] ${line}"
+            done <<< "$match"
+          }
+
+          # Commit messages
+          commits=$(gh api "repos/${{ github.repository }}/pulls/${pr_number}/commits" \
+            --jq '.[].commit.message' 2>/dev/null || echo "")
+
+          # Matches Co-Authored-By / Made with / Generated with (e.g. "🤖 Generated with Claude Code")
+          attribution_re='co-authored-by:|(made|generated)[[:space:]]+(with|by)'
+
+          commit_hits=$(echo "$commits" | grep -iE "$attribution_re" || true)
+          if [ -n "$commit_hits" ]; then
+            append_violation "commit" "$commit_hits"
           fi
+
+          # PR description (body) — same attribution footers
+          body=$(gh api "repos/${{ github.repository }}/pulls/${pr_number}" \
+            --jq '.body // ""' 2>/dev/null || echo "")
+
+          body_hits=$(echo "$body" | grep -iE "$attribution_re" || true)
+          if [ -n "$body_hits" ]; then
+            append_violation "pr body" "$body_hits"
+          fi
+
+          if [ "$found" = true ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            violations_encoded="${violations//$'\n'/'%0A'}"
+            echo "violations=${violations_encoded}" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          echo "found=false" >> "$GITHUB_OUTPUT"
+          exit 0
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -47,21 +77,18 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            // Get violations from previous step output
             const violationsEncoded = '${{ steps.check.outputs.violations }}';
 
-            // Validate that violations are present
             if (!violationsEncoded) {
               console.warn('Warning: No violations output found');
               return;
             }
 
-            // Decode the violations (replace URL-encoded newlines)
             const violations = violationsEncoded.replace(/%0A/g, '\n').trim();
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `❌ Co-authored commits detected\n\nPull requests must have a single author. Found Co-Authored-By footer in commits:\n\`\`\`\n${violations}\n\`\`\`\n\nPlease:\n- Amend commits to remove \`Co-Authored-By\` footers, or open a new PR with a single author\n- Update the PR description to remove any \`Co-Authored-By\` lines or "Made with …" attribution`
+              body: `❌ AI ownership attribution detected\n\nPull requests must not claim AI co-authorship or tool ownership. Found:\n\`\`\`\n${violations}\n\`\`\`\n\nPlease:\n- Amend commits to remove \`Co-Authored-By\` footers and lines like \`Generated with Claude Code\`, or open a new PR with a single author\n- Update the PR description to remove \`Co-Authored-By\` lines and any \`Made with …\` / \`Generated with …\` attribution`
             });
