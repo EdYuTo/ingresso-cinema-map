@@ -23,20 +23,25 @@ jobs:
       deployments: write
 
     steps:
-      - name: Verify Cloudflare secrets
+      - name: Verify Cloudflare API token
         run: |
-          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
-            echo "::error::Missing GitHub Actions secrets. Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID under Settings → Secrets and variables → Actions."
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN in Settings → Secrets and variables → Actions."
             exit 1
           fi
 
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify Cloudflare Pages access
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages project list
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy --project-name=ingresso-cinema-map --branch main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -101,7 +101,7 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 - **Test** — roda em todo PR e push para `main` (testes de fixture)
 - **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
-- **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
+- **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secret: `CLOUDFLARE_API_TOKEN` com permissão **Account → Cloudflare Pages → Edit**)
 
 ## Tecnologias
 
