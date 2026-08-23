@@ -33,7 +33,7 @@ Para testar localmente ou contribuir com o projeto:
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/EdYuTo/ingresso-cinema-map.git
+   git clone https://github.com/mobyleOfficial/ingresso-cinema-map.git
    ```
 
 2. Abra `chrome://extensions` no Chrome
