@@ -397,3 +397,24 @@
 #icm-panel .icm-btn-small.icm-active {
   color: #3255e2 !important; text-decoration-color: #3255e2 !important;
 }
+
+/* ── Help icon for mode explanations ──────────────────────────────────── */
+
+.icm-help-icon {
+  cursor: help !important; font-size: 11px !important; color: rgba(152, 170, 236, 0.5) !important;
+  display: inline-block !important; margin-left: 2px !important;
+}
+
+.icm-help-icon:hover { color: #98aaec !important; }
+
+.icm-help-item { margin-bottom: 14px !important; }
+
+.icm-help-item h4 {
+  font-size: 13px !important; font-weight: 600 !important; color: #f0f0f0 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.icm-help-item p {
+  font-size: 12px !important; color: rgba(240,240,240,0.7) !important;
+  margin: 0 !important; line-height: 1.5 !important;
+}
