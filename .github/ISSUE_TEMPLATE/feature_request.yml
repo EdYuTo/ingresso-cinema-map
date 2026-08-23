@@ -13,7 +13,7 @@ body:
     attributes:
       label: Problema ou motivação
       description: Qual necessidade ou frustração essa funcionalidade resolveria?
-      placeholder: Ex.: Quero filtrar cinemas por tipo de sala (IMAX, VIP) no mapa.
+      placeholder: "Ex.: Quero filtrar cinemas por tipo de sala (IMAX, VIP) no mapa."
     validations:
       required: true
 
@@ -22,7 +22,7 @@ body:
     attributes:
       label: Proposta
       description: Como você imagina que isso funcionaria?
-      placeholder: Ex.: Um filtro no painel do mapa com chips por tipo de sala.
+      placeholder: "Ex.: Um filtro no painel do mapa com chips por tipo de sala."
     validations:
       required: true
 
