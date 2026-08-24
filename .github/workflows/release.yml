@@ -38,6 +38,9 @@ jobs:
       - name: Install Chromium for Playwright
         run: npx playwright install chromium --with-deps
 
+      - name: Install Firefox for Playwright
+        run: npx playwright install firefox --with-deps
+
       - name: Run fixture tests
         run: xvfb-run --auto-servernum --server-args='-screen 0 1360x900x24' npm test
         env:
@@ -88,7 +91,8 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           ZIP=$(ls dist/*.zip | head -n 1)
-          gh release create "v${VERSION}" "$ZIP" \
+          XPI=$(ls dist/*.xpi | head -n 1)
+          gh release create "v${VERSION}" "$ZIP" "$XPI" \
             --title "v${VERSION}" \
             --notes-file dist/release-notes.md
 

@@ -1,5 +1,11 @@
 {
   "manifest_version": 3,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ingresso-cinema-map@mobyleofficial.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
   "name": "Ingresso Cinema Map",
   "version": "2.0.0",
   "description": "Mapa de cinemas no ingresso.com — onboarding: https://ingresso-cinema-map.pages.dev",
@@ -27,7 +33,8 @@
     "https://maps.google.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {

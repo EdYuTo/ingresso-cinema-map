@@ -1,6 +1,6 @@
 # Ingresso Cinema Map
 
-Extensão para Chrome que embute um mapa interativo de cinemas diretamente nas páginas de filme do [ingresso.com](https://www.ingresso.com).
+Extensão para **Chrome** e **Firefox** que embute um mapa interativo de cinemas diretamente nas páginas de filme do [ingresso.com](https://www.ingresso.com).
 
 **Página de onboarding:** [ingresso-cinema-map.pages.dev](https://ingresso-cinema-map.pages.dev) — recursos, guia visual e instalação para novos usuários.
 
@@ -20,7 +20,7 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 
 ## Instalação
 
-Instale pela **[Chrome Web Store](https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc)**.
+Instale pela **[Chrome Web Store](https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc)**. A publicação no **Firefox Add-ons** virá em seguida.
 
 A **[página de onboarding](https://ingresso-cinema-map.pages.dev)** explica os recursos, mostra capturas de tela e também cobre a instalação manual para desenvolvedores. A [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html) está lá.
 
@@ -36,9 +36,9 @@ Para testar localmente ou contribuir com o projeto:
    git clone https://github.com/mobyleOfficial/ingresso-cinema-map.git
    ```
 
-2. Abra `chrome://extensions` no Chrome
-3. Ative **Modo do desenvolvedor**
-4. Clique em **Carregar sem compactação** e selecione a pasta do projeto
+2. **Chrome:** abra `chrome://extensions`, ative **Modo do desenvolvedor** e clique em **Carregar sem compactação** — selecione a pasta do projeto.
+
+3. **Firefox (128+):** abra `about:debugging#/runtime/this-firefox`, clique em **Carregar extensão temporária…** e selecione o `manifest.json` na raiz do projeto. Para instalação persistente, use o `.xpi` de `npm run package` em `about:addons` → engrenagem → **Instalar complemento a partir de arquivo…**.
 
 A extensão aparece em qualquer página `https://www.ingresso.com/filme/*`.
 
@@ -97,13 +97,23 @@ npx playwright install chromium   # necessário na primeira vez
 npm run screenshots
 ```
 
+### Testes de integração
+
+```bash
+npm install
+npx playwright install chromium firefox
+npm test                          # Chrome (fixture) + Firefox (ingresso.com)
+npm run test:chrome               # só Chromium + fixture local
+npm run test:firefox              # só Firefox + geckodriver (Firefox 128+)
+```
+
 O script abre uma janela do **Chromium (Playwright)** com a extensão instalada via `--load-extension`, navega até uma página de filme no ingresso.com e salva as capturas em `website/images/`.
 
 > **Nota:** use o Chromium do Playwright (`npx playwright install chromium`), não o Google Chrome — extensões MV3 não carregam corretamente com `channel: 'chrome'`.
 
 ## CI / Chrome Web Store
 
-- **Test** — roda em todo PR e push para `main` (testes de fixture)
+- **Test** — roda em todo PR e push para `main` (Chrome com fixture + Firefox com geckodriver)
 - **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
 - **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secret: `CLOUDFLARE_API_TOKEN` com permissão **Account → Cloudflare Pages → Edit**)
 
@@ -118,7 +128,7 @@ Também há uma seção **Feedback** na [página de onboarding](https://ingresso
 
 ## Tecnologias
 
-- [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) — Chrome Extension
+- [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) — Chrome / Firefox Extension
 - [Leaflet](https://leafletjs.com/) — mapa interativo
 - [OpenStreetMap](https://www.openstreetmap.org/) / [Nominatim](https://nominatim.org/) — tiles e geocodificação
 - [Ingresso Content API](https://api-content.ingresso.com/) — coordenadas dos cinemas
