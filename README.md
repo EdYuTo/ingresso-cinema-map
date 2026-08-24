@@ -102,10 +102,11 @@ npm run screenshots
 ```bash
 npm install
 npx playwright install chromium firefox
-npm test                          # Chrome (fixture) + Firefox (ingresso.com)
-npm run test:chrome               # só Chromium + fixture local
-npm run test:firefox              # só Firefox + geckodriver (Firefox 128+)
+npm test                          # Chrome + Firefox (ambos com fixture local)
+npm run test:chrome               # só Chromium + fixture Playwright
+npm run test:firefox              # só Firefox + geckodriver + fixture HTTP
 ```
+
 
 O script abre uma janela do **Chromium (Playwright)** com a extensão instalada via `--load-extension`, navega até uma página de filme no ingresso.com e salva as capturas em `website/images/`.
 
@@ -113,7 +114,7 @@ O script abre uma janela do **Chromium (Playwright)** com a extensão instalada 
 
 ## CI / Chrome Web Store
 
-- **Test** — roda em todo PR e push para `main` (Chrome com fixture + Firefox com geckodriver)
+- **Test** — roda em todo PR e push para `main` (Chrome e Firefox, ambos com fixture local estável)
 - **Release** — manual apenas: cria tag git, GitHub Release com notas e, opcionalmente, publica na Chrome Web Store (configure os secrets do Chrome Web Store em **Settings → Secrets and variables → Actions** antes de rodar)
 - **Deploy website** — publica `website/` no Cloudflare Pages somente após merge em `main` (secret: `CLOUDFLARE_API_TOKEN` com permissão **Account → Cloudflare Pages → Edit**)
 

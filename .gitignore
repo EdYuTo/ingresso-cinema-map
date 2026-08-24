@@ -20,6 +20,7 @@ Thumbs.db
 .playwright-profile/
 .playwright-profile-*/
 .test-extension-firefox/
+.playwright-firefox-profile-tests-system/
 .playwright-firefox-profile-tests/
 .playwright-firefox-profile-tests-pre/
 web-ext-artifacts/

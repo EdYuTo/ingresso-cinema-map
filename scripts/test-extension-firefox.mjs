@@ -18,7 +18,7 @@ process.env.CI = 'true';
 
 const report = createReporter();
 
-console.log('Launching Firefox with extension against ingresso.com…');
+console.log('Launching Firefox with extension and local Ingresso fixture…');
 const { context, page, movieUrl } = await launchFirefoxExtensionContext();
 
 try {

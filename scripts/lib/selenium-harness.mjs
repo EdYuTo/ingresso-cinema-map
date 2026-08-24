@@ -4,12 +4,10 @@ import { ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { firefox as playwrightFirefox } from 'playwright';
 import { download as downloadGeckodriver } from 'geckodriver';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
-import { MOVIE_URL, ROOT } from './test-harness.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { prepareFirefoxTestExtension, startFixtureServer } from './fixture-server.mjs';
 
 let geckodriverPathPromise = null;
 
@@ -33,16 +31,10 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-function ensureStoreXpi() {
-  const distDir = path.join(ROOT, 'dist');
-  const existing = fs.existsSync(distDir)
-    ? fs.readdirSync(distDir).find(name => name.endsWith('.xpi'))
-    : null;
-  if (existing) return path.join(distDir, existing);
-  execSync('npm run package --silent', { cwd: ROOT, stdio: 'pipe' });
-  const built = fs.readdirSync(distDir).find(name => name.endsWith('.xpi'));
-  if (!built) throw new Error('Failed to build Firefox .xpi (npm run package)');
-  return path.join(distDir, built);
+function zipExtensionDir(extensionDir) {
+  const xpiPath = path.join(os.tmpdir(), `icm-firefox-fixture-${Date.now()}.xpi`);
+  execSync(`zip -qr "${xpiPath}" . -x "*.DS_Store"`, { cwd: extensionDir, stdio: 'pipe' });
+  return xpiPath;
 }
 
 class SeleniumPage {
@@ -149,8 +141,9 @@ class SeleniumPage {
 }
 
 class SeleniumContext {
-  constructor(driver) {
+  constructor(driver, fixtureServer) {
     this.driver = driver;
+    this.fixtureServer = fixtureServer;
     this._pages = [new SeleniumPage(driver)];
   }
 
@@ -160,20 +153,23 @@ class SeleniumContext {
 
   async close() {
     await this.driver.quit().catch(() => {});
+    await this.fixtureServer.close().catch(() => {});
   }
 }
 
 export async function launchFirefoxExtensionContext() {
-  const xpiPath = ensureStoreXpi();
+  const fixtureServer = await startFixtureServer();
+  const extensionDir = prepareFirefoxTestExtension(fixtureServer.origin);
+  const xpiPath = zipExtensionDir(extensionDir);
 
   const options = new firefox.Options();
   options.setBinary(resolveFirefoxBinary());
   options.setPreference('xpinstall.signatures.required', false);
   options.setPreference('datareporting.policy.firstRunURL', '');
   options.setPreference('termsofuse.bypassNotification', true);
-  options.setPreference('geo.enabled', true);
+  options.setPreference('geo.enabled', false);
   options.setPreference('geo.prompt.testing', true);
-  options.setPreference('geo.prompt.testing.allow', true);
+  options.setPreference('geo.prompt.testing.allow', false);
 
   const service = new ServiceBuilder(await getGeckodriverPath());
   const driver = await new Builder()
@@ -184,10 +180,11 @@ export async function launchFirefoxExtensionContext() {
 
   await driver.manage().window().setRect({ width: 1360, height: 900, x: 0, y: 0 });
   await driver.installAddon(xpiPath, true);
+  fs.unlinkSync(xpiPath);
 
-  const context = new SeleniumContext(driver);
+  const context = new SeleniumContext(driver, fixtureServer);
   const page = context.pages()[0];
-  return { context, page, movieUrl: MOVIE_URL };
+  return { context, page, movieUrl: fixtureServer.movieUrl };
 }
 
 export async function waitForFirefoxExtension() {
@@ -196,14 +193,17 @@ export async function waitForFirefoxExtension() {
 }
 
 export async function openFirefoxFixturePage(page, movieUrl) {
-  await page.goto('https://www.ingresso.com/', { waitUntil: 'domcontentloaded' });
+  // Seed city cookie on the fixture origin before the movie page loads.
+  const origin = new URL(movieUrl).origin;
+  await page.goto(`${origin}/`, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => {
     document.cookie = `SiteCity=${encodeURIComponent(JSON.stringify({
       Id: '1', Name: 'São Paulo', UrlKey: 'sao-paulo', UF: 'SP', State: 'São Paulo',
-    }))}; domain=.ingresso.com; path=/`;
-    document.cookie = 'ingressoCookieConsent=true; domain=.ingresso.com; path=/';
-    document.cookie = 'dcuc=true; domain=.ingresso.com; path=/';
+    }))}; path=/`;
+    document.cookie = 'ingressoCookieConsent=true; path=/';
+    document.cookie = 'dcuc=true; path=/';
   });
+
   await page.goto(movieUrl, { waitUntil: 'domcontentloaded' });
   await page.addStyleTag({
     content: '.CookieConsent, [class*="CookieConsent"] { display: none !important; }',
