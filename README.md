@@ -20,9 +20,9 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 
 ## Instalação
 
-A extensão será publicada na **Chrome Web Store**. O link de instalação será adicionado aqui assim que estiver disponível.
+Instale pela **[Chrome Web Store](https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc)**.
 
-Enquanto isso, comece pela **[página de onboarding](https://ingresso-cinema-map.pages.dev)** — ela explica os recursos, mostra capturas de tela e descreve como instalar manualmente. A [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html) também está lá.
+A **[página de onboarding](https://ingresso-cinema-map.pages.dev)** explica os recursos, mostra capturas de tela e também cobre a instalação manual para desenvolvedores. A [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html) está lá.
 
 > O site é publicado via GitHub Actions após merge em `main`. Desative o build automático do Git no painel do Cloudflare Pages para evitar deploys em PRs.
 
