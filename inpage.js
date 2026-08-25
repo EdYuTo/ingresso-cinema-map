@@ -945,7 +945,9 @@
     mapEl._leaflet_map = leafletMap;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
+      maxZoom: 19,
+      // #29: send Referer on cross-origin tiles despite page same-origin policy
+      referrerPolicy: 'strict-origin-when-cross-origin',
     }).addTo(leafletMap);
 
     const validCoords = [[userCoords.lat, userCoords.lng]];
