@@ -10,7 +10,7 @@
     }
   },
   "name": "Ingresso Cinema Map",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Mapa de cinemas no ingresso.com — onboarding: https://ingresso-cinema-map.pages.dev",
   "icons": {
     "16": "icons/icon16.png",
