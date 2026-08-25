@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "screenshots": "node scripts/capture-screenshots.mjs",
-    "test": "node scripts/test-brazil-coords.mjs && node scripts/test-osm-tile-referrer.mjs && node scripts/test-extension.mjs && node scripts/test-extension-firefox.mjs",
+    "test": "node scripts/test-brazil-coords.mjs && node scripts/test-osm-tile-referrer.mjs && node scripts/test-geocode-format.mjs && node scripts/test-extension.mjs && node scripts/test-extension-firefox.mjs",
     "test:chrome": "node scripts/test-extension.mjs",
     "test:firefox": "node scripts/test-extension-firefox.mjs",
-    "test:unit": "node scripts/test-brazil-coords.mjs",
+    "test:unit": "node scripts/test-brazil-coords.mjs && node scripts/test-geocode-format.mjs",
     "test:osm-referrer": "node scripts/test-osm-tile-referrer.mjs",
     "test:short-links": "node scripts/test-short-links.mjs",
     "test:dump-fixture": "node scripts/dump-ingresso-fixture.mjs",

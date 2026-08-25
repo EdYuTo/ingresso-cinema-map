@@ -211,6 +211,12 @@
     return pageCity;
   }
 
+  const {
+    decodeMapsText,
+    formatGoogleAddressForGeocode,
+    buildGeocodeQueryFallbacks
+  } = globalThis.IcmGeocodeFormat;
+
   function buildGeocodeQuery(query) {
     const city = pageCity || DEFAULT_CITY;
     const formatted = formatGoogleAddressForGeocode(query);
@@ -226,61 +232,31 @@
     return `${trimmed}, ${city.name}, ${city.uf}, Brasil`;
   }
 
-  function expandStreetAbbreviations(text) {
-    return String(text)
-      .replace(/\bR\.\s*/gi, 'Rua ')
-      .replace(/\bAv\.\s*/gi, 'Avenida ')
-      .replace(/\bAl\.\s*/gi, 'Alameda ')
-      .replace(/\bTrav\.\s*/gi, 'Travessa ')
-      .replace(/\bRod\.\s*/gi, 'Rodovia ')
-      .replace(/\bPç\.\s*/gi, 'Praça ')
-      .replace(/\bPc\.\s*/gi, 'Praça ')
-      .trim();
-  }
+  async function geocodeResolvedAddress(query, formattedInput) {
+    const formatted = formattedInput || formatGoogleAddressForGeocode(query);
+    let data = [];
+    let requested = false;
 
-  function formatGoogleAddressForGeocode(raw) {
-    const decoded = decodeMapsText(raw);
-    let segments = decoded.split(',').map(s => s.trim()).filter(Boolean);
-    if (!segments.length) return { query: decoded, city: null, uf: null };
-
-    const cepRe = /^\d{5}-?\d{3}$/;
-    const cityUfRe = /^(.+?)\s*-\s*([A-Z]{2})$/i;
-
-    if (cepRe.test(segments[segments.length - 1])) segments.pop();
-
-    let city = null;
-    let uf = null;
-    if (cityUfRe.test(segments[segments.length - 1] || '')) {
-      const match = segments.pop().match(cityUfRe);
-      city = match[1].trim();
-      uf = match[2].toUpperCase();
-    } else if (segments.length >= 2 && /^[A-Z]{2}$/i.test(segments[segments.length - 1])) {
-      uf = segments.pop().toUpperCase();
-      city = segments.pop();
+    if (formatted.street && formatted.city && formatted.uf) {
+      data = await nominatimStructuredSearch({
+        street: formatted.street,
+        city: formatted.city,
+        state: formatted.uf,
+        country: 'Brasil'
+      }, 5);
+      requested = true;
     }
 
-    let streetNumber = '';
-    if (segments.length >= 2) {
-      const tail = segments[segments.length - 1];
-      const numMatch = tail.match(/^(\d+)\s*-\s*.+$/);
-      if (numMatch) {
-        streetNumber = numMatch[1];
-        segments.pop();
+    if (!data.length) {
+      const candidates = buildGeocodeQueryFallbacks(query, formatted);
+      for (const candidate of candidates) {
+        if (requested) await delay(NOMINATIM_DELAY);
+        data = await nominatimSearch(candidate, 5);
+        requested = true;
+        if (data.length) break;
       }
     }
 
-    let street = expandStreetAbbreviations(segments.join(', '));
-    if (streetNumber) street = `${street} ${streetNumber}`.trim();
-
-    if (city && uf) {
-      return { query: `${street}, ${city}, ${uf}, Brasil`, city, uf };
-    }
-    return { query: street || decoded, city: null, uf: null };
-  }
-
-  async function geocodeResolvedAddress(query) {
-    const formatted = formatGoogleAddressForGeocode(query);
-    const data = await nominatimSearch(formatted.query, 5);
     if (!data.length) {
       throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
     }
@@ -297,10 +273,6 @@
 
   const MAPS_SHORT_LINK_RE =
     /^(https?:\/\/)?(share\.google(\.com)?\/[^\s/?#]+|maps\.app\.goo\.gl\/[^\s/?#]+|goo\.gl\/maps\/[^\s/?#]+)/i;
-
-  function decodeMapsText(text) {
-    return decodeURIComponent(String(text).replace(/\+/g, ' ')).trim();
-  }
 
   function isValidCoord(lat, lng) {
     return Number.isFinite(lat) && Number.isFinite(lng)
@@ -475,6 +447,23 @@
     const result = nominatimGate.then(run, run);
     nominatimGate = result.then(() => {}, () => {});
     return result;
+  }
+
+  async function nominatimStructuredSearch({ street, city, state, country }, limit = 5) {
+    const params = new URLSearchParams({
+      street,
+      city,
+      state,
+      country,
+      format: 'json',
+      limit: String(limit),
+      countrycodes: 'br'
+    });
+    const res = await fetch(`${NOMINATIM_API}?${params}`, {
+      headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
+    });
+    if (!res.ok) throw new Error('Serviço de geocodificação indisponível.');
+    return res.json();
   }
 
   async function geocodeInPageCity(query) {
@@ -1429,7 +1418,7 @@
     const searchQuery = mapsInput?.query || normalizedQuery;
     const formatted = formatGoogleAddressForGeocode(searchQuery);
     const match = formatted.city && formatted.uf
-      ? await geocodeResolvedAddress(searchQuery)
+      ? await geocodeResolvedAddress(searchQuery, formatted)
       : await geocodeInPageCity(searchQuery);
     return {
       lat: parseFloat(match.lat),
