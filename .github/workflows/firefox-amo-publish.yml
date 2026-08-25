@@ -46,6 +46,7 @@ jobs:
             --source-dir dist/firefox-src \
             --artifacts-dir dist/firefox-signed \
             --channel listed \
+            --approval-timeout 0 \
             --api-key "$FIREFOX_JWT_ISSUER" \
             --api-secret "$FIREFOX_JWT_SECRET"
         env:
