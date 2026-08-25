@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "browser_specific_settings": {
     "gecko": {
-      "id": "ingresso-cinema-map@mobyleofficial.github.io",
+      "id": "ingresso-cinema-map-2@mobyleofficial.github.io",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
         "required": ["locationInfo"]
