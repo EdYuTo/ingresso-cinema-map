@@ -53,6 +53,47 @@ export async function runExtensionTests({
     );
   }
 
+  async function testLocationAutocomplete(page) {
+    report.section('Location autocomplete');
+
+    // Close a stuck preview overlay if confirm raced ahead of the marker.
+    if (await page.locator('#icm-loc-preview:not(.icm-hidden)').isVisible().catch(() => false)) {
+      await page.locator('#icm-loc-preview-confirm').click({ force: true });
+      await page.waitForFunction(
+        () => document.getElementById('icm-loc-preview')?.classList.contains('icm-hidden'),
+        null,
+        { timeout: 10000 },
+      );
+    }
+
+    await page.locator('#icm-btn-change-loc').click({ force: true });
+    await page.waitForSelector('#icm-loc-search:not(.icm-hidden)', { timeout: 15000 });
+
+    await page.locator('#icm-loc-search-input').fill('Consol');
+    await page.waitForSelector('#icm-ac-list-loc:not(.icm-hidden) .icm-ac-option', { timeout: 8000 });
+    const suggestionCount = await page.locator('#icm-ac-list-loc .icm-ac-option').count();
+    report.assert('suggestions appear for typed address', suggestionCount >= 1, `count=${suggestionCount}`);
+
+    await page.locator('#icm-ac-list-loc .icm-ac-option[data-idx="0"]').click();
+    await page.waitForSelector('#icm-loc-preview:not(.icm-hidden)', { timeout: 15000 });
+    report.assert('selecting suggestion opens location preview', true);
+
+    await page.locator('#icm-loc-preview-cancel').click({ force: true });
+    await page.waitForFunction(
+      () => document.getElementById('icm-loc-preview')?.classList.contains('icm-hidden'),
+      null,
+      { timeout: 10000 },
+    );
+
+    await page.locator('#icm-btn-change-loc').click({ force: true });
+    await page.waitForSelector('#icm-loc-search:not(.icm-hidden)', { timeout: 15000 });
+    await page.locator('#icm-loc-search-input').fill('https://maps.app.goo.gl/example');
+    await page.waitForTimeout(500);
+    const mapsUrlSuggestions = await page.locator('#icm-ac-list-loc:not(.icm-hidden) .icm-ac-option').count();
+    report.assert('no suggestions for Google Maps URLs', mapsUrlSuggestions === 0, `count=${mapsUrlSuggestions}`);
+    await page.locator('#icm-loc-search-close').click({ force: true });
+  }
+
   async function testSortControls(page) {
     report.section('Sort: Mais próximo (dist-asc)');
 
@@ -245,6 +286,7 @@ export async function runExtensionTests({
 
   await testBackgroundShortLink(resolveViaBackground);
   await testPersonalShortLink(page);
+  await testLocationAutocomplete(page);
   await testPinClickDoesNotReloadMap(page);
   await testSortControls(page);
   await testGroupFriends(page);
