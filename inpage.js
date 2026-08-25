@@ -444,18 +444,37 @@
     return words.length > 0 && words.every(w => hay.includes(w));
   }
 
-  async function nominatimSearch(q, limit = 5) {
-    const params = new URLSearchParams({
-      q,
-      format: 'json',
-      limit: String(limit),
-      countrycodes: 'br'
-    });
-    const res = await fetch(`${NOMINATIM_API}?${params}`, {
-      headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
-    });
-    if (!res.ok) throw new Error('Serviço de geocodificação indisponível.');
-    return res.json();
+  let lastNominatimRequestAt = 0;
+  let nominatimGate = Promise.resolve();
+
+  async function nominatimSearch(q, limit = 5, { signal } = {}) {
+    const run = async () => {
+      const wait = Math.max(0, NOMINATIM_DELAY - (Date.now() - lastNominatimRequestAt));
+      if (wait > 0) await delay(wait);
+      if (signal?.aborted) {
+        const err = new Error('Aborted');
+        err.name = 'AbortError';
+        throw err;
+      }
+      lastNominatimRequestAt = Date.now();
+      const params = new URLSearchParams({
+        q,
+        format: 'json',
+        limit: String(limit),
+        countrycodes: 'br'
+      });
+      const res = await fetch(`${NOMINATIM_API}?${params}`, {
+        headers: { 'User-Agent': 'IngressoCinemaMap/2.0' },
+        signal
+      });
+      if (!res.ok) throw new Error('Serviço de geocodificação indisponível.');
+      return res.json();
+    };
+
+    // Serialize callers so bursts stay ≤ ~1 req/s (shared Nominatim gate).
+    const result = nominatimGate.then(run, run);
+    nominatimGate = result.then(() => {}, () => {});
+    return result;
   }
 
   async function geocodeInPageCity(query) {
@@ -472,6 +491,216 @@
       );
     }
     return match;
+  }
+
+  // ── Location autocomplete ──────────────────────────────────────────────
+
+  const AUTOCOMPLETE_DEBOUNCE_MS = 350;
+  const AUTOCOMPLETE_MIN_CHARS = 3;
+  const AUTOCOMPLETE_LIMIT = 5;
+
+  let activeAutocomplete = null;
+  const autocompleteInstances = [];
+
+  function isMapsOrUrlQuery(query) {
+    const trimmed = query.trim();
+    return GOOGLE_MAPS_URL_RE.test(trimmed)
+      || MAPS_SHORT_LINK_RE.test(trimmed)
+      || /^https?:\/\//i.test(trimmed);
+  }
+
+  function suggestionLabel(item) {
+    const name = String(item.display_name || '').trim();
+    return name.split(',').slice(0, 3).join(',').trim() || name;
+  }
+
+  function suggestionToCoords(item) {
+    return {
+      lat: parseFloat(item.lat),
+      lng: parseFloat(item.lon),
+      label: suggestionLabel(item)
+    };
+  }
+
+  async function fetchAutocompleteSuggestions(query, signal) {
+    await resolvePageCity();
+    const city = pageCity || DEFAULT_CITY;
+    const data = await nominatimSearch(buildGeocodeQuery(query), AUTOCOMPLETE_LIMIT, { signal });
+    if (!Array.isArray(data) || !data.length) return [];
+    const matched = data.filter(item => geocodeResultMatchesCity(item, city));
+    return (matched.length ? matched : data).slice(0, AUTOCOMPLETE_LIMIT);
+  }
+
+  function hideAllAutocompleteLists(exceptList = null) {
+    for (const api of autocompleteInstances) {
+      if (exceptList && api.listEl === exceptList) continue;
+      api.hideList();
+    }
+    if (!exceptList) activeAutocomplete = null;
+  }
+
+  function attachLocationAutocomplete(input, { listEl, onSelect, onEnterSubmit }) {
+    if (!input || !listEl) return;
+
+    let debounceTimer = null;
+    let requestSeq = 0;
+    let abortController = null;
+    let items = [];
+    let activeIndex = -1;
+
+    function setExpanded(open) {
+      input.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) input.removeAttribute('aria-activedescendant');
+    }
+
+    function cancelPending() {
+      clearTimeout(debounceTimer);
+      debounceTimer = null;
+      requestSeq += 1;
+      if (abortController) {
+        abortController.abort();
+        abortController = null;
+      }
+    }
+
+    function hideList() {
+      cancelPending();
+      listEl.classList.add('icm-hidden');
+      listEl.innerHTML = '';
+      items = [];
+      activeIndex = -1;
+      setExpanded(false);
+      if (activeAutocomplete === input) activeAutocomplete = null;
+    }
+
+    function highlight(index) {
+      const options = listEl.querySelectorAll('.icm-ac-option');
+      options.forEach((opt, i) => {
+        const selected = i === index;
+        opt.setAttribute('aria-selected', selected ? 'true' : 'false');
+        opt.classList.toggle('icm-ac-active', selected);
+      });
+      activeIndex = index;
+      if (index >= 0 && options[index]) {
+        input.setAttribute('aria-activedescendant', options[index].id);
+        options[index].scrollIntoView({ block: 'nearest' });
+      } else {
+        input.removeAttribute('aria-activedescendant');
+      }
+    }
+
+    function renderList(suggestions) {
+      items = suggestions;
+      activeIndex = -1;
+      if (!suggestions.length) {
+        hideList();
+        return;
+      }
+
+      hideAllAutocompleteLists(listEl);
+      listEl.innerHTML = suggestions.map((item, i) => {
+        const label = escapeHtml(suggestionLabel(item));
+        return `<li id="${listEl.id}-opt-${i}" class="icm-ac-option" role="option" aria-selected="false" data-idx="${i}">${label}</li>`;
+      }).join('');
+      listEl.classList.remove('icm-hidden');
+      setExpanded(true);
+      activeAutocomplete = input;
+    }
+
+    async function runSearch(query, seq, signal) {
+      try {
+        const suggestions = await fetchAutocompleteSuggestions(query, signal);
+        if (seq !== requestSeq || signal.aborted) return;
+        renderList(suggestions);
+      } catch (err) {
+        if (seq !== requestSeq || err?.name === 'AbortError') return;
+        hideList();
+      }
+    }
+
+    function scheduleSearch() {
+      const query = input.value.trim();
+      clearTimeout(debounceTimer);
+      debounceTimer = null;
+      if (query.length < AUTOCOMPLETE_MIN_CHARS || isMapsOrUrlQuery(query)) {
+        hideList();
+        return;
+      }
+      // Invalidate any in-flight request for this input while waiting to debounce.
+      requestSeq += 1;
+      if (abortController) {
+        abortController.abort();
+        abortController = null;
+      }
+      debounceTimer = setTimeout(() => {
+        const seq = ++requestSeq;
+        abortController = new AbortController();
+        runSearch(query, seq, abortController.signal);
+      }, AUTOCOMPLETE_DEBOUNCE_MS);
+    }
+
+    function applySuggestion(index) {
+      const item = items[index];
+      if (!item) return;
+      const coords = suggestionToCoords(item);
+      if (!isValidCoord(coords.lat, coords.lng)) return;
+      input.value = coords.label;
+      hideList();
+      onSelect(coords);
+    }
+
+    autocompleteInstances.push({ listEl, hideList });
+
+    input.addEventListener('input', scheduleSearch);
+    input.addEventListener('blur', () => {
+      // Allow option mousedown to fire before hide
+      setTimeout(() => {
+        if (document.activeElement === input) return;
+        if (listEl.contains(document.activeElement)) return;
+        hideList();
+      }, 150);
+    });
+
+    listEl.addEventListener('mousedown', e => {
+      const opt = e.target.closest('.icm-ac-option');
+      if (!opt) return;
+      e.preventDefault();
+      applySuggestion(parseInt(opt.dataset.idx, 10));
+    });
+
+    input.addEventListener('keydown', e => {
+      const open = !listEl.classList.contains('icm-hidden') && items.length > 0;
+
+      if (e.key === 'ArrowDown' && open) {
+        e.preventDefault();
+        highlight(activeIndex < items.length - 1 ? activeIndex + 1 : 0);
+        return;
+      }
+      if (e.key === 'ArrowUp' && open) {
+        e.preventDefault();
+        highlight(activeIndex > 0 ? activeIndex - 1 : items.length - 1);
+        return;
+      }
+      if (e.key === 'Escape') {
+        if (open) {
+          e.preventDefault();
+          hideList();
+        } else {
+          cancelPending();
+        }
+        return;
+      }
+      if (e.key === 'Enter') {
+        if (open && activeIndex >= 0) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          applySuggestion(activeIndex);
+          return;
+        }
+        hideList();
+        if (onEnterSubmit) onEnterSubmit();
+      }
+    });
   }
 
   // ── Group mode calculations ────────────────────────────────────────────
@@ -1335,6 +1564,7 @@
   }
 
   function closeLocationSearch() {
+    hideAllAutocompleteLists();
     document.getElementById('icm-loc-search')?.classList.add('icm-hidden');
     const errEl = document.getElementById('icm-loc-search-error');
     if (errEl) { errEl.textContent = ''; errEl.classList.add('icm-hidden'); }
@@ -1510,13 +1740,14 @@
       confirmGroupFriendPreview();
       return;
     }
-    if (!previewMarker) return;
-    const latlng = previewMarker.getLatLng();
+    const marker = previewMarker;
     locationPreviewActive = false;
     previewContext = null;
     previewMarker = null;
     document.getElementById('icm-loc-preview')?.classList.add('icm-hidden');
     setMapOverlayVisibility(true);
+    if (!marker) return;
+    const latlng = marker.getLatLng();
     renderWithLocation({ lat: latlng.lat, lng: latlng.lng, label: previewLabel });
     previewLabel = '';
   }
@@ -1958,7 +2189,10 @@
         <p class="icm-state-icon">📍</p>
         <p class="icm-manual-label">Digite seu endereço ou bairro</p>
         <div class="icm-manual-row">
-          <input id="icm-manual-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
+          <div class="icm-ac-wrap">
+            <input id="icm-manual-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="icm-ac-list-manual">
+            <ul id="icm-ac-list-manual" class="icm-ac-list icm-hidden" role="listbox"></ul>
+          </div>
           <button id="icm-btn-manual-go" class="icm-btn-primary">Buscar</button>
         </div>
         <p id="icm-manual-error" class="icm-hidden"></p>
@@ -1969,7 +2203,10 @@
           <div id="icm-map"></div>
           <div id="icm-loc-search" class="icm-loc-overlay icm-hidden">
             <div class="icm-loc-search-row">
-              <input id="icm-loc-search-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
+              <div class="icm-ac-wrap">
+                <input id="icm-loc-search-input" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="icm-ac-list-loc">
+                <ul id="icm-ac-list-loc" class="icm-ac-list icm-hidden" role="listbox"></ul>
+              </div>
               <button id="icm-loc-search-go" class="icm-btn-primary" type="button">Buscar</button>
               <button id="icm-loc-search-close" class="icm-loc-search-close" type="button" aria-label="Fechar">✕</button>
             </div>
@@ -2020,7 +2257,10 @@
             <div class="icm-group-section">
               <label>Adicionar endereço do amigo:</label>
               <div class="icm-manual-row">
-                <input id="icm-group-search" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off">
+                <div class="icm-ac-wrap">
+                  <input id="icm-group-search" type="text" placeholder="Endereço ou link do Google Maps" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="icm-ac-list-group">
+                  <ul id="icm-ac-list-group" class="icm-ac-list icm-hidden" role="listbox"></ul>
+                </div>
                 <button id="icm-group-add-btn" class="icm-btn-primary">Adicionar</button>
               </div>
               <button id="icm-group-pin-drop" class="icm-btn-link">ou marque no mapa</button>
@@ -2067,14 +2307,9 @@
     });
     panel.querySelector('#icm-btn-change-loc').addEventListener('click', showManualInput);
     panel.querySelector('#icm-btn-manual-go').addEventListener('click', submitManualLocation);
-    panel.querySelector('#icm-manual-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitManualLocation();
-    });
     panel.querySelector('#icm-loc-search-go').addEventListener('click', submitLocationSearch);
-    panel.querySelector('#icm-loc-search-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitLocationSearch();
-    });
     panel.querySelector('#icm-loc-search-close').addEventListener('click', () => {
+      hideAllAutocompleteLists();
       closeLocationSearch();
       setMapOverlayVisibility(true);
     });
@@ -2085,10 +2320,39 @@
     panel.querySelector('#icm-group-done').addEventListener('click', closeGroupModal);
     panel.querySelector('#icm-group-exit').addEventListener('click', exitGroupMode);
     panel.querySelector('#icm-group-add-btn').addEventListener('click', addFriendLocation);
-    panel.querySelector('#icm-group-search').addEventListener('keydown', e => {
-      if (e.key === 'Enter') addFriendLocation();
-    });
     panel.querySelector('#icm-group-pin-drop').addEventListener('click', enablePinDrop);
+
+    attachLocationAutocomplete(panel.querySelector('#icm-manual-input'), {
+      listEl: panel.querySelector('#icm-ac-list-manual'),
+      onSelect: (coords) => {
+        enterLocationPreview(coords);
+      },
+      onEnterSubmit: submitManualLocation
+    });
+    attachLocationAutocomplete(panel.querySelector('#icm-loc-search-input'), {
+      listEl: panel.querySelector('#icm-ac-list-loc'),
+      onSelect: (coords) => {
+        enterLocationPreview(coords);
+      },
+      onEnterSubmit: submitLocationSearch
+    });
+    attachLocationAutocomplete(panel.querySelector('#icm-group-search'), {
+      listEl: panel.querySelector('#icm-ac-list-group'),
+      onSelect: (coords) => {
+        const input = panel.querySelector('#icm-group-search');
+        clearGroupSearchFeedback();
+        if (input) input.value = '';
+        enterGroupFriendPreview(coords, coords.label);
+      },
+      onEnterSubmit: addFriendLocation
+    });
+
+    document.addEventListener('mousedown', e => {
+      if (!activeAutocomplete) return;
+      const wrap = activeAutocomplete.closest('.icm-ac-wrap');
+      if (wrap && wrap.contains(e.target)) return;
+      hideAllAutocompleteLists();
+    });
     panel.querySelectorAll('[data-group-mode]').forEach(chip => {
       chip.addEventListener('click', () => {
         if (friendLocations.length === 0) return;

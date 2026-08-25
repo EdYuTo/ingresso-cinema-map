@@ -18,6 +18,10 @@ const MOCK_NOMINATIM = {
     lat: '-23.5558',
     lon: '-46.6626',
     display_name: 'Rua da Consolação, 2423, Consolação, São Paulo, SP, Brasil',
+  }, {
+    lat: '-23.5505',
+    lon: '-46.6333',
+    display_name: 'Consolação, São Paulo, SP, Brasil',
   }],
   museu: [{
     lat: '-23.5756',
