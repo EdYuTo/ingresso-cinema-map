@@ -33,6 +33,24 @@ export async function runExtensionTests({
 
     const pins = await page.locator('.icm-pin').count();
     report.assert('cinema pins rendered', pins > 0, `pins=${pins}`);
+
+    // #29: OSM requires Referer; page same-origin policy would otherwise omit it.
+    const tileReferrerPolicy = await page.evaluate(() => {
+      const map = document.getElementById('icm-map')?._leaflet_map;
+      if (!map) return null;
+      let policy = null;
+      map.eachLayer((layer) => {
+        if (layer?.options && typeof layer.getTileUrl === 'function') {
+          policy = layer.options.referrerPolicy ?? null;
+        }
+      });
+      return policy;
+    });
+    report.assert(
+      'OSM tile layer referrerPolicy is strict-origin-when-cross-origin',
+      tileReferrerPolicy === 'strict-origin-when-cross-origin',
+      `policy=${tileReferrerPolicy}`,
+    );
   }
 
   async function testSortControls(page) {
