@@ -20,7 +20,7 @@ Veja os horários, compare distâncias e encontre o cinema mais conveniente — 
 
 ## Instalação
 
-Instale pela **[Chrome Web Store](https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc)** ou pelo **[Firefox Add-ons](https://addons.mozilla.org/pt-BR/firefox/addon/ingresso-cinema-map/)**.
+Instale pela **[Chrome Web Store](https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc)**. A publicação no **Firefox Add-ons** virá em seguida.
 
 A **[página de onboarding](https://ingresso-cinema-map.pages.dev)** explica os recursos, mostra capturas de tela e também cobre a instalação manual para desenvolvedores. A [política de privacidade](https://ingresso-cinema-map.pages.dev/privacy.html) está lá.
 
@@ -38,7 +38,7 @@ Para testar localmente ou contribuir com o projeto:
 
 2. **Chrome:** abra `chrome://extensions`, ative **Modo do desenvolvedor** e clique em **Carregar sem compactação** — selecione a pasta do projeto.
 
-3. **Firefox (140+):** abra `about:debugging#/runtime/this-firefox`, clique em **Carregar extensão temporária…** e selecione o `manifest.json` na raiz do projeto. Para instalação persistente, use o `.xpi` de `npm run package` em `about:addons` → engrenagem → **Instalar complemento a partir de arquivo…**.
+3. **Firefox (128+):** abra `about:debugging#/runtime/this-firefox`, clique em **Carregar extensão temporária…** e selecione o `manifest.json` na raiz do projeto. Para instalação persistente, use o `.xpi` de `npm run package` em `about:addons` → engrenagem → **Instalar complemento a partir de arquivo…**.
 
 A extensão aparece em qualquer página `https://www.ingresso.com/filme/*`.
 
