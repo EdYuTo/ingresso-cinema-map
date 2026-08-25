@@ -44,7 +44,7 @@
     },
     {
       "matches": ["https://www.ingresso.com/filme/*"],
-      "js": ["lib/leaflet.js", "inpage.js"],
+      "js": ["lib/leaflet.js", "lib/brazil-coords.js", "inpage.js"],
       "css": ["lib/leaflet.css", "inpage.css"],
       "run_at": "document_idle",
       "world": "MAIN"

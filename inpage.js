@@ -307,6 +307,12 @@
       && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
   }
 
+  const { isPlausiblyInBrazilBBox } = globalThis.IcmBrazilCoords;
+
+  function isPlausiblyInBrazil(lat, lng) {
+    return isValidCoord(lat, lng) && isPlausiblyInBrazilBBox(lat, lng);
+  }
+
   function extractGooglePlaceCoords(href) {
     const m34 = href.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
     if (m34) {
@@ -1215,8 +1221,10 @@
         continue;
       }
       const theater = apiMap.get(normalizeName(cinema.name));
-      if (theater?.geolocation?.lat && theater.geolocation.lat !== 0 && theater.geolocation.lng !== 0) {
-        const coords = { lat: theater.geolocation.lat, lng: theater.geolocation.lng };
+      const apiLat = theater?.geolocation?.lat;
+      const apiLng = theater?.geolocation?.lng;
+      if (apiLat && apiLat !== 0 && apiLng && apiLng !== 0 && isPlausiblyInBrazil(apiLat, apiLng)) {
+        const coords = { lat: apiLat, lng: apiLng };
         geocodeCache.set(cinema.name, coords);
         result.push({ ...cinema, ...coords });
       } else {
