@@ -19,6 +19,11 @@ Thumbs.db
 # Playwright (local screenshot capture)
 .playwright-profile/
 .playwright-profile-*/
+.test-extension-firefox/
+.playwright-firefox-profile-tests-system/
+.playwright-firefox-profile-tests/
+.playwright-firefox-profile-tests-pre/
+web-ext-artifacts/
 node_modules/
 
 # CI package output

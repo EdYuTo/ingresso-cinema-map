@@ -1,10 +1,12 @@
 {
   "name": "ingresso-cinema-map",
-  "description": "Chrome extension — onboarding at https://ingresso-cinema-map.pages.dev",
+  "description": "Chrome & Firefox extension — onboarding at https://ingresso-cinema-map.pages.dev",
   "private": true,
   "scripts": {
     "screenshots": "node scripts/capture-screenshots.mjs",
-    "test": "node scripts/test-extension.mjs",
+    "test": "node scripts/test-extension.mjs && node scripts/test-extension-firefox.mjs",
+    "test:chrome": "node scripts/test-extension.mjs",
+    "test:firefox": "node scripts/test-extension-firefox.mjs",
     "test:short-links": "node scripts/test-short-links.mjs",
     "test:dump-fixture": "node scripts/dump-ingresso-fixture.mjs",
     "package": "node scripts/package-extension.mjs",
@@ -12,6 +14,9 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.0",
-    "playwright": "^1.62.1"
+    "geckodriver": "^6.1.1",
+    "playwright": "^1.62.1",
+    "selenium-webdriver": "^4.47.0",
+    "web-ext": "^10.6.0"
   }
 }

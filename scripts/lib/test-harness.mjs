@@ -276,13 +276,10 @@ async function openLocationEntry(page) {
 }
 
 async function submitLocationQuery(page, _query, errorSelector) {
-  const preview = page.locator('#icm-loc-preview:not(.icm-hidden)');
-  const error = page.locator(`${errorSelector}:not(.icm-hidden)`);
-
   await Promise.race([
-    preview.waitFor({ state: 'visible', timeout: 120000 }),
-    error.waitFor({ state: 'visible', timeout: 120000 }).then(async () => {
-      throw new Error((await error.textContent())?.trim() || 'Location search failed');
+    page.waitForSelector('#icm-loc-preview:not(.icm-hidden)', { state: 'visible', timeout: 120000 }),
+    page.waitForSelector(`${errorSelector}:not(.icm-hidden)`, { state: 'visible', timeout: 120000 }).then(async () => {
+      throw new Error((await page.locator(errorSelector).textContent())?.trim() || 'Location search failed');
     }),
   ]);
 

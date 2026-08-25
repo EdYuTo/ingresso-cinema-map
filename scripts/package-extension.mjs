@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build a Chrome Web Store zip from extension source files.
+ * Build store packages from extension source files (Chrome .zip + Firefox .xpi).
  *
  * Usage: npm run package
  */
@@ -49,22 +49,28 @@ for (const rel of PACKAGE_PATHS) {
 }
 
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
-const zipName = `ingresso-cinema-map-v${manifest.version}.zip`;
+const version = manifest.version;
+const zipName = `ingresso-cinema-map-v${version}.zip`;
+const xpiName = `ingresso-cinema-map-v${version}.xpi`;
 
 fs.mkdirSync(DIST, { recursive: true });
 
 for (const entry of fs.readdirSync(DIST)) {
-  if (entry.endsWith('.zip')) {
+  if (entry.endsWith('.zip') || entry.endsWith('.xpi')) {
     fs.unlinkSync(path.join(DIST, entry));
   }
 }
 
-const zipPath = path.join(DIST, zipName);
 const zipArgs = PACKAGE_PATHS.map((rel) => `"${rel}"`).join(' ');
-execSync(`zip -r "${zipPath}" ${zipArgs} -x "*.DS_Store"`, {
-  cwd: ROOT,
-  stdio: 'inherit',
-});
+const zipPath = path.join(DIST, zipName);
+const xpiPath = path.join(DIST, xpiName);
+
+for (const packagePath of [zipPath, xpiPath]) {
+  execSync(`zip -r "${packagePath}" ${zipArgs} -x "*.DS_Store"`, {
+    cwd: ROOT,
+    stdio: 'inherit',
+  });
+}
 
 function listZipEntries(zipFile) {
   const listing = execSync(`unzip -Z1 "${zipFile}"`, { encoding: 'utf8' });
@@ -100,5 +106,7 @@ function assertCleanStoreZip(zipFile) {
 }
 
 assertCleanStoreZip(zipPath);
+assertCleanStoreZip(xpiPath);
 
 console.log(`Created ${zipPath} (${fs.statSync(zipPath).size} bytes)`);
+console.log(`Created ${xpiPath} (${fs.statSync(xpiPath).size} bytes)`);

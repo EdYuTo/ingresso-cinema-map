@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ingresso Cinema Map — Mapa de cinemas no ingresso.com</title>
-  <meta name="description" content="Extensão para Chrome que embute um mapa interativo de cinemas nas páginas de filme do ingresso.com. Compare distâncias e encontre o cinema ideal.">
+  <meta name="description" content="Extensão para Chrome e Firefox que embute um mapa interativo de cinemas nas páginas de filme do ingresso.com. Compare distâncias e encontre o cinema ideal.">
   <meta property="og:title" content="Ingresso Cinema Map">
   <meta property="og:description" content="Encontre o cinema mais perto, sem sair do ingresso.com.">
   <meta property="og:type" content="website">
@@ -41,7 +41,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Extensão Chrome
+            Extensão Chrome &amp; Firefox
           </p>
           <h1><span>Encontre o cinema mais perto</span>, sem sair do ingresso.com</h1>
           <p class="hero-lead">
@@ -210,21 +210,25 @@
             <p class="section-intro">
               Já disponível na
               <a href="https://chromewebstore.google.com/detail/acpagoehgmgamaofekdkaflcplildogc" target="_blank" rel="noopener noreferrer">Chrome Web Store</a>.
-              Para contribuir ou testar uma build local, carregue a extensão a partir do código-fonte:
+              Firefox ainda é instalação local (128+). Para contribuir ou testar uma build, carregue a extensão a partir do código-fonte:
             </p>
           </header>
           <ol class="install-steps">
             <li>
               <strong>1. Baixe o código</strong>
-              <span>Clone o repositório no GitHub ou baixe o ZIP da release.</span>
+              <span>Clone o repositório no GitHub ou baixe o ZIP/XPI da release.</span>
             </li>
             <li>
-              <strong>2. Abra extensões</strong>
-              <span>Acesse <code>chrome://extensions</code> e ative o Modo do desenvolvedor.</span>
+              <strong>2. Chrome</strong>
+              <span>Acesse <code>chrome://extensions</code>, ative o Modo do desenvolvedor e clique em <em>Carregar sem compactação</em>.</span>
             </li>
             <li>
-              <strong>3. Carregue a pasta</strong>
-              <span>Clique em <em>Carregar sem compactação</em> e selecione a pasta do projeto.</span>
+              <strong>3. Firefox</strong>
+              <span>Requer Firefox 128+. Em <code>about:debugging#/runtime/this-firefox</code>, clique em <em>Carregar extensão temporária…</em> e selecione o <code>manifest.json</code> do projeto — ou instale o <code>.xpi</code> da release em <code>about:addons</code>.</span>
+            </li>
+            <li>
+              <strong>4. Selecione a pasta</strong>
+              <span>Escolha a pasta raiz do repositório clonado (Chrome) ou confirme o arquivo escolhido (Firefox).</span>
             </li>
           </ol>
         </div>
