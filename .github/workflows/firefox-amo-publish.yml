@@ -1,0 +1,53 @@
+name: Firefox Add-ons Publish
+
+# Manual only — publishes the current manifest.json version to AMO without
+# touching the git tag, GitHub Release, or Chrome Web Store. Use this to
+# retry the Firefox Add-ons step in isolation (e.g. after fixing AMO API
+# credentials) without re-running the full Release workflow.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: firefox-amo-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Sign & publish to Firefox Add-ons (AMO)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension zip
+        run: npm run package
+
+      - name: Sign & publish to Firefox Add-ons (AMO)
+        run: |
+          XPI=$(ls dist/*.xpi | head -n 1)
+          mkdir -p dist/firefox-src
+          unzip -q -o "$XPI" -d dist/firefox-src
+          npx web-ext sign \
+            --source-dir dist/firefox-src \
+            --artifacts-dir dist/firefox-signed \
+            --channel listed \
+            --api-key "$FIREFOX_JWT_ISSUER" \
+            --api-secret "$FIREFOX_JWT_SECRET"
+        env:
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
