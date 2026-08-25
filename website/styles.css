@@ -132,6 +132,30 @@ a:hover {
   color: var(--text);
 }
 
+@media (max-width: 640px) {
+  .brand span {
+    display: none;
+  }
+
+  .site-nav {
+    overflow-x: auto;
+    flex-shrink: 1;
+    min-width: 0;
+    scrollbar-width: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-nav a {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
 /* ── Hero ───────────────────────────────────────────────────────────── */
 
 .hero {
