@@ -1,0 +1,26 @@
+name: Dúvida
+description: Tire uma dúvida sobre o funcionamento da extensão
+title: "[Dúvida] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Descreva sua dúvida com o máximo de detalhes possível para agilizarmos a resposta.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Sua dúvida
+      description: O que você gostaria de entender sobre a extensão?
+      placeholder: "Ex.: Como funciona a reordenação de cinemas na opção de listagem por amigo?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Informações adicionais
+      description: Prints, URL do filme, cidade selecionada no ingresso.com, etc.
+    validations:
+      required: false
