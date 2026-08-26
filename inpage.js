@@ -242,6 +242,13 @@
     writeSavedAddresses(list.slice(0, SAVED_ADDRESSES_MAX));
   }
 
+  function removeSavedAddress(lat, lng) {
+    const list = readSavedAddresses().filter(a =>
+      !(Math.abs(a.lat - lat) < 0.0001 && Math.abs(a.lng - lng) < 0.0001)
+    );
+    writeSavedAddresses(list);
+  }
+
   const {
     decodeMapsText,
     formatGoogleAddressForGeocode,
@@ -609,7 +616,7 @@
       }
     }
 
-    function renderList(suggestions) {
+    function renderList(suggestions, { removable = false } = {}) {
       items = suggestions;
       activeIndex = -1;
       if (!suggestions.length) {
@@ -620,7 +627,12 @@
       hideAllAutocompleteLists(listEl);
       listEl.innerHTML = suggestions.map((item, i) => {
         const label = escapeHtml(suggestionLabel(item));
-        return `<li id="${listEl.id}-opt-${i}" class="icm-ac-option" role="option" aria-selected="false" data-idx="${i}">${label}</li>`;
+        const optionClass = removable ? 'icm-ac-option icm-ac-option--removable' : 'icm-ac-option';
+        const removeBtn = removable
+          ? `<button type="button" class="icm-ac-remove" data-idx="${i}" aria-label="Remover do histórico" title="Remover do histórico">×</button>`
+          : '';
+        return `<li id="${listEl.id}-opt-${i}" class="${optionClass}" role="option" aria-selected="false" data-idx="${i}">` +
+          `<span class="icm-ac-option-label">${label}</span>${removeBtn}</li>`;
       }).join('');
       listEl.classList.remove('icm-hidden');
       setExpanded(true);
@@ -635,7 +647,7 @@
         hideList();
         return;
       }
-      renderList(filtered.map(a => ({ display_name: a.label, lat: a.lat, lon: a.lng })));
+      renderList(filtered.map(a => ({ display_name: a.label, lat: a.lat, lon: a.lng })), { removable: true });
     }
 
     async function runSearch(query, seq, signal) {
@@ -700,6 +712,18 @@
     });
 
     listEl.addEventListener('mousedown', e => {
+      const removeBtn = e.target.closest('.icm-ac-remove');
+      if (removeBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const item = items[parseInt(removeBtn.dataset.idx, 10)];
+        if (item) {
+          removeSavedAddress(item.lat, item.lon);
+          showSavedSuggestions(input.value.trim());
+        }
+        return;
+      }
+
       const opt = e.target.closest('.icm-ac-option');
       if (!opt) return;
       e.preventDefault();
