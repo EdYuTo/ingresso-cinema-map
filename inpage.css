@@ -688,12 +688,16 @@
   margin-bottom: 8px !important; font-size: 12px !important; color: #f0f0f0 !important;
 }
 
-.icm-group-remove {
+.icm-group-actions { display: flex !important; align-items: center !important; gap: 8px !important; flex-shrink: 0 !important; }
+
+.icm-group-remove, .icm-group-rename {
   background: none !important; border: none !important; color: rgba(240,240,240,0.6) !important;
-  font-size: 16px !important; cursor: pointer !important; padding: 0 !important;
+  font-size: 14px !important; cursor: pointer !important; padding: 0 !important;
 }
 
-.icm-group-remove:hover { color: #f0f0f0 !important; }
+.icm-group-remove { font-size: 16px !important; }
+
+.icm-group-remove:hover, .icm-group-rename:hover { color: #f0f0f0 !important; }
 
 #icm-panel #icm-group-bar { display: flex !important; align-items: center !important; gap: 5px !important; }
 

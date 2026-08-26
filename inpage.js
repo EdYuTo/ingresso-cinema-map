@@ -24,6 +24,9 @@
   const SESSION_TYPES = ['VIP', 'LASER', 'DUBLADO', 'LEGENDADO', 'NORMAL'];
   const UI_NOISE = ['Assentos', 'Preços', 'Detalhes', 'Lembre-me', 'Compartilhar', 'Favoritar'];
 
+  const SAVED_ADDRESSES_KEY = 'icmSavedAddresses';
+  const SAVED_ADDRESSES_MAX = 8;
+
   // ── Module state ───────────────────────────────────────────────────────
   let leafletMap = null;
   let cinemaMarkers = [];
@@ -209,6 +212,34 @@
     pageCity = (await fetchCityByUrlKey(key)) || DEFAULT_CITY;
     pageCityKey = key;
     return pageCity;
+  }
+
+  // ── Saved addresses (local persistence) ─────────────────────────────────
+
+  function readSavedAddresses() {
+    try {
+      const list = JSON.parse(localStorage.getItem(SAVED_ADDRESSES_KEY) || '[]');
+      return Array.isArray(list) ? list : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function writeSavedAddresses(list) {
+    try {
+      localStorage.setItem(SAVED_ADDRESSES_KEY, JSON.stringify(list));
+    } catch {
+      // localStorage unavailable (private mode, quota) — persistence is best-effort
+    }
+  }
+
+  function saveAddress({ label, lat, lng }) {
+    if (!label || !isValidCoord(lat, lng)) return;
+    const list = readSavedAddresses().filter(a =>
+      !(Math.abs(a.lat - lat) < 0.0001 && Math.abs(a.lng - lng) < 0.0001)
+    );
+    list.unshift({ label, lat, lng });
+    writeSavedAddresses(list.slice(0, SAVED_ADDRESSES_MAX));
   }
 
   const {
@@ -596,6 +627,17 @@
       activeAutocomplete = input;
     }
 
+    function showSavedSuggestions(filterQuery = '') {
+      const saved = readSavedAddresses();
+      const q = filterQuery.toLowerCase();
+      const filtered = q ? saved.filter(a => a.label.toLowerCase().includes(q)) : saved;
+      if (!filtered.length) {
+        hideList();
+        return;
+      }
+      renderList(filtered.map(a => ({ display_name: a.label, lat: a.lat, lon: a.lng })));
+    }
+
     async function runSearch(query, seq, signal) {
       try {
         const suggestions = await fetchAutocompleteSuggestions(query, signal);
@@ -611,8 +653,12 @@
       const query = input.value.trim();
       clearTimeout(debounceTimer);
       debounceTimer = null;
-      if (query.length < AUTOCOMPLETE_MIN_CHARS || isMapsOrUrlQuery(query)) {
+      if (isMapsOrUrlQuery(query)) {
         hideList();
+        return;
+      }
+      if (query.length < AUTOCOMPLETE_MIN_CHARS) {
+        showSavedSuggestions(query);
         return;
       }
       // Invalidate any in-flight request for this input while waiting to debounce.
@@ -641,6 +687,9 @@
     autocompleteInstances.push({ listEl, hideList });
 
     input.addEventListener('input', scheduleSearch);
+    input.addEventListener('focus', () => {
+      if (!input.value.trim()) showSavedSuggestions();
+    });
     input.addEventListener('blur', () => {
       // Allow option mousedown to fire before hide
       setTimeout(() => {
@@ -1698,11 +1747,13 @@
   function confirmGroupFriendPreview() {
     if (!previewMarker) return;
     const latlng = previewMarker.getLatLng();
+    const label = buildFriendLabel(groupPreviewQuery, { label: previewLabel });
     friendLocations.push({
       lat: latlng.lat,
       lng: latlng.lng,
-      label: buildFriendLabel(groupPreviewQuery, { label: previewLabel })
+      label
     });
+    saveAddress({ label, lat: latlng.lat, lng: latlng.lng });
     resetGroupPreviewState(true);
     updateGroupList();
     updateGroupBarState();
@@ -1737,6 +1788,7 @@
     setMapOverlayVisibility(true);
     if (!marker) return;
     const latlng = marker.getLatLng();
+    saveAddress({ label: previewLabel, lat: latlng.lat, lng: latlng.lng });
     renderWithLocation({ lat: latlng.lat, lng: latlng.lng, label: previewLabel });
     previewLabel = '';
   }
@@ -1867,9 +1919,27 @@
           <span style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 8px ${color}88"></span>
           <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(friend.label)}">${escapeHtml(friendShortLabel(friend, idx))}</span>
         </span>
-        <button class="icm-group-remove" data-idx="${idx}">✕</button>
+        <span class="icm-group-actions">
+          <button class="icm-group-rename" data-idx="${idx}" title="Renomear" aria-label="Renomear amigo">✎</button>
+          <button class="icm-group-remove" data-idx="${idx}" title="Remover" aria-label="Remover amigo">✕</button>
+        </span>
       </div>`;
     }).join('');
+
+    list.querySelectorAll('.icm-group-rename').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        const friend = friendLocations[idx];
+        if (!friend) return;
+        const next = window.prompt('Apelido para este amigo:', friend.label || '');
+        if (next === null) return;
+        const trimmed = next.trim();
+        if (!trimmed) return;
+        friend.label = trimmed;
+        updateGroupList();
+        refreshMapDisplay();
+      });
+    });
 
     list.querySelectorAll('.icm-group-remove').forEach(btn => {
       btn.addEventListener('click', () => {
