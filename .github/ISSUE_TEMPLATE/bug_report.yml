@@ -49,12 +49,22 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: chrome
+  - type: dropdown
+    id: browser
     attributes:
-      label: Versão do Chrome
-      description: 'Abra chrome://version (ou Menu → Ajuda → Sobre o Google Chrome) e copie o número em "Google Chrome".'
-      placeholder: "Ex.: 128.0.6613.84"
+      label: Navegador
+      options:
+        - Chrome
+        - Firefox
+    validations:
+      required: true
+
+  - type: input
+    id: browser_version
+    attributes:
+      label: Versão do navegador
+      description: 'Chrome: abra chrome://version (ou Menu → Ajuda → Sobre o Google Chrome). Firefox: abra about:support (ou Menu → Ajuda → Mais informações para solução de problemas) e copie o número em "Versão".'
+      placeholder: "Ex.: 128.0.6613.84 (Chrome) ou 130.0.1 (Firefox)"
     validations:
       required: true
 
@@ -70,7 +80,7 @@ body:
     id: extension
     attributes:
       label: Versão da extensão
-      description: 'Em chrome://extensions, ative "Detalhes" ou veja a versão no manifesto carregado.'
+      description: 'Chrome: em chrome://extensions, ative "Detalhes". Firefox: em about:addons, clique na extensão. Ou veja a versão no manifesto carregado.'
       placeholder: 'Ex.: 1.0.0 (ou "carregada sem compactação")'
     validations:
       required: false
