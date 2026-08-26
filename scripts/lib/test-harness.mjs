@@ -407,7 +407,7 @@ export async function openGroupModal(page) {
   await page.waitForSelector('#icm-group-modal:not(.icm-hidden)', { timeout: 15000 });
 }
 
-export async function addGroupFriend(page, query, { labelIncludes } = {}) {
+export async function addGroupFriend(page, query, { labelIncludes, customLabel } = {}) {
   await page.waitForSelector('#icm-group-modal:not(.icm-hidden)', { timeout: 15000 });
 
   const before = await page.locator('#icm-group-list .icm-group-item').count();
@@ -425,10 +425,14 @@ export async function addGroupFriend(page, query, { labelIncludes } = {}) {
   await page.waitForSelector('.icm-preview-dot', { timeout: 20000 });
 
   if (labelIncludes) {
-    const previewLabel = await page.locator('#icm-loc-preview-label').textContent();
+    const previewLabel = await page.locator('#icm-loc-preview-label').inputValue();
     if (!(previewLabel || '').includes(labelIncludes)) {
       throw new Error(`Preview label missing "${labelIncludes}": ${previewLabel}`);
     }
+  }
+
+  if (customLabel) {
+    await page.locator('#icm-loc-preview-label').fill(customLabel);
   }
 
   await page.evaluate(() => {

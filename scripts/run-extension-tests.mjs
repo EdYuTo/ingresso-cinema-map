@@ -281,6 +281,35 @@ export async function runExtensionTests({
     report.assert('friend markers on map', friendMarkers >= 3, `markers=${friendMarkers}`);
   }
 
+  async function testCustomNickname(page) {
+    report.section('Group: custom nickname saved as address label');
+    await openGroupModal(page);
+    await addGroupFriend(page, LOCATIONS.belasArtes.typedAddress, {
+      labelIncludes: LOCATIONS.belasArtes.labelIncludes,
+      customLabel: 'Casa Teste',
+    });
+    const listText = await page.locator('#icm-group-list').textContent();
+    report.assert('custom nickname shown in friend list', (listText || '').includes('Casa Teste'), listText || '');
+
+    await page.locator('#icm-group-search').fill('');
+    await page.locator('#icm-group-search').click();
+    await page.waitForSelector('#icm-ac-list-group .icm-ac-option', { timeout: 10000 });
+    const suggestions = await page.locator('#icm-ac-list-group .icm-ac-option').allTextContents();
+    report.assert(
+      'custom nickname appears as saved-address suggestion',
+      suggestions.some(s => s.includes('Casa Teste')),
+      suggestions.join(' | '),
+    );
+
+    await page.locator('#icm-group-search').fill('');
+    await page.locator('#icm-group-done').click();
+    await page.waitForFunction(
+      () => document.getElementById('icm-group-modal')?.classList.contains('icm-hidden'),
+      null,
+      { timeout: 10000 },
+    );
+  }
+
   await waitForPanel(page);
   await waitForInitialLoad(page);
 
@@ -290,6 +319,7 @@ export async function runExtensionTests({
   await testPinClickDoesNotReloadMap(page);
   await testSortControls(page);
   await testGroupFriends(page);
+  await testCustomNickname(page);
 
   return report.summary();
 }

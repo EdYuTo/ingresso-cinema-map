@@ -1616,22 +1616,26 @@
     if (!labelEl || !hintEl || !confirmBtn) return;
 
     if (mode === 'group-pin') {
-      labelEl.textContent = 'Marcar localização no mapa';
+      labelEl.value = '';
+      labelEl.placeholder = 'Marcar localização no mapa';
+      labelEl.readOnly = true;
       hintEl.textContent = 'Clique no mapa onde o amigo está. Pressione Cancelar para voltar.';
       confirmBtn.classList.add('icm-hidden');
       return;
     }
 
+    labelEl.readOnly = false;
+    labelEl.placeholder = 'Apelido (ex: Casa)';
     confirmBtn.classList.remove('icm-hidden');
     if (mode === 'group') {
-      labelEl.textContent = previewLabel || `Amigo ${friendLocations.length + 1}`;
-      hintEl.textContent = 'Arraste o marcador para ajustar. Confirme para adicionar à lista.';
+      labelEl.value = previewLabel || `Amigo ${friendLocations.length + 1}`;
+      hintEl.textContent = 'Arraste o marcador para ajustar. Edite o apelido acima e confirme para adicionar.';
       confirmBtn.textContent = 'Adicionar amigo';
       return;
     }
 
-    labelEl.textContent = previewLabel;
-    hintEl.textContent = 'Arraste o marcador para ajustar a posição';
+    labelEl.value = previewLabel;
+    hintEl.textContent = 'Arraste o marcador para ajustar a posição. Edite o apelido acima antes de confirmar.';
     confirmBtn.textContent = 'Confirmar localização';
   }
 
@@ -1747,6 +1751,8 @@
   function confirmGroupFriendPreview() {
     if (!previewMarker) return;
     const latlng = previewMarker.getLatLng();
+    const editedLabel = document.getElementById('icm-loc-preview-label')?.value.trim();
+    if (editedLabel) previewLabel = editedLabel;
     const label = buildFriendLabel(groupPreviewQuery, { label: previewLabel });
     friendLocations.push({
       lat: latlng.lat,
@@ -1781,6 +1787,8 @@
       return;
     }
     const marker = previewMarker;
+    const editedLabel = document.getElementById('icm-loc-preview-label')?.value.trim();
+    if (editedLabel) previewLabel = editedLabel;
     locationPreviewActive = false;
     previewContext = null;
     previewMarker = null;
@@ -1936,6 +1944,7 @@
         const trimmed = next.trim();
         if (!trimmed) return;
         friend.label = trimmed;
+        saveAddress({ label: trimmed, lat: friend.lat, lng: friend.lng });
         updateGroupList();
         refreshMapDisplay();
       });
@@ -2272,7 +2281,7 @@
             <p id="icm-loc-search-error" class="icm-loc-search-error icm-hidden"></p>
           </div>
           <div id="icm-loc-preview" class="icm-loc-overlay icm-hidden">
-            <p id="icm-loc-preview-label" class="icm-loc-preview-label"></p>
+            <input id="icm-loc-preview-label" class="icm-loc-preview-label" type="text" autocomplete="off" aria-label="Apelido para este endereço">
             <p class="icm-loc-preview-hint">Arraste o marcador para ajustar a posição</p>
             <div class="icm-loc-preview-actions">
               <button id="icm-loc-preview-cancel" class="icm-btn-link" type="button">Cancelar</button>
