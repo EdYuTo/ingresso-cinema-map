@@ -124,6 +124,14 @@ class SeleniumPage {
         const el = await driver.findElement({ css: selector });
         return el.getText();
       },
+      async inputValue() {
+        const el = await driver.findElement({ css: selector });
+        return el.getAttribute('value');
+      },
+      async allTextContents() {
+        const els = await driver.findElements({ css: selector });
+        return Promise.all(els.map(el => el.getText()));
+      },
       async count() {
         const els = await driver.findElements({ css: selector });
         return els.length;
