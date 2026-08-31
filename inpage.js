@@ -252,8 +252,11 @@
   const {
     decodeMapsText,
     formatGoogleAddressForGeocode,
-    buildGeocodeQueryFallbacks
+    buildGeocodeQueryFallbacks,
+    pickGeocodeMatch
   } = globalThis.IcmGeocodeFormat;
+
+  const GEOCODE_PRECISION_RANK = { city: 1, 'cep-block': 2, cep: 3, house: 4 };
 
   function buildGeocodeQuery(query) {
     const city = pageCity || DEFAULT_CITY;
@@ -272,38 +275,60 @@
 
   async function geocodeResolvedAddress(query, formattedInput) {
     const formatted = formattedInput || formatGoogleAddressForGeocode(query);
-    let data = [];
+    let best = null;
     let requested = false;
 
+    // Keeps the most precise hit seen so far; true once nothing can beat it.
+    const consider = (data) => {
+      const picked = pickGeocodeMatch(data, formatted);
+      if (
+        picked
+        && (!best || GEOCODE_PRECISION_RANK[picked.precision] > GEOCODE_PRECISION_RANK[best.precision])
+      ) {
+        best = picked;
+      }
+      return best?.precision === 'house';
+    };
+
+    const search = async (run) => {
+      if (requested) await delay(NOMINATIM_DELAY);
+      requested = true;
+      return run();
+    };
+
     if (formatted.street && formatted.city && formatted.uf) {
-      data = await nominatimStructuredSearch({
+      const data = await search(() => nominatimStructuredSearch({
         street: formatted.street,
         city: formatted.city,
         state: formatted.uf,
+        postalcode: formatted.cep,
         country: 'Brasil'
-      }, 5);
-      requested = true;
+      }, 5));
+      if (consider(data)) return best.match;
     }
 
-    if (!data.length) {
-      const candidates = buildGeocodeQueryFallbacks(query, formatted);
-      for (const candidate of candidates) {
-        if (requested) await delay(NOMINATIM_DELAY);
-        data = await nominatimSearch(candidate, 5);
-        requested = true;
-        if (data.length) break;
+    if (!best) {
+      for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
+        const data = await search(() => nominatimSearch(candidate, 5));
+        if (consider(data)) return best.match;
+        if (best) break;
       }
     }
 
-    if (!data.length) {
-      throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
+    // Only street segments so far: Nominatim orders them unpredictably, so an
+    // arbitrary one can sit kilometres from the address. The CEP block is tight.
+    if (formatted.cep && (best?.precision === 'city' || best?.precision === 'cep-block')) {
+      const data = await search(() => nominatimSearch(
+        [formatted.cep, formatted.city, formatted.uf, 'Brasil'].filter(Boolean).join(', '),
+        5
+      ));
+      consider(data);
     }
 
-    if (formatted.city) {
-      const cityNorm = normalizeName(formatted.city);
-      return data.find(item => normalizeName(item.display_name).includes(cityNorm)) || data[0];
+    if (!best) {
+      throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
     }
-    return data[0];
+    return best.match;
   }
 
   const GOOGLE_MAPS_URL_RE =
@@ -470,6 +495,7 @@
       const params = new URLSearchParams({
         q,
         format: 'json',
+        addressdetails: '1',
         limit: String(limit),
         countrycodes: 'br'
       });
@@ -487,16 +513,18 @@
     return result;
   }
 
-  async function nominatimStructuredSearch({ street, city, state, country }, limit = 5) {
+  async function nominatimStructuredSearch({ street, city, state, postalcode, country }, limit = 5) {
     const params = new URLSearchParams({
       street,
       city,
       state,
       country,
       format: 'json',
+      addressdetails: '1',
       limit: String(limit),
       countrycodes: 'br'
     });
+    if (postalcode) params.set('postalcode', postalcode);
     const res = await fetch(`${NOMINATIM_API}?${params}`, {
       headers: { 'User-Agent': 'IngressoCinemaMap/2.0' }
     });

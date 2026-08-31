@@ -14,7 +14,8 @@ const require = createRequire(import.meta.url);
 const {
   expandTitleAbbreviations,
   formatGoogleAddressForGeocode,
-  buildGeocodeQueryFallbacks
+  buildGeocodeQueryFallbacks,
+  pickGeocodeMatch
 } = require(path.join(__dirname, '..', 'lib', 'geocode-format.js'));
 
 let passed = 0;
@@ -133,6 +134,26 @@ console.log('formatGoogleAddressForGeocode');
   assertEqual(result.street, 'Rua da Consolação 200', 'street without neighborhood');
 }
 
+{
+  const result = formatGoogleAddressForGeocode(
+    'R. Augusta, 901 - Consolação, São Paulo - SP, 01305-100'
+  );
+  assertEqual(result.cep, '01305-100', 'keeps the CEP so geocoding can disambiguate the street');
+  assertEqual(result.number, '901', 'keeps the house number for verifying geocoder matches');
+}
+
+{
+  const result = formatGoogleAddressForGeocode('Rua Augusta, 901 - Consolação, São Paulo - SP');
+  assertEqual(result.cep, null, 'cep is null when the address has none');
+}
+
+{
+  const result = formatGoogleAddressForGeocode(
+    'R. Augusta, 901 - Consolação, São Paulo - SP, 01305100'
+  );
+  assertEqual(result.cep, '01305-100', 'normalizes an unhyphenated CEP');
+}
+
 console.log('buildGeocodeQueryFallbacks');
 {
   const raw = 'Av. Brig. Faria Lima, 949 - Pinheiros, São Paulo - SP, 05426-100';
@@ -150,6 +171,55 @@ console.log('buildGeocodeQueryFallbacks');
   );
   const unique = new Set(candidates);
   assertEqual(unique.size, candidates.length, 'fallback list has no duplicates');
+}
+
+
+console.log('pickGeocodeMatch');
+{
+  const formatted = formatGoogleAddressForGeocode(
+    'R. Augusta, 901 - Consolação, São Paulo - SP, 01305-100'
+  );
+
+  const withHouse = [
+    { lat: '-23.5661', lon: '-46.6685', address: { city: 'São Paulo', postcode: '01427-970' } },
+    { lat: '-23.5526', lon: '-46.6544', address: { house_number: '901', city: 'São Paulo', postcode: '01305-100' } }
+  ];
+  const houseMatch = pickGeocodeMatch(withHouse, formatted);
+  assertEqual(houseMatch.precision, 'house', 'house-number hit wins over street segments');
+  assertEqual(houseMatch.match.lat, '-23.5526', 'returns the house-number result');
+
+  const segmentsOnly = [
+    { lat: '-23.5661', lon: '-46.6685', address: { city: 'São Paulo', postcode: '01427-970' } },
+    { lat: '-23.5515', lon: '-46.6510', address: { city: 'São Paulo', postcode: '01305-000' } }
+  ];
+  const cepMatch = pickGeocodeMatch(segmentsOnly, formatted);
+  assertEqual(cepMatch.precision, 'cep-block', 'falls back to the segment sharing the CEP prefix');
+  assertEqual(cepMatch.match.lat, '-23.5515', 'returns the CEP-prefix segment, not the first result');
+
+  const exactCep = [
+    { lat: '-23.5515', lon: '-46.6510', address: { city: 'São Paulo', postcode: '01305-000' } },
+    { lat: '-23.5544', lon: '-46.6559', address: { city: 'São Paulo', postcode: '01305-100' } }
+  ];
+  const exact = pickGeocodeMatch(exactCep, formatted);
+  assertEqual(exact.precision, 'cep', 'the exact CEP beats another CEP in the same block');
+  assertEqual(exact.match.lat, '-23.5544', 'returns the exact-CEP result');
+
+  const otherCity = [
+    { lat: '-22.8543', lon: '-47.1889', address: { house_number: '901', city: 'Hortolândia', postcode: '13181-670' } }
+  ];
+  assertEqual(
+    pickGeocodeMatch(otherCity, formatted),
+    null,
+    'discards a house-number hit in another city'
+  );
+
+  const cityOnly = [
+    { lat: '-23.5661', lon: '-46.6685', address: { city: 'São Paulo', postcode: '01427-970' } }
+  ];
+  const loose = pickGeocodeMatch(cityOnly, formatted);
+  assertEqual(loose.precision, 'city', 'street segment in the right city is the weakest usable match');
+
+  assertEqual(pickGeocodeMatch([], formatted), null, 'no results means no match');
 }
 
 console.log('');
