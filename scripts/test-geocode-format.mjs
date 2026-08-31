@@ -15,7 +15,8 @@ const {
   expandTitleAbbreviations,
   formatGoogleAddressForGeocode,
   buildGeocodeQueryFallbacks,
-  pickGeocodeMatch
+  pickGeocodeMatch,
+  buildHouseNumberProbes
 } = require(path.join(__dirname, '..', 'lib', 'geocode-format.js'));
 
 let passed = 0;
@@ -220,6 +221,22 @@ console.log('pickGeocodeMatch');
   assertEqual(loose.precision, 'city', 'street segment in the right city is the weakest usable match');
 
   assertEqual(pickGeocodeMatch([], formatted), null, 'no results means no match');
+}
+
+console.log('buildHouseNumberProbes');
+{
+  assertEqual(
+    buildHouseNumberProbes('901').join(','),
+    '899,903,897,905',
+    'probes the closest same-side numbers first, alternating down and up'
+  );
+  assertEqual(
+    buildHouseNumberProbes('4').join(','),
+    '2,6,8,10',
+    'skips numbers below 1 near the start of a street and still fills the budget'
+  );
+  assertEqual(buildHouseNumberProbes(null).join(','), '', 'no number means no probes');
+  assertEqual(buildHouseNumberProbes('sem numero').join(','), '', 'non-numeric input means no probes');
 }
 
 console.log('');

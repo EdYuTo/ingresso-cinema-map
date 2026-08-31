@@ -253,10 +253,13 @@
     decodeMapsText,
     formatGoogleAddressForGeocode,
     buildGeocodeQueryFallbacks,
-    pickGeocodeMatch
+    pickGeocodeMatch,
+    buildHouseNumberProbes
   } = globalThis.IcmGeocodeFormat;
 
-  const GEOCODE_PRECISION_RANK = { city: 1, 'cep-block': 2, cep: 3, house: 4 };
+  const GEOCODE_PRECISION_RANK = {
+    city: 1, 'cep-block': 2, cep: 3, 'house-near': 4, house: 5
+  };
 
   function buildGeocodeQuery(query) {
     const city = pageCity || DEFAULT_CITY;
@@ -312,6 +315,28 @@
         const data = await search(() => nominatimSearch(candidate, 5));
         if (consider(data)) return best.match;
         if (best) break;
+      }
+    }
+
+    // OSM often lacks the exact number while carrying its neighbours. A hit two
+    // doors away is metres off; a street segment can be a couple of blocks off.
+    if (formatted.number && formatted.street && formatted.city && formatted.uf) {
+      const streetName = formatted.street.replace(/\s*\d+\s*$/, '').trim();
+      for (const probe of buildHouseNumberProbes(formatted.number)) {
+        const data = await search(() => nominatimStructuredSearch({
+          street: `${streetName} ${probe}`,
+          city: formatted.city,
+          state: formatted.uf,
+          country: 'Brasil'
+        }, 3));
+        const neighbour = pickGeocodeMatch(data, { ...formatted, number: probe });
+        if (neighbour?.precision === 'house') {
+          const rank = GEOCODE_PRECISION_RANK['house-near'];
+          if (!best || rank > GEOCODE_PRECISION_RANK[best.precision]) {
+            best = { match: neighbour.match, precision: 'house-near' };
+          }
+          break;
+        }
       }
     }
 
