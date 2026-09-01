@@ -254,7 +254,8 @@
     formatGoogleAddressForGeocode,
     buildGeocodeQueryFallbacks,
     pickGeocodeMatch,
-    buildHouseNumberProbes
+    buildHouseNumberProbes,
+    shouldRefineSuggestion
   } = globalThis.IcmGeocodeFormat;
 
   const GEOCODE_PRECISION_RANK = {
@@ -602,6 +603,25 @@
     };
   }
 
+  /**
+   * Suggestions come straight from a free-text search. One without a house
+   * number is an arbitrary segment of the road — Nominatim returns several and
+   * lists them by its own ranking — so re-resolve the typed address through the
+   * ranked path and keep only the label the user picked.
+   */
+  async function refineSuggestionCoords(item, typedQuery, coords) {
+    if (!shouldRefineSuggestion(item, formatGoogleAddressForGeocode(typedQuery))) return coords;
+    try {
+      const refined = await geocodeManualInput(typedQuery);
+      if (isValidCoord(refined.lat, refined.lng)) {
+        return { ...coords, lat: refined.lat, lng: refined.lng };
+      }
+    } catch {
+      // Refinement is best-effort; the suggestion's own coordinates still work.
+    }
+    return coords;
+  }
+
   async function fetchAutocompleteSuggestions(query, signal) {
     await resolvePageCity();
     const city = pageCity || DEFAULT_CITY;
@@ -739,14 +759,15 @@
       }, AUTOCOMPLETE_DEBOUNCE_MS);
     }
 
-    function applySuggestion(index) {
+    async function applySuggestion(index) {
       const item = items[index];
       if (!item) return;
       const coords = suggestionToCoords(item);
       if (!isValidCoord(coords.lat, coords.lng)) return;
+      const typedQuery = input.value.trim();
       input.value = coords.label;
       hideList();
-      onSelect(coords);
+      onSelect(await refineSuggestionCoords(item, typedQuery, coords));
     }
 
     autocompleteInstances.push({ listEl, hideList });

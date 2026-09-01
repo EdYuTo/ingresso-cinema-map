@@ -16,7 +16,8 @@ const {
   formatGoogleAddressForGeocode,
   buildGeocodeQueryFallbacks,
   pickGeocodeMatch,
-  buildHouseNumberProbes
+  buildHouseNumberProbes,
+  shouldRefineSuggestion
 } = require(path.join(__dirname, '..', 'lib', 'geocode-format.js'));
 
 let passed = 0;
@@ -268,6 +269,35 @@ console.log('buildHouseNumberProbes');
   );
   assertEqual(buildHouseNumberProbes(null).join(','), '', 'no number means no probes');
   assertEqual(buildHouseNumberProbes('sem numero').join(','), '', 'non-numeric input means no probes');
+}
+
+console.log('shouldRefineSuggestion');
+{
+  const typed = formatGoogleAddressForGeocode('av brigadeiro faria lima 949, pinheiros');
+
+  assertEqual(
+    shouldRefineSuggestion({ address: { road: 'Avenida Brigadeiro Faria Lima' } }, typed),
+    true,
+    'a suggestion without a house number is a street segment and needs refining'
+  );
+  assertEqual(
+    shouldRefineSuggestion({ address: { house_number: '952', road: 'Avenida Brigadeiro Faria Lima' } }, typed),
+    false,
+    'a suggestion that already carries a house number is kept as is'
+  );
+  assertEqual(
+    shouldRefineSuggestion({ display_name: 'Casa', lat: '-23.5', lon: '-46.6' }, typed),
+    false,
+    'a saved address has no geocoder details and must never be re-geocoded'
+  );
+  assertEqual(
+    shouldRefineSuggestion(
+      { address: { road: 'Avenida Paulista' } },
+      formatGoogleAddressForGeocode('avenida paulista')
+    ),
+    false,
+    'nothing to refine when the user typed no house number'
+  );
 }
 
 console.log('');
