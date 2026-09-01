@@ -254,7 +254,8 @@
     formatGoogleAddressForGeocode,
     buildGeocodeQueryFallbacks,
     pickGeocodeMatch,
-    buildHouseNumberProbes
+    buildHouseNumberProbes,
+    shouldRefineSuggestion
   } = globalThis.IcmGeocodeFormat;
 
   const GEOCODE_PRECISION_RANK = {
@@ -276,10 +277,53 @@
     return `${trimmed}, ${city.name}, ${city.uf}, Brasil`;
   }
 
+  // ── Geocode tracing (opt-in) ───────────────────────────────────────────
+  // localStorage.setItem('icm-geocode-debug', '1') on the page, then reload:
+  // every address search prints one [ICM geocode] JSON blob to the console.
+
+  const GEOCODE_DEBUG_KEY = 'icm-geocode-debug';
+  let geocodeTrace = null;
+
+  function geocodeDebugEnabled() {
+    try {
+      return localStorage.getItem(GEOCODE_DEBUG_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function summarizeGeocodeResults(data) {
+    if (!Array.isArray(data)) return data;
+    return data.slice(0, 3).map(item => ({
+      lat: item.lat,
+      lon: item.lon,
+      hn: item.address?.house_number ?? null,
+      city: item.address?.city ?? item.address?.town ?? null,
+      cep: item.address?.postcode ?? null,
+      name: String(item.display_name || '').slice(0, 60)
+    }));
+  }
+
+  function traceGeocodeStart(query) {
+    geocodeTrace = geocodeDebugEnabled() ? { query, steps: [] } : null;
+  }
+
+  function traceGeocodeStep(step, detail) {
+    if (geocodeTrace) geocodeTrace.steps.push({ step, ...detail });
+  }
+
+  function traceGeocodeEnd(outcome) {
+    if (!geocodeTrace) return;
+    geocodeTrace.outcome = outcome;
+    console.log('[ICM geocode]', JSON.stringify(geocodeTrace, null, 1));
+    geocodeTrace = null;
+  }
+
   async function geocodeResolvedAddress(query, formattedInput) {
     const formatted = formattedInput || formatGoogleAddressForGeocode(query);
     let best = null;
     let requested = false;
+    traceGeocodeStep('formatted', { formatted });
 
     // Keeps the most precise hit seen so far; true once nothing can beat it.
     const consider = (data) => {
@@ -307,14 +351,10 @@
         postalcode: formatted.cep,
         country: 'Brasil'
       }, 5));
-      if (consider(data)) return best.match;
-    }
-
-    if (!best) {
-      for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
-        const data = await search(() => nominatimSearch(candidate, 5));
-        if (consider(data)) return best.match;
-        if (best) break;
+      traceGeocodeStep('structured', { street: formatted.street, results: summarizeGeocodeResults(data) });
+      if (consider(data)) {
+        traceGeocodeStep('picked', { precision: best.precision, from: 'structured' });
+        return best.match;
       }
     }
 
@@ -322,13 +362,14 @@
     // doors away is metres off; a street segment can be a couple of blocks off.
     if (formatted.number && formatted.street && formatted.city && formatted.uf) {
       const streetName = formatted.street.replace(/\s*\d+\s*$/, '').trim();
-      for (const probe of buildHouseNumberProbes(formatted.number)) {
+      for (const probe of buildHouseNumberProbes(formatted.number, 6)) {
         const data = await search(() => nominatimStructuredSearch({
           street: `${streetName} ${probe}`,
           city: formatted.city,
           state: formatted.uf,
           country: 'Brasil'
         }, 3));
+        traceGeocodeStep('probe', { number: probe, results: summarizeGeocodeResults(data) });
         const neighbour = pickGeocodeMatch(data, { ...formatted, number: probe });
         if (neighbour?.precision === 'house') {
           const rank = GEOCODE_PRECISION_RANK['house-near'];
@@ -347,12 +388,23 @@
         [formatted.cep, formatted.city, formatted.uf, 'Brasil'].filter(Boolean).join(', '),
         5
       ));
+      traceGeocodeStep('cep', { cep: formatted.cep, results: summarizeGeocodeResults(data) });
       consider(data);
+    }
+
+    if (!best) {
+      for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
+        const data = await search(() => nominatimSearch(candidate, 5));
+        traceGeocodeStep('freetext', { candidate, results: summarizeGeocodeResults(data) });
+        if (consider(data)) return best.match;
+        if (best) break;
+      }
     }
 
     if (!best) {
       throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
     }
+    traceGeocodeStep('picked', { precision: best.precision, match: summarizeGeocodeResults([best.match])[0] });
     return best.match;
   }
 
@@ -561,6 +613,7 @@
     await resolvePageCity();
     const city = pageCity || DEFAULT_CITY;
     const data = await nominatimSearch(buildGeocodeQuery(query), 5);
+    traceGeocodeStep('city search', { query: buildGeocodeQuery(query), results: summarizeGeocodeResults(data) });
     if (!data.length) {
       throw new Error(`Endereço não encontrado em ${city.name}. Tente incluir o bairro.`);
     }
@@ -600,6 +653,25 @@
       lng: parseFloat(item.lon),
       label: suggestionLabel(item)
     };
+  }
+
+  /**
+   * Suggestions come straight from a free-text search. One without a house
+   * number is an arbitrary segment of the road — Nominatim returns several and
+   * lists them by its own ranking — so re-resolve the typed address through the
+   * ranked path and keep only the label the user picked.
+   */
+  async function refineSuggestionCoords(item, typedQuery, coords) {
+    if (!shouldRefineSuggestion(item, formatGoogleAddressForGeocode(typedQuery))) return coords;
+    try {
+      const refined = await geocodeManualInput(typedQuery);
+      if (isValidCoord(refined.lat, refined.lng)) {
+        return { ...coords, lat: refined.lat, lng: refined.lng };
+      }
+    } catch {
+      // Refinement is best-effort; the suggestion's own coordinates still work.
+    }
+    return coords;
   }
 
   async function fetchAutocompleteSuggestions(query, signal) {
@@ -739,14 +811,15 @@
       }, AUTOCOMPLETE_DEBOUNCE_MS);
     }
 
-    function applySuggestion(index) {
+    async function applySuggestion(index) {
       const item = items[index];
       if (!item) return;
       const coords = suggestionToCoords(item);
       if (!isValidCoord(coords.lat, coords.lng)) return;
+      const typedQuery = input.value.trim();
       input.value = coords.label;
       hideList();
-      onSelect(coords);
+      onSelect(await refineSuggestionCoords(item, typedQuery, coords));
     }
 
     autocompleteInstances.push({ listEl, hideList });
@@ -1525,6 +1598,7 @@
   }
 
   async function geocodeManualInput(query) {
+    traceGeocodeStart(query);
     let normalizedQuery;
     try {
       normalizedQuery = await normalizeMapsInput(query);
@@ -1534,23 +1608,37 @@
 
     const mapsInput = parseGoogleMapsUrl(normalizedQuery);
     if (mapsInput?.lat != null && mapsInput?.lng != null) {
+      traceGeocodeEnd({ source: 'coordinates in URL', lat: mapsInput.lat, lng: mapsInput.lng });
       return {
         lat: mapsInput.lat,
         lng: mapsInput.lng,
         label: mapsInput.label || `${mapsInput.lat}, ${mapsInput.lng}`
       };
     }
+    traceGeocodeStep('resolved', { normalizedQuery });
 
     const searchQuery = mapsInput?.query || normalizedQuery;
-    const formatted = formatGoogleAddressForGeocode(searchQuery);
-    const match = formatted.city && formatted.uf
+    let formatted = formatGoogleAddressForGeocode(searchQuery);
+
+    // Typed addresses usually omit the city ("av faria lima 949, pinheiros").
+    // Borrowing it from the page keeps them on the ranked path instead of the
+    // plain city search, which takes whatever Nominatim lists first.
+    if (formatted.street && formatted.number && !(formatted.city && formatted.uf)) {
+      const city = await resolvePageCity() || DEFAULT_CITY;
+      formatted = { ...formatted, city: city.name, uf: city.uf };
+    }
+
+    const ranked = Boolean(formatted.city && formatted.uf);
+    const match = ranked
       ? await geocodeResolvedAddress(searchQuery, formatted)
       : await geocodeInPageCity(searchQuery);
-    return {
+    const coords = {
       lat: parseFloat(match.lat),
       lng: parseFloat(match.lon),
       label: cleanMapsAddressLabel(searchQuery) || match.display_name
     };
+    traceGeocodeEnd({ path: ranked ? 'ranked' : 'city search', lat: coords.lat, lng: coords.lng });
+    return coords;
   }
 
   // ── Match & geocode (cache-aware) ──────────────────────────────────────
