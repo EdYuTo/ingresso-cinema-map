@@ -277,10 +277,53 @@
     return `${trimmed}, ${city.name}, ${city.uf}, Brasil`;
   }
 
+  // ── Geocode tracing (opt-in) ───────────────────────────────────────────
+  // localStorage.setItem('icm-geocode-debug', '1') on the page, then reload:
+  // every address search prints one [ICM geocode] JSON blob to the console.
+
+  const GEOCODE_DEBUG_KEY = 'icm-geocode-debug';
+  let geocodeTrace = null;
+
+  function geocodeDebugEnabled() {
+    try {
+      return localStorage.getItem(GEOCODE_DEBUG_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function summarizeGeocodeResults(data) {
+    if (!Array.isArray(data)) return data;
+    return data.slice(0, 3).map(item => ({
+      lat: item.lat,
+      lon: item.lon,
+      hn: item.address?.house_number ?? null,
+      city: item.address?.city ?? item.address?.town ?? null,
+      cep: item.address?.postcode ?? null,
+      name: String(item.display_name || '').slice(0, 60)
+    }));
+  }
+
+  function traceGeocodeStart(query) {
+    geocodeTrace = geocodeDebugEnabled() ? { query, steps: [] } : null;
+  }
+
+  function traceGeocodeStep(step, detail) {
+    if (geocodeTrace) geocodeTrace.steps.push({ step, ...detail });
+  }
+
+  function traceGeocodeEnd(outcome) {
+    if (!geocodeTrace) return;
+    geocodeTrace.outcome = outcome;
+    console.log('[ICM geocode]', JSON.stringify(geocodeTrace, null, 1));
+    geocodeTrace = null;
+  }
+
   async function geocodeResolvedAddress(query, formattedInput) {
     const formatted = formattedInput || formatGoogleAddressForGeocode(query);
     let best = null;
     let requested = false;
+    traceGeocodeStep('formatted', { formatted });
 
     // Keeps the most precise hit seen so far; true once nothing can beat it.
     const consider = (data) => {
@@ -308,7 +351,11 @@
         postalcode: formatted.cep,
         country: 'Brasil'
       }, 5));
-      if (consider(data)) return best.match;
+      traceGeocodeStep('structured', { street: formatted.street, results: summarizeGeocodeResults(data) });
+      if (consider(data)) {
+        traceGeocodeStep('picked', { precision: best.precision, from: 'structured' });
+        return best.match;
+      }
     }
 
     // OSM often lacks the exact number while carrying its neighbours. A hit two
@@ -322,6 +369,7 @@
           state: formatted.uf,
           country: 'Brasil'
         }, 3));
+        traceGeocodeStep('probe', { number: probe, results: summarizeGeocodeResults(data) });
         const neighbour = pickGeocodeMatch(data, { ...formatted, number: probe });
         if (neighbour?.precision === 'house') {
           const rank = GEOCODE_PRECISION_RANK['house-near'];
@@ -340,12 +388,14 @@
         [formatted.cep, formatted.city, formatted.uf, 'Brasil'].filter(Boolean).join(', '),
         5
       ));
+      traceGeocodeStep('cep', { cep: formatted.cep, results: summarizeGeocodeResults(data) });
       consider(data);
     }
 
     if (!best) {
       for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
         const data = await search(() => nominatimSearch(candidate, 5));
+        traceGeocodeStep('freetext', { candidate, results: summarizeGeocodeResults(data) });
         if (consider(data)) return best.match;
         if (best) break;
       }
@@ -354,6 +404,7 @@
     if (!best) {
       throw new Error(`Endereço não encontrado para "${query}". Tente incluir rua e número.`);
     }
+    traceGeocodeStep('picked', { precision: best.precision, match: summarizeGeocodeResults([best.match])[0] });
     return best.match;
   }
 
@@ -562,6 +613,7 @@
     await resolvePageCity();
     const city = pageCity || DEFAULT_CITY;
     const data = await nominatimSearch(buildGeocodeQuery(query), 5);
+    traceGeocodeStep('city search', { query: buildGeocodeQuery(query), results: summarizeGeocodeResults(data) });
     if (!data.length) {
       throw new Error(`Endereço não encontrado em ${city.name}. Tente incluir o bairro.`);
     }
@@ -1546,6 +1598,7 @@
   }
 
   async function geocodeManualInput(query) {
+    traceGeocodeStart(query);
     let normalizedQuery;
     try {
       normalizedQuery = await normalizeMapsInput(query);
@@ -1555,12 +1608,14 @@
 
     const mapsInput = parseGoogleMapsUrl(normalizedQuery);
     if (mapsInput?.lat != null && mapsInput?.lng != null) {
+      traceGeocodeEnd({ source: 'coordinates in URL', lat: mapsInput.lat, lng: mapsInput.lng });
       return {
         lat: mapsInput.lat,
         lng: mapsInput.lng,
         label: mapsInput.label || `${mapsInput.lat}, ${mapsInput.lng}`
       };
     }
+    traceGeocodeStep('resolved', { normalizedQuery });
 
     const searchQuery = mapsInput?.query || normalizedQuery;
     let formatted = formatGoogleAddressForGeocode(searchQuery);
@@ -1573,14 +1628,17 @@
       formatted = { ...formatted, city: city.name, uf: city.uf };
     }
 
-    const match = formatted.city && formatted.uf
+    const ranked = Boolean(formatted.city && formatted.uf);
+    const match = ranked
       ? await geocodeResolvedAddress(searchQuery, formatted)
       : await geocodeInPageCity(searchQuery);
-    return {
+    const coords = {
       lat: parseFloat(match.lat),
       lng: parseFloat(match.lon),
       label: cleanMapsAddressLabel(searchQuery) || match.display_name
     };
+    traceGeocodeEnd({ path: ranked ? 'ranked' : 'city search', lat: coords.lat, lng: coords.lng });
+    return coords;
   }
 
   // ── Match & geocode (cache-aware) ──────────────────────────────────────
