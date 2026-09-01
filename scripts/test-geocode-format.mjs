@@ -155,6 +155,25 @@ console.log('formatGoogleAddressForGeocode');
   assertEqual(result.cep, '01305-100', 'normalizes an unhyphenated CEP');
 }
 
+{
+  const result = formatGoogleAddressForGeocode('av brigadeiro faria lima 949, pinheiros');
+  assertEqual(result.number, '949', 'reads a number glued to the end of the street segment');
+  assertEqual(result.neighborhood, 'pinheiros', 'treats the trailing segment as the neighbourhood');
+  assertEqual(result.street, 'av brigadeiro faria lima 949', 'street keeps the number, drops the neighbourhood');
+  assertEqual(result.city, null, 'no city when the user did not type one');
+}
+
+{
+  const result = formatGoogleAddressForGeocode('Avenida Paulista 1578');
+  assertEqual(result.number, '1578', 'reads the number from a single-segment address');
+  assertEqual(result.neighborhood, null, 'a single segment has no neighbourhood');
+}
+
+{
+  const result = formatGoogleAddressForGeocode('Rua 25 de Março, Centro');
+  assertEqual(result.number, null, 'a number inside the street name is not a house number');
+}
+
 console.log('buildGeocodeQueryFallbacks');
 {
   const raw = 'Av. Brig. Faria Lima, 949 - Pinheiros, São Paulo - SP, 05426-100';
@@ -214,6 +233,18 @@ console.log('pickGeocodeMatch');
     'discards a house-number hit in another city'
   );
 
+  const guarulhos = [{
+    lat: '-23.4468988',
+    lon: '-46.5211920',
+    display_name: '949, Avenida Brigadeiro Faria Lima, Vila Cocaia, Guarulhos, São Paulo, Região Sudeste, 07130-000, Brasil',
+    address: { house_number: '901', city: 'Guarulhos', state: 'São Paulo', postcode: '07130-000' }
+  }];
+  assertEqual(
+    pickGeocodeMatch(guarulhos, formatted),
+    null,
+    'the state name in display_name does not smuggle in a result from another city'
+  );
+
   const cityOnly = [
     { lat: '-23.5661', lon: '-46.6685', address: { city: 'São Paulo', postcode: '01427-970' } }
   ];
@@ -226,13 +257,13 @@ console.log('pickGeocodeMatch');
 console.log('buildHouseNumberProbes');
 {
   assertEqual(
-    buildHouseNumberProbes('901').join(','),
-    '899,903,897,905',
-    'probes the closest same-side numbers first, alternating down and up'
+    buildHouseNumberProbes('901', 6).join(','),
+    '900,902,899,903,898,904',
+    'probes by distance, crossing parity — the neighbour opposite can be the closest one'
   );
   assertEqual(
-    buildHouseNumberProbes('4').join(','),
-    '2,6,8,10',
+    buildHouseNumberProbes('4', 6).join(','),
+    '3,5,2,6,1,7',
     'skips numbers below 1 near the start of a street and still fills the budget'
   );
   assertEqual(buildHouseNumberProbes(null).join(','), '', 'no number means no probes');

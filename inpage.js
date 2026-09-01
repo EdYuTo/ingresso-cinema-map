@@ -310,19 +310,11 @@
       if (consider(data)) return best.match;
     }
 
-    if (!best) {
-      for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
-        const data = await search(() => nominatimSearch(candidate, 5));
-        if (consider(data)) return best.match;
-        if (best) break;
-      }
-    }
-
     // OSM often lacks the exact number while carrying its neighbours. A hit two
     // doors away is metres off; a street segment can be a couple of blocks off.
     if (formatted.number && formatted.street && formatted.city && formatted.uf) {
       const streetName = formatted.street.replace(/\s*\d+\s*$/, '').trim();
-      for (const probe of buildHouseNumberProbes(formatted.number)) {
+      for (const probe of buildHouseNumberProbes(formatted.number, 6)) {
         const data = await search(() => nominatimStructuredSearch({
           street: `${streetName} ${probe}`,
           city: formatted.city,
@@ -348,6 +340,14 @@
         5
       ));
       consider(data);
+    }
+
+    if (!best) {
+      for (const candidate of buildGeocodeQueryFallbacks(query, formatted)) {
+        const data = await search(() => nominatimSearch(candidate, 5));
+        if (consider(data)) return best.match;
+        if (best) break;
+      }
     }
 
     if (!best) {
@@ -1542,7 +1542,16 @@
     }
 
     const searchQuery = mapsInput?.query || normalizedQuery;
-    const formatted = formatGoogleAddressForGeocode(searchQuery);
+    let formatted = formatGoogleAddressForGeocode(searchQuery);
+
+    // Typed addresses usually omit the city ("av faria lima 949, pinheiros").
+    // Borrowing it from the page keeps them on the ranked path instead of the
+    // plain city search, which takes whatever Nominatim lists first.
+    if (formatted.street && formatted.number && !(formatted.city && formatted.uf)) {
+      const city = await resolvePageCity() || DEFAULT_CITY;
+      formatted = { ...formatted, city: city.name, uf: city.uf };
+    }
+
     const match = formatted.city && formatted.uf
       ? await geocodeResolvedAddress(searchQuery, formatted)
       : await geocodeInPageCity(searchQuery);
